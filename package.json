@@ -1,0 +1,34 @@
+{
+	"name": "devpro",
+	"version": "2.0.0",
+	"description": "Sharing project ideas",
+	"main": "index.js",
+	"scripts": {
+		"server": "nodemon index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/agitaev/devpro.git"
+	},
+	"keywords": [
+		"nodejs",
+		"js",
+		"reactjs",
+		"mongo"
+	],
+	"author": "Seid Akhmed Agitaev",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/agitaev/devpro/issues"
+	},
+	"homepage": "https://github.com/agitaev/devpro#readme",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"express": "^4.17.1",
+		"mongoose": "^5.9.5"
+	},
+	"devDependencies": {
+		"concurrently": "^5.1.0",
+		"nodemon": "^2.0.2"
+	}
+}
