@@ -4,7 +4,11 @@
 	"description": "Sharing project ideas",
 	"main": "index.js",
 	"scripts": {
-		"server": "nodemon index.js"
+		"client-install": "npm install --prefix client",
+		"client": "npm run start --prefix client",
+		"start": "node index.js",
+		"server": "nodemon index.js",
+		"dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
 	},
 	"repository": {
 		"type": "git",
@@ -23,9 +27,15 @@
 	},
 	"homepage": "https://github.com/agitaev/devpro#readme",
 	"dependencies": {
+		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.19.0",
 		"express": "^4.17.1",
-		"mongoose": "^5.9.5"
+		"is-empty": "^1.2.0",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^5.9.5",
+		"passport": "^0.4.1",
+		"passport-jwt": "^4.0.0",
+		"validator": "^12.2.0"
 	},
 	"devDependencies": {
 		"concurrently": "^5.1.0",
