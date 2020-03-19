@@ -13,25 +13,23 @@ import {
 import { ArrowBackIosOutlined as BackIcon } from '@material-ui/icons';
 
 class Login extends Component {
-	constructor() {
-		super();
-		this.state = {
-			email: '',
-			password: '',
-			errors: {}
-		};
-	}
+	state = {
+		email: '',
+		password: '',
+		errors: {}
+	};
 
 	componentDidMount() {
 		// If logged in and user navigates to Login page, should redirect them to dashboard
 		if (this.props.auth.isAuthenticated) {
-			this.props.history.push('/dashboard');
+			console.log(this.props);
+			this.props.history.push('/');
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if (nextProps.auth.isAuthenticated) {
-			this.props.history.push('/dashboard'); // push user to dashboard when they login
+			this.props.history.push('/'); // push user to dashboard when they login
 		}
 
 		if (nextProps.errors) {
@@ -78,7 +76,13 @@ class Login extends Component {
 								<strong>Login</strong>&nbsp;below
 							</Typography>
 							<Typography variant='subtitle1'>
-								Don't have an account? <Link to='/register'>Sign Up</Link>
+								Don't have an account?{' '}
+								<Link
+									to='/register'
+									style={{ textDecoration: 'none', color: 'primary' }}
+								>
+									Join us!
+								</Link>
 							</Typography>
 						</div>
 						<form noValidate onSubmit={this.onSubmit}>
@@ -135,7 +139,8 @@ Login.propTypes = {
 
 const mapStateToProps = state => ({
 	auth: state.auth,
-	errors: state.errors
+	errors: state.errors,
+	posts: state.posts
 });
 
 export default connect(

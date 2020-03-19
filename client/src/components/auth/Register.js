@@ -76,7 +76,13 @@ class Register extends Component {
 								<strong>Register</strong>&nbsp;below
 							</Typography>
 							<Typography variant='subtitle1'>
-								Already have an account? <Link to='/login'>Sign in</Link>
+								Already have an account?{' '}
+								<Link
+									to='/login'
+									style={{ textDecoration: 'none', color: 'primary' }}
+								>
+									Sign in instead.
+								</Link>
 							</Typography>
 						</div>
 						<form noValidate onSubmit={this.onSubmit}>

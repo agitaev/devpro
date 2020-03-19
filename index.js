@@ -6,16 +6,16 @@ const app = express();
 require('./db/mongoose');
 
 const users = require('./routes/userRoutes');
-require('./models/Product');
+const posts = require('./routes/postRoutes');
+const tags = require('./routes/tagRouter');
 
-// BodyParser middleware
+// bodyparser middleware
 app.use(
 	bodyParser.urlencoded({
 		extended: false
 	})
 );
 app.use(bodyParser.json());
-require('./routes/productRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static('client/build'));
@@ -34,6 +34,8 @@ require('./config/passport')(passport);
 
 // Routes
 app.use('/api/users', users);
+app.use('/api/posts', posts);
+app.use('/api/tags', tags);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

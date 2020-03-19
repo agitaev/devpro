@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { logoutUser } from '../../actions/authActions';
 import {
 	AppBar,
 	Toolbar,
@@ -44,16 +45,34 @@ const useStyles = makeStyles(theme => ({
 	inputInput: {
 		padding: '.5rem .5rem .5rem 2.4rem',
 		width: '100%'
+	},
+	sectionDesktop: {
+		display: 'none',
+		[theme.breakpoints.up('md')]: {
+			display: 'flex'
+		}
+	},
+	sectionMobile: {
+		display: 'flex',
+		[theme.breakpoints.up('md')]: {
+			display: 'none'
+		}
+	},
+	logoMobile: {
+		justifyContent: 'center',
+		[theme.breakpoints.up('md')]: {
+			justifyContent: 'flex-start'
+		}
 	}
 }));
 
-const Navbar = props => {
+const Navbar = ({ logoutUser, auth }) => {
 	const classes = useStyles();
 
 	return (
 		<AppBar position='static'>
 			<Toolbar variant='dense'>
-				<Grid container alignItems='center'>
+				<Grid container alignItems='center' className={classes.logoMobile}>
 					<CasinoIcon />
 					<Typography
 						variant='h6'
@@ -69,11 +88,16 @@ const Navbar = props => {
 						devpro
 					</Typography>
 				</Grid>
-				<Grid container justify='flex-end'>
-					{props.auth.isAuthenticated ? (
-						<Button color='inherit' component={Link} to='/me'>
-							Profile
-						</Button>
+				<Grid container justify='flex-end' className={classes.sectionDesktop}>
+					{auth.isAuthenticated ? (
+						<React.Fragment>
+							<Button color='inherit' component={Link} to='/me'>
+								Profile
+							</Button>
+							<Button color='inherit' onClick={() => logoutUser()}>
+								Sign Out
+							</Button>
+						</React.Fragment>
 					) : (
 						<Button color='inherit' component={Link} to='/register'>
 							Sign In/Up
@@ -102,4 +126,7 @@ const mapStateToProps = state => ({
 	auth: state.auth
 });
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(
+	mapStateToProps,
+	{ logoutUser }
+)(Navbar);
