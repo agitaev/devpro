@@ -6,16 +6,52 @@ const UserSchema = new Schema(
 	{
 		name: {
 			type: String,
-			required: true
+			required: true,
+			trim: true,
+			immutable: true
+		},
+		username: {
+			type: String,
+			// required: true,
+			unique: true,
+			immutable: true,
+			trim: true
 		},
 		email: {
 			type: String,
 			required: true
 		},
+		bio: {
+			type: String,
+			maxlength: 160,
+			trim: true
+		},
 		password: {
 			type: String,
 			required: true
-		}
+		},
+		followed_tags: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Tag'
+				// required: [true, 'Undefined tag']
+			}
+		],
+		saved_posts: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Post'
+			}
+		],
+		voted_posts: [
+			{
+				post: {
+					type: Schema.Types.ObjectId,
+					ref: 'Post'
+				},
+				action: Number
+			}
+		]
 	},
 	{
 		timestamps: {

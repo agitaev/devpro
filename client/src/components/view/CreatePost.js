@@ -23,6 +23,7 @@ class CreatePost extends Component {
 
 	UNSAFE_componentWillReceiveProps(nextProps) {
 		if (nextProps.errors) {
+			console.log(nextProps);
 			this.setState({ errors: nextProps.errors });
 		}
 	}

@@ -18,9 +18,20 @@ export const getPosts = () => dispatch => {
 			localStorage.setItem('posts', JSON.stringify(posts));
 		})
 		.catch(err => {
-			console.log(err.response);
-			dispatch({ type: GET_ERRORS, payload: err.response.data });
+			dispatch({ type: GET_ERRORS, payload: err });
 		});
+};
+
+// Retrieve Single Post
+export const getPost = postId => dispatch => {
+	axios
+		.get(`/api/posts/${postId}`)
+		.then(res => {
+			const post = res.data;
+			// dispatch({ type: GET_POST, payload: post });
+			localStorage.setItem('post', JSON.stringify(post));
+		})
+		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
 };
 
 // Create Post
@@ -65,24 +76,12 @@ export const createPost = (postData, history) => dispatch => {
 		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
 
-// Retrieve Single Post
-export const getPost = postId => dispatch => {
-	axios
-		.get(`/api/posts/${postId}`)
-		.then(res => {
-			const post = res.data;
-			localStorage.setItem('post', JSON.stringify(post));
-			dispatch(setPost(post));
-		})
-		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
-};
-
 // control post votes
-export const votePost = (postId, action) => dispatch => {
+export const votePost = (postId, action, user) => dispatch => {
 	axios
-		.post(`/api/posts/${postId}/action`, { action })
+		.post(`/api/posts/${postId}/action`, { action, user })
 		.then(res => dispatch({ type: VOTE_POST, payload: res.data }))
-		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
 };
 
 export const setPost = post => {

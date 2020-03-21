@@ -12,25 +12,27 @@ class PostList extends Component {
 
 	componentDidMount() {
 		this.props.getPosts();
-		const posts = JSON.parse(localStorage.getItem('posts'));
-		if (posts) this.setState({ posts });
+		// const posts = JSON.parse(localStorage.getItem('posts'));
+		// if (posts) this.setState({ posts });
 	}
 
 	UNSAFE_componentWillReceiveProps(nextProps) {
 		if (nextProps.posts) {
-			// console.log('new posts', nextProps.posts.posts);
-			this.setState({ posts: nextProps.posts.posts });
+			this.setState({ posts: nextProps.posts });
 		}
 	}
 
 	render() {
+		const { posts } = this.state;
 		return (
 			<Grid container justify='space-evenly' spacing={1}>
-				{this.state.posts.map((post, id) => (
-					<Grid item xs={12} sm={6} md={4} lg={4} key={id}>
-						<PostItem post={post} withVoteController />
-					</Grid>
-				))}
+				{posts && posts !== undefined
+					? posts.map((post, id) => (
+							<Grid item xs={12} sm={6} md={4} lg={4} key={id}>
+								<PostItem post={post} withVoteController />
+							</Grid>
+					  ))
+					: null}
 			</Grid>
 		);
 	}
@@ -38,7 +40,7 @@ class PostList extends Component {
 
 PostList.propTypes = {
 	getPosts: PropTypes.func.isRequired,
-	posts: PropTypes.object.isRequired
+	posts: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({

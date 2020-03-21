@@ -7,6 +7,7 @@ const validatePostInput = require('../validation/post');
 
 // Load Post model
 const Post = require('../models/Post');
+const User = require('../models/User');
 
 // @route GET api/posts/
 // @desc Retrieve all posts
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
 			.sort({ created_at: 'desc' }) // newest on top
 			.exec((err, posts) => {
 				if (err) {
-					throw new Error();
+					res.send(400).send(err);
 				} else {
 					res.send(posts);
 				}
@@ -66,29 +67,44 @@ router.post('/new', (req, res) => {
 	});
 });
 
-// @route POST api/posts/:id
+// @route POST api/posts/:postId/action
 // @desc Upvote/Downvote post
 // @access public
-router.post('/:id([0-9a-fA-F]{24})/action', async (req, res) => {
-	const { action } = req.body;
-	const { id } = req.params;
+router.post('/:postId([0-9a-fA-F]{24})/action', async (req, res) => {
+	const { action, user } = req.body;
+	const { postId } = req.params;
+	const count = action === 'upvote' ? 1 : -1;
 
-	if (action === 'upvote') {
-		try {
-			await Post.findOneAndUpdate(
-				{ _id: id },
-				{ $inc: { vote_count: 1 } },
-				{ new: true }
-			).exec((err, post) => {
-				if (err) {
-					res.status(400).json(err);
-				} else {
-					res.status(202).send(post);
+	try {
+		await User.findOneAndUpdate(
+			{ _id: user.id, 'voted_posts.post': { $ne: postId } },
+			{
+				$push: {
+					voted_posts: { post: postId, action: count > 0 ? 1 : 0 }
 				}
-			});
-		} catch (e) {
-			res.status(400).send(e);
-		}
+			}
+		).exec(async (error, response) => {
+			if (error) {
+				res.status(400).json(error);
+			} else if (!response) {
+				// if response is null, user already voted
+				res.status(400).send({ error: 'already voted' });
+			} else {
+				await Post.findOneAndUpdate(
+					{ _id: postId },
+					{ $inc: { vote_count: count } },
+					{ new: true }
+				).exec((error, post) => {
+					if (error) {
+						res.status(400).json(error);
+					} else {
+						res.status(202).send(post);
+					}
+				});
+			}
+		});
+	} catch (e) {
+		res.status(400).send(e);
 	}
 });
 
@@ -105,7 +121,7 @@ router.get('/:id([0-9a-fA-F]{24})', async (req, res) => {
 			.populate('tags')
 			.exec((err, post) => {
 				if (err) {
-					throw new Error(err);
+					res.status(400).json(err);
 				} else {
 					res.status(200).send(post);
 				}

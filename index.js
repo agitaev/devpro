@@ -8,6 +8,7 @@ require('./db/mongoose');
 const users = require('./routes/userRoutes');
 const posts = require('./routes/postRoutes');
 const tags = require('./routes/tagRoutes');
+const reactions = require('./routes/reactionRoutes');
 
 // bodyparser middleware
 app.use(
@@ -36,6 +37,7 @@ require('./config/passport')(passport);
 app.use('/api/users', users);
 app.use('/api/posts', posts);
 app.use('/api/tags', tags);
+app.use('/api/reactions', reactions);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

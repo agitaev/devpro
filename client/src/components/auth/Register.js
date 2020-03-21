@@ -60,7 +60,7 @@ class Register extends Component {
 		const { errors } = this.state;
 
 		return (
-			<Container style={{ margin: '4rem 0' }}>
+			<Container style={{ margin: '4rem auto' }}>
 				<Grid container justify='center'>
 					<Grid item xs={10} sm={8} md={6} lg={5}>
 						<BackToHomeButton />
