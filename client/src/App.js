@@ -8,11 +8,12 @@ import { Provider } from 'react-redux';
 import store from './store';
 
 import Navbar from './components/layout/Navbar';
-import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import PrivateRoute from './components/private/PrivateRoute';
 import Dashboard from './components/dashboard/Dashboard';
+import Post from './components/view/Post';
+import CreatePost from './components/view/CreatePost';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -42,12 +43,17 @@ class App extends Component {
 				<Router>
 					<div className='App'>
 						<Navbar />
-						<Route exact path='/dashboard' component={Landing} />
+						<Switch>
+							<PrivateRoute exact path='/posts/new' component={CreatePost} />
+						</Switch>
+						<Route exact path='/' component={Dashboard} />
 						<Route exact path='/register' component={Register} />
 						<Route exact path='/login' component={Login} />
-						<Switch>
-							<PrivateRoute exact path='/' component={Dashboard} />
-						</Switch>
+						<Route
+							exact
+							path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
+							component={Post}
+						/>
 					</div>
 				</Router>
 			</Provider>

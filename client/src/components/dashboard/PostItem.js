@@ -1,29 +1,38 @@
 import React, { Component } from 'react';
-import {
-	Paper,
-	Typography,
-	Grid,
-	Link,
-	Chip,
-	IconButton
-} from '@material-ui/core';
+import { Paper, Typography, Grid, Link, IconButton } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import {
 	ExpandLessOutlined as UpvoteIcon,
 	ExpandMoreOutlined as DownvoteIcon
 } from '@material-ui/icons';
 import moment from 'moment/';
+import TagChip from './TagChip';
+import { connect } from 'react-redux';
+import { upvotePost, votePost } from '../../actions/postActions';
 
 class PostItem extends Component {
 	state = {
-		elevation: 0
+		elevation: 0,
+		post: {}
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
 	onMouseOut = () => this.setState({ elevation: 0 });
 
+	upvotePost = () => {
+		// this.props.upvotePost(this.props.post._id);
+		this.props.votePost(this.props.post._id, 'upvote');
+	};
+
+	UNSAFE_componentWillReceiveProps(nextProps) {
+		if (nextProps.post) {
+			this.setState({ post: nextProps.post });
+		}
+	}
+
 	render() {
-		const { post } = this.props;
+		const { withVoteController, post } = this.props;
+
 		return (
 			<Paper
 				style={{
@@ -36,7 +45,7 @@ class PostItem extends Component {
 				onMouseOut={this.onMouseOut}
 			>
 				<img
-					src='https://via.placeholder.com/400x300'
+					src='https://via.placeholder.com/1200x800'
 					style={{ width: '100%', height: 'auto' }}
 					alt='meaningful text'
 				/>
@@ -75,47 +84,41 @@ class PostItem extends Component {
 								{post.author.name}
 							</Link>
 						</Grid>
-						<div style={{ margin: '1rem 0 0' }}>
-							<Chip
-								size='small'
-								clickable
-								label='nodejs'
-								component={RouterLink}
-								to='/tags/nodejs'
-								underline='none'
-								style={{ margin: '0 .125rem' }}
-							/>
-							<Chip
-								size='small'
-								clickable
-								label='nodejs'
-								component={RouterLink}
-								to='/tags/nodejs'
-								underline='none'
-								style={{ margin: '0 .125rem' }}
-							/>
-						</div>
-					</Grid>
-					<Grid item xs={1} sm={1} md={1}>
-						<Grid
-							container
-							direction='column'
-							justify='flex-start'
-							alignItems='center'
-						>
-							<IconButton aria-label='upvote post' size='small'>
-								<UpvoteIcon />
-							</IconButton>
-							<Typography variant='subtitle2'>{post.vote_count}</Typography>
-							<IconButton aria-label='downvote post' size='small'>
-								<DownvoteIcon />
-							</IconButton>
+						<Grid container spacing={1} style={{ padding: '1rem 0' }}>
+							{post.tags.map(tag => (
+								<TagChip key={tag._id} tag={tag} small />
+							))}
 						</Grid>
 					</Grid>
+					{withVoteController && (
+						<Grid item xs={1} sm={1} md={1}>
+							<Grid
+								container
+								direction='column'
+								justify='flex-start'
+								alignItems='center'
+							>
+								<IconButton
+									aria-label='upvote post'
+									size='small'
+									onClick={this.upvotePost}
+								>
+									<UpvoteIcon />
+								</IconButton>
+								<Typography variant='subtitle2'>{post.vote_count}</Typography>
+								<IconButton aria-label='downvote post' size='small'>
+									<DownvoteIcon />
+								</IconButton>
+							</Grid>
+						</Grid>
+					)}
 				</Grid>
 			</Paper>
 		);
 	}
 }
 
-export default PostItem;
+export default connect(
+	null,
+	{ upvotePost, votePost }
+)(PostItem);

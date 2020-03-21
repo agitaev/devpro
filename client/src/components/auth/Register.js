@@ -11,7 +11,7 @@ import {
 	Typography,
 	TextField
 } from '@material-ui/core';
-import { ArrowBackIosOutlined as BackIcon } from '@material-ui/icons';
+import BackToHomeButton from '../element/BackToHomeButton';
 
 class Register extends Component {
 	constructor() {
@@ -32,7 +32,7 @@ class Register extends Component {
 		}
 	}
 
-	componentWillReceiveProps(nextProps) {
+	UNSAFE_componentWillReceiveProps(nextProps) {
 		if (nextProps.errors) {
 			this.setState({
 				errors: nextProps.errors
@@ -60,17 +60,10 @@ class Register extends Component {
 		const { errors } = this.state;
 
 		return (
-			<Container style={{ marginTop: '4rem' }}>
+			<Container style={{ margin: '4rem 0' }}>
 				<Grid container justify='center'>
 					<Grid item xs={10} sm={8} md={6} lg={5}>
-						<Button
-							color='inherit'
-							startIcon={<BackIcon />}
-							component={Link}
-							to='/'
-						>
-							Back to home
-						</Button>
+						<BackToHomeButton />
 						<div style={{ margin: '1.5rem 0 1rem' }}>
 							<Typography variant='h4'>
 								<strong>Register</strong>&nbsp;below

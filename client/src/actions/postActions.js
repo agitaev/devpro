@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { GET_ERRORS, GET_POSTS, ADD_POST, GET_POST } from './types';
+import {
+	GET_ERRORS,
+	GET_POSTS,
+	ADD_POST,
+	SET_POST,
+	UPVOTE_POST,
+	VOTE_POST
+} from './types';
 
 // Retrieve Posts
 export const getPosts = () => dispatch => {
@@ -18,25 +25,76 @@ export const getPosts = () => dispatch => {
 
 // Create Post
 export const createPost = (postData, history) => dispatch => {
+	let tags = [];
+	let promises = [];
+
+	// loop through each tag and collect promises
+	postData.tags.forEach(tag =>
+		promises.push(
+			axios
+				.get(`/api/tags/${tag}`)
+				.then(res => tags.push(res.data[0]._id))
+				.catch(err =>
+					dispatch({ type: GET_ERRORS, payload: err.response.data })
+				)
+		)
+	);
+
+	// resolve promises
 	axios
-		.post('/api/posts/new', postData)
+		.all(promises)
 		.then(res => {
-			const { post } = res.data;
-			dispatch({ type: ADD_POST, payload: post });
-			history.push('/');
-		}) // redirect to homepage
+			axios
+				.post('/api/posts/new', { ...postData, tags })
+				.then(res => {
+					// console.log(res.data);
+					dispatch({
+						type: ADD_POST,
+						payload: {
+							...postData,
+							tags
+						}
+					});
+
+					history.push('/');
+				})
+				.catch(err =>
+					dispatch({ type: GET_ERRORS, payload: err.response.data })
+				);
+		})
 		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
 
 // Retrieve Single Post
-export const getPostById = (postId, history) => dispatch => {
+export const getPost = postId => dispatch => {
 	axios
 		.get(`/api/posts/${postId}`)
 		.then(res => {
-			const { post } = res.data;
-			console.log(post);
-			dispatch({ type: GET_POST, payload: post });
-			history.push(`/posts/${postId}`);
+			const post = res.data;
+			localStorage.setItem('post', JSON.stringify(post));
+			dispatch(setPost(post));
 		})
 		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+
+// control post votes
+export const votePost = (postId, action) => dispatch => {
+	axios
+		.post(`/api/posts/${postId}/action`, { action })
+		.then(res => dispatch({ type: VOTE_POST, payload: res.data }))
+		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+
+export const setPost = post => {
+	return {
+		type: SET_POST,
+		payload: post
+	};
+};
+
+export const upvotePost = id => {
+	return {
+		type: UPVOTE_POST,
+		payload: id
+	};
 };

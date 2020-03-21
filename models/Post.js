@@ -10,6 +10,11 @@ const PostSchema = new Schema(
 			minLength: 10,
 			maxlength: 255
 		},
+		subtitle: {
+			type: String,
+			trim: true,
+			maxlength: 255
+		},
 		body: {
 			type: String,
 			trim: true,

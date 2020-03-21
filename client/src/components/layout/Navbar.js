@@ -70,7 +70,7 @@ const Navbar = ({ logoutUser, auth }) => {
 	const classes = useStyles();
 
 	return (
-		<AppBar position='static'>
+		<AppBar position='sticky'>
 			<Toolbar variant='dense'>
 				<Grid container alignItems='center' className={classes.logoMobile}>
 					<CasinoIcon />
@@ -91,8 +91,8 @@ const Navbar = ({ logoutUser, auth }) => {
 				<Grid container justify='flex-end' className={classes.sectionDesktop}>
 					{auth.isAuthenticated ? (
 						<React.Fragment>
-							<Button color='inherit' component={Link} to='/me'>
-								Profile
+							<Button color='inherit' component={Link} to='/posts/new'>
+								I have an idea
 							</Button>
 							<Button color='inherit' onClick={() => logoutUser()}>
 								Sign Out

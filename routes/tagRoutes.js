@@ -20,4 +20,17 @@ router.post('/new', async (req, res) => {
 	}
 });
 
+// @route GET api/tags/:title
+// @desc Get tag details by its name
+// @access public
+router.get('/:title', async (req, res) => {
+	const { title } = req.params;
+	try {
+		const tag = await Tag.find({ title });
+		res.send(tag);
+	} catch (e) {
+		res.status(404).send({ error: 'not found' });
+	}
+});
+
 module.exports = router;

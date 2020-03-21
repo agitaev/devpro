@@ -7,7 +7,7 @@ require('./db/mongoose');
 
 const users = require('./routes/userRoutes');
 const posts = require('./routes/postRoutes');
-const tags = require('./routes/tagRouter');
+const tags = require('./routes/tagRoutes');
 
 // bodyparser middleware
 app.use(
@@ -39,5 +39,5 @@ app.use('/api/tags', tags);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-	console.log(`[server] app running on http://127.0.0.1:${PORT}`);
+	console.log(`[server] server is running on http://127.0.0.1:${PORT}`);
 });
