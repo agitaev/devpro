@@ -12,6 +12,7 @@ const TagChip = ({ tag, small }) => {
 				component={RouterLink}
 				to={`/tags/${tag.title}`}
 				underline='none'
+				color='secondary'
 			/>
 		</Grid>
 	);

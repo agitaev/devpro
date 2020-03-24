@@ -2,30 +2,61 @@ import React, { Component } from 'react';
 import { Paper, Typography, Grid, Link, IconButton } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-	ExpandLessOutlined as UpvoteIcon
-	// ExpandMoreOutlined as DownvoteIcon
+	ExpandLessOutlined as UpvoteIcon,
+	BookmarkBorderOutlined as SaveIcon,
+	BookmarkOutlined as UnsaveIcon
 } from '@material-ui/icons';
 import moment from 'moment/';
-import TagChip from './TagChip';
+import TagChip from '../element/TagChip';
 import { connect } from 'react-redux';
-import { votePost } from '../../actions/postActions';
+import { votePost, savePost } from '../../actions/postActions';
+import isEmpty from 'is-empty';
 
 class PostItem extends Component {
 	state = {
 		elevation: 0,
-		post: { author: {}, tags: [] }
+		post: { author: {}, tags: [] },
+		saved: false
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
 	onMouseOut = () => this.setState({ elevation: 0 });
 
-	upvotePost = () => {
+	handleSavePostClick = () => {
+		this.props.savePost(this.props.post._id, this.props.user);
+		this.setState({ saved: !this.state.saved });
+	};
+
+	handleUpvotePostClick = () => {
 		this.props.votePost(this.props.post._id, 'upvote', this.props.user);
 	};
 
-	downvotePost = () => {
+	handleDownvotePostClick = () => {
 		this.props.votePost(this.props.post._id, 'downvote', this.props.user);
 	};
+
+	componentDidMount() {
+		if (
+			this.props.saved_posts &&
+			this.props.saved_posts.includes(this.props.post._id)
+		) {
+			this.setState({ saved: true });
+		}
+	}
+
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	if (nextProps.user) {
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// }
+
+	componentDidUpdate(prevProps) {
+		if (isEmpty(prevProps.user) && this.state.saved) {
+			this.setState({ saved: false });
+		}
+	}
 
 	render() {
 		const { post } = this.props;
@@ -33,8 +64,7 @@ class PostItem extends Component {
 		return (
 			<Paper
 				style={{
-					padding: '2rem',
-					marginTop: '1rem',
+					padding: '1.4rem',
 					backgroundColor: 'inherit'
 				}}
 				elevation={this.state.elevation}
@@ -43,28 +73,53 @@ class PostItem extends Component {
 			>
 				<img
 					src='https://via.placeholder.com/1200x800'
-					style={{ width: '100%', height: 'auto' }}
+					style={{
+						width: '100%',
+						height: 'auto',
+						display: 'block',
+						marginBottom: '1rem'
+					}}
 					alt='meaningful text'
 				/>
-				<Typography variant='overline' style={{ margin: '1rem 0 .5rem' }}>
-					{moment(post.created_at).format('MMM D')}
-				</Typography>
+				<Grid container alignItems='center'>
+					<Typography variant='overline' style={{ flex: 1 }}>
+						{moment(post.created_at).format('MMM D')}
+					</Typography>
+					<IconButton
+						aria-label='save post'
+						size='small'
+						style={{ padding: 0 }}
+						onClick={this.handleSavePostClick}
+					>
+						{!this.state.saved ? <SaveIcon /> : <UnsaveIcon />}
+					</IconButton>
+				</Grid>
 				<Grid
 					container
 					direction='row'
 					justify='space-between'
 					alignItems='flex-start'
-					style={{ margin: '.5rem 0 1rem' }}
 				>
-					<Grid item xs={11} sm={11} md={11} style={{ paddingRight: '.5rem' }}>
+					<Grid item style={{ paddingRight: '.5rem', flex: 1 }}>
 						<Typography
+							gutterBottom
 							variant='h5'
 							component={RouterLink}
 							to={`/posts/${post._id}`}
 							color='inherit'
-							style={{ textDecoration: 'none', lineHeight: 'normal' }}
+							style={{
+								textDecoration: 'none',
+								lineHeight: 'normal'
+							}}
 						>
 							{post.title}
+						</Typography>
+						<Typography
+							gutterBottom
+							style={{ marginTop: '1rem' }}
+							variant='subtitle1'
+						>
+							{post.subtitle}
 						</Typography>
 						{post.author ? (
 							<Grid
@@ -83,7 +138,7 @@ class PostItem extends Component {
 								</Link>
 							</Grid>
 						) : null}
-						<Grid container spacing={1} style={{ padding: '1rem 0' }}>
+						<Grid container spacing={1} style={{ marginTop: '1rem' }}>
 							{post.tags
 								? post.tags.map(tag => (
 										<TagChip key={tag._id} tag={tag} small />
@@ -92,7 +147,7 @@ class PostItem extends Component {
 						</Grid>
 					</Grid>
 					{this.props.withVoteController && (
-						<Grid item xs={1} sm={1} md={1}>
+						<Grid item>
 							<Grid
 								container
 								direction='column'
@@ -103,7 +158,7 @@ class PostItem extends Component {
 									aria-label='upvote post'
 									size='small'
 									style={{ padding: 0 }}
-									onClick={this.upvotePost}
+									onClick={this.handleUpvotePostClick}
 								>
 									<UpvoteIcon />
 								</IconButton>
@@ -114,7 +169,7 @@ class PostItem extends Component {
 									<IconButton
 										aria-label='downvote post'
 										size='small'
-										onClick={this.downvotePost}
+										onClick={this.handleDownvotePostClick}
 									>
 										<DownvoteIcon />
 									</IconButton>
@@ -129,10 +184,11 @@ class PostItem extends Component {
 }
 
 const mapStateToProps = state => ({
-	user: state.auth.user
+	user: state.auth.user,
+	saved_posts: state.auth.user.saved_posts
 });
 
 export default connect(
 	mapStateToProps,
-	{ votePost }
+	{ votePost, savePost }
 )(PostItem);

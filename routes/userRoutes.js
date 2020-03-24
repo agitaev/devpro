@@ -12,7 +12,6 @@ const validateLoginInput = require('../validation/login');
 
 // Load User model
 const User = require('../models/User');
-
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -31,7 +30,9 @@ router.post('/register', (req, res) => {
 			const newUser = new User({
 				name: req.body.name,
 				email: req.body.email,
-				password: req.body.password
+				username: 'anonymous',
+				password: req.body.password,
+				followed_tags: req.body.followed_tags
 			});
 
 			// Hash password before saving in database
@@ -64,43 +65,49 @@ router.post('/login', (req, res) => {
 	const { email, password } = req.body;
 
 	// Find user by email
-	User.findOne({ email }).then(user => {
-		// Check if user exists
-		if (!user) {
-			return res.status(404).json({ emailnotfound: 'Email not found' });
-		}
-
-		// Check password
-		bcrypt.compare(password, user.password).then(isMatch => {
-			if (isMatch) {
-				// User matched
-				// Create JWT Payload
-				const payload = {
-					id: user.id,
-					name: user.name
-				};
-
-				// Sign token
-				jwt.sign(
-					payload,
-					keys.secretOrKey,
-					{
-						expiresIn: 31556926 // 1 year in seconds
-					},
-					(err, token) => {
-						res.json({
-							success: true,
-							token: 'Bearer ' + token
-						});
-					}
-				);
-			} else {
-				return res
-					.status(400)
-					.json({ passwordincorrect: 'Password incorrect' });
+	User.findOne({ email })
+		.populate('followed_tags')
+		.exec((err, user) => {
+			console.log(user);
+			// Check if user exists
+			if (!user) {
+				return res.status(404).json({ emailnotfound: 'Email not found' });
 			}
+
+			// Check password
+			bcrypt.compare(password, user.password).then(isMatch => {
+				if (isMatch) {
+					// User matched
+					// Create JWT Payload
+					const payload = {
+						id: user.id,
+						name: user.name,
+						saved_posts: user.saved_posts,
+						voted_posts: user.voted_posts,
+						followed_tags: user.followed_tags
+					};
+
+					// Sign token
+					jwt.sign(
+						payload,
+						keys.secretOrKey,
+						{
+							expiresIn: 31556926 // 1 year in seconds
+						},
+						(err, token) => {
+							res.json({
+								success: true,
+								token: 'Bearer ' + token
+							});
+						}
+					);
+				} else {
+					return res
+						.status(400)
+						.json({ passwordincorrect: 'Password incorrect' });
+				}
+			});
 		});
-	});
 });
 
 module.exports = router;

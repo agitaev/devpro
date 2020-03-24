@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import TagChip from '../dashboard/TagChip';
+import TagChip from '../element/TagChip';
 import PostItem from '../dashboard/PostItem';
 
 class Post extends Component {
@@ -48,7 +48,7 @@ class Post extends Component {
 							alt='meaningful text'
 						/>
 						<Grid container justify='center'>
-							<Grid item sm={12} md={6}>
+							<Grid item sm={12} md={8} lg={6}>
 								<div style={{ marginTop: '2rem' }}>
 									<header>
 										<Typography variant='h2' gutterBottom>
@@ -91,23 +91,23 @@ class Post extends Component {
 										</Grid>
 									</div>
 									<div style={{ padding: '1rem 0 3rem' }}>
-										<Typography variant='h6' gutterBottom>
-											Author
-										</Typography>
-										<Grid
-											container
-											alignItems='center'
-											spacing={2}
-											style={{
-												padding: '.5rem 0',
-												textDecoration: 'none',
-												color: 'inherit'
-											}}
-											component={RouterLink}
-											to={`/users/${post.author ? post.author._id : ''}`}
-										>
-											{post.author ? (
-												<React.Fragment>
+										{post.author ? (
+											<React.Fragment>
+												<Typography variant='h6' gutterBottom>
+													Author
+												</Typography>
+												<Grid
+													container
+													alignItems='center'
+													spacing={2}
+													style={{
+														padding: '.5rem 0',
+														textDecoration: 'none',
+														color: 'inherit'
+													}}
+													component={RouterLink}
+													to={`/users/${post.author ? post.author._id : ''}`}
+												>
 													<Grid item>
 														<Avatar>
 															{post.author.name.substring(0, 1).toUpperCase()}
@@ -123,11 +123,11 @@ class Post extends Component {
 															{post.author.name}
 														</Typography>
 													</Grid>
-												</React.Fragment>
-											) : (
-												''
-											)}
-										</Grid>
+												</Grid>
+											</React.Fragment>
+										) : (
+											''
+										)}
 									</div>
 								</div>
 							</Grid>
@@ -135,7 +135,7 @@ class Post extends Component {
 						<Divider />
 						<div style={{ padding: '2rem 0 1rem' }}>
 							<Typography variant='h6' gutterBottom>
-								Related
+								{post.author ? 'Related' : ''}
 							</Typography>
 							<div>
 								<Grid container direction='row'>

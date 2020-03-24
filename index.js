@@ -9,6 +9,7 @@ const users = require('./routes/userRoutes');
 const posts = require('./routes/postRoutes');
 const tags = require('./routes/tagRoutes');
 const reactions = require('./routes/reactionRoutes');
+const recommender = require('./routes/recommenderRoutes');
 
 // bodyparser middleware
 app.use(
@@ -38,6 +39,7 @@ app.use('/api/users', users);
 app.use('/api/posts', posts);
 app.use('/api/tags', tags);
 app.use('/api/reactions', reactions);
+app.use('/api/recommender', recommender);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

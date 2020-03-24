@@ -7,7 +7,8 @@ import {
 	Typography,
 	Grid,
 	Button,
-	InputBase
+	InputBase,
+	Container
 } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Casino as CasinoIcon, Search as SearchIcon } from '@material-ui/icons';
@@ -71,53 +72,67 @@ const Navbar = ({ logoutUser, auth }) => {
 
 	return (
 		<AppBar position='sticky'>
-			<Toolbar variant='dense'>
-				<Grid container alignItems='center' className={classes.logoMobile}>
-					<CasinoIcon />
-					<Typography
-						variant='h6'
-						component={Link}
-						to='/'
-						style={{
-							marginLeft: '.25rem',
-							color: '#fff',
-							textDecoration: 'none',
-							textTransform: 'uppercase'
-						}}
-					>
-						devpro
-					</Typography>
-				</Grid>
-				<Grid container justify='flex-end' className={classes.sectionDesktop}>
-					{auth.isAuthenticated ? (
-						<React.Fragment>
-							<Button color='inherit' component={Link} to='/posts/new'>
-								I have an idea
-							</Button>
-							<Button color='inherit' onClick={() => logoutUser()}>
-								Sign Out
-							</Button>
-						</React.Fragment>
-					) : (
-						<Button color='inherit' component={Link} to='/register'>
-							Sign In/Up
-						</Button>
-					)}
-					<div className={classes.search}>
-						<div className={classes.searchIcon}>
-							<SearchIcon />
-						</div>
-						<InputBase
-							placeholder='Search'
-							classes={{
-								root: classes.inputRoot,
-								input: classes.inputInput
+			<Container maxWidth='lg'>
+				<Toolbar variant='dense'>
+					<Grid container alignItems='center' className={classes.logoMobile}>
+						<CasinoIcon />
+						<Typography
+							variant='h6'
+							component={Link}
+							to='/'
+							style={{
+								marginLeft: '.25rem',
+								color: '#fff',
+								textDecoration: 'none',
+								textTransform: 'uppercase'
 							}}
-							inputProps={{ 'aria-label': 'search' }}
-						/>
-					</div>
-				</Grid>
-			</Toolbar>
+						>
+							devpro
+						</Typography>
+					</Grid>
+					<Grid container justify='flex-end' className={classes.sectionDesktop}>
+						{auth.isAuthenticated ? (
+							<React.Fragment>
+								<Button color='inherit' component={Link} to='/posts/new'>
+									I Have An Idea
+								</Button>
+								<Button color='inherit' component={Link} to='/me'>
+									Profile
+								</Button>
+								<Button color='inherit' onClick={() => logoutUser()}>
+									Sign Out
+								</Button>
+							</React.Fragment>
+						) : (
+							<React.Fragment>
+								<Button
+									color='inherit'
+									component={Link}
+									to={`/login?id=${auth.user.id}`}
+								>
+									Sign In
+								</Button>
+								<Button color='inherit' component={Link} to='/register'>
+									Sign Up
+								</Button>
+							</React.Fragment>
+						)}
+						<div className={classes.search}>
+							<div className={classes.searchIcon}>
+								<SearchIcon />
+							</div>
+							<InputBase
+								placeholder='Search'
+								classes={{
+									root: classes.inputRoot,
+									input: classes.inputInput
+								}}
+								inputProps={{ 'aria-label': 'search' }}
+							/>
+						</div>
+					</Grid>
+				</Toolbar>
+			</Container>
 		</AppBar>
 	);
 };

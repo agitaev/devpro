@@ -13,6 +13,7 @@ const Tag = require('../models/Tag');
 router.post('/tag/:tagId([0-9a-fA-F]{24})/subscribe', async (req, res) => {
 	const { tagId } = req.params;
 	const { userId } = req.body;
+	console.log(userId);
 
 	try {
 		// check if user is authorized

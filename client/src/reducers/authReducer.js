@@ -1,4 +1,8 @@
-import { SET_CURRENT_USER, USER_LOADING } from '../actions/types';
+import {
+	SET_CURRENT_USER,
+	USER_LOADING,
+	SYNC_SAVED_POSTS
+} from '../actions/types';
 const isEmpty = require('is-empty');
 
 const initialState = {
@@ -19,6 +23,11 @@ export default (state = initialState, action) => {
 			return {
 				...state,
 				loading: true
+			};
+		case SYNC_SAVED_POSTS:
+			return {
+				...state,
+				user: { ...state.user, saved_posts: action.payload }
 			};
 		default:
 			return state;

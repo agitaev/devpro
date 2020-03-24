@@ -50,7 +50,7 @@ class CreatePost extends Component {
 		const { title, subtitle, body, tags, errors } = this.state;
 
 		return (
-			<Container maxWidth='lg' style={{ margin: '4rem 0' }}>
+			<Container maxWidth='lg' style={{ margin: '4rem auto' }}>
 				<Grid container justify='center'>
 					<Grid item xs={12} sm={10} md={8}>
 						<BackToHomeButton />

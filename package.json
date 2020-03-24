@@ -8,7 +8,8 @@
 		"client": "npm run start --prefix client",
 		"start": "node index.js",
 		"server": "nodemon index.js",
-		"dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+		"dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+		"brain": "nodemon ./lib/brain.js"
 	},
 	"repository": {
 		"type": "git",
@@ -27,8 +28,12 @@
 	},
 	"homepage": "https://github.com/agitaev/devpro#readme",
 	"dependencies": {
+		"@tensorflow/tfjs": "^1.7.0",
+		"@tensorflow/tfjs-node": "^1.7.0",
 		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.19.0",
+		"brain.js": "^2.0.0-alpha.12",
+		"chalk": "^3.0.0",
 		"express": "^4.17.1",
 		"is-empty": "^1.2.0",
 		"jsonwebtoken": "^8.5.1",

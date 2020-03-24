@@ -4,12 +4,14 @@ import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
+import { getTags } from '../../actions/tagActions';
 import {
 	Container,
 	Grid,
 	Button,
 	Typography,
-	TextField
+	TextField,
+	Chip
 } from '@material-ui/core';
 import BackToHomeButton from '../element/BackToHomeButton';
 
@@ -21,18 +23,27 @@ class Register extends Component {
 			email: '',
 			password: '',
 			passwordVerification: '',
+			followed_tags: [],
+			populated_tags: [],
 			errors: {}
 		};
 	}
 
 	componentDidMount() {
-		// If logged in and user navigates to Register page, should redirect them to dashboard
 		if (this.props.auth.isAuthenticated) {
 			this.props.history.push('/dashboard');
+		} else {
+			// populate tags
+			this.props.getTags();
 		}
 	}
 
 	UNSAFE_componentWillReceiveProps(nextProps) {
+		if (nextProps.tags) {
+			this.setState({
+				populated_tags: nextProps.tags
+			});
+		}
 		if (nextProps.errors) {
 			this.setState({
 				errors: nextProps.errors
@@ -50,14 +61,25 @@ class Register extends Component {
 			name: this.state.name,
 			email: this.state.email,
 			password: this.state.password,
-			passwordVerification: this.state.passwordVerification
+			passwordVerification: this.state.passwordVerification,
+			followed_tags: this.state.followed_tags
 		};
 
 		this.props.registerUser(newUser, this.props.history);
 	};
 
+	onSelectTag = tag => () => {
+		const followed_tags = this.state.followed_tags.concat(tag._id);
+		this.setState({ followed_tags });
+	};
+
+	onDeleteTag = tag => () => {
+		const followed_tags = this.state.followed_tags.filter(x => x !== tag._id);
+		this.setState({ followed_tags });
+	};
+
 	render() {
-		const { errors } = this.state;
+		const { errors, populated_tags, followed_tags } = this.state;
 
 		return (
 			<Container style={{ margin: '4rem auto' }}>
@@ -131,6 +153,41 @@ class Register extends Component {
 								error={errors.passwordVerification ? true : false}
 								helperText={errors.passwordVerification}
 							/>
+							<div style={{ margin: '1.5rem 0 1rem' }}>
+								<Typography variant='subtitle1' style={{ lineHeight: '1.25' }}>
+									What technologies are you interested in?
+								</Typography>
+								<Typography variant='caption' color='error'>
+									{errors.followed_tags}
+								</Typography>
+								<Grid
+									container
+									spacing={1}
+									justify='center'
+									style={{ paddingTop: '.75rem' }}
+								>
+									{populated_tags && populated_tags !== undefined
+										? populated_tags.map(tag => (
+												<Grid item key={tag._id}>
+													<Chip
+														color={
+															followed_tags.includes(tag._id)
+																? 'primary'
+																: undefined
+														}
+														label={tag.title}
+														onClick={this.onSelectTag(tag)}
+														onDelete={
+															followed_tags.includes(tag._id)
+																? this.onDeleteTag(tag)
+																: undefined
+														}
+													/>
+												</Grid>
+										  ))
+										: null}
+								</Grid>
+							</div>
 							<Button
 								type='submit'
 								variant='contained'
@@ -156,12 +213,15 @@ Register.propTypes = {
 
 const mapStateToProps = state => ({
 	auth: state.auth,
-	errors: state.errors
+	errors: state.errors,
+	tags: state.tags
+		// sort alphabetically
+		.sort((x, y) => (x.title < y.title ? -1 : x.title > y.title ? 1 : 0))
 });
 
 export default compose(
 	connect(
 		mapStateToProps,
-		{ registerUser }
+		{ registerUser, getTags }
 	)
 )(withRouter(Register));

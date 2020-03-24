@@ -11,9 +11,12 @@ class PostList extends Component {
 	};
 
 	componentDidMount() {
-		this.props.getPosts();
-		// const posts = JSON.parse(localStorage.getItem('posts'));
-		// if (posts) this.setState({ posts });
+		if (!localStorage.getItem('posts')) {
+			this.props.getPosts();
+		} else {
+			const posts = JSON.parse(localStorage.getItem('posts'));
+			this.setState({ posts });
+		}
 	}
 
 	UNSAFE_componentWillReceiveProps(nextProps) {

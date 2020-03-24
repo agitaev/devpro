@@ -3,9 +3,11 @@ import {
 	GET_ERRORS,
 	GET_POSTS,
 	ADD_POST,
-	SET_POST,
-	UPVOTE_POST,
-	VOTE_POST
+	// SET_POST,
+	// UPVOTE_POST,
+	VOTE_POST,
+	// SAVE_POST,
+	SYNC_SAVED_POSTS
 } from './types';
 
 // Retrieve Posts
@@ -73,7 +75,7 @@ export const createPost = (postData, history) => dispatch => {
 					dispatch({ type: GET_ERRORS, payload: err.response.data })
 				);
 		})
-		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+		.catch(err => console.log(err));
 };
 
 // control post votes
@@ -84,16 +86,25 @@ export const votePost = (postId, action, user) => dispatch => {
 		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
 };
 
-export const setPost = post => {
-	return {
-		type: SET_POST,
-		payload: post
-	};
+export const savePost = (postId, user) => dispatch => {
+	axios
+		.post(`/api/reactions/post/${postId}/save`, { userId: user.id })
+		.then(res =>
+			dispatch({ type: SYNC_SAVED_POSTS, payload: res.data.saved_posts })
+		)
+		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
 };
 
-export const upvotePost = id => {
-	return {
-		type: UPVOTE_POST,
-		payload: id
-	};
-};
+// export const setPost = post => {
+// 	return {
+// 		type: SET_POST,
+// 		payload: post
+// 	};
+// };
+
+// export const upvotePost = id => {
+// 	return {
+// 		type: UPVOTE_POST,
+// 		payload: id
+// 	};
+// };

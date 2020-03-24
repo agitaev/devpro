@@ -41,6 +41,11 @@ const validateRegisterInput = data => {
 		errors.passwordVerification = 'Passwords must match';
 	}
 
+	// Followed tags field check
+	if (data.followed_tags.length < 3) {
+		errors.followed_tags = 'Choose at least 3 tags to get personalized feed';
+	}
+
 	return {
 		errors,
 		isValid: isEmpty(errors)
