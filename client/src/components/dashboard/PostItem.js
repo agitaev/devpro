@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Paper, Typography, Grid, Link, IconButton } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
+import compose from 'recompose/compose';
 import {
 	ExpandLessOutlined as UpvoteIcon,
-	BookmarkBorderOutlined as SaveIcon,
-	BookmarkOutlined as UnsaveIcon
+	StarBorderOutlined as SaveIcon,
+	StarOutlined as UnsaveIcon
 } from '@material-ui/icons';
 import moment from 'moment/';
 import TagChip from '../element/TagChip';
@@ -23,8 +24,13 @@ class PostItem extends Component {
 	onMouseOut = () => this.setState({ elevation: 0 });
 
 	handleSavePostClick = () => {
-		this.props.savePost(this.props.post._id, this.props.user);
-		this.setState({ saved: !this.state.saved });
+		if (this.props.isAuthenticated) {
+			this.props.savePost(this.props.post, this.props.user);
+			this.setState({ saved: !this.state.saved });
+		} else {
+			// this.props.history.push('/login');
+			console.log('unauthorized');
+		}
 	};
 
 	handleUpvotePostClick = () => {
@@ -36,24 +42,20 @@ class PostItem extends Component {
 	};
 
 	componentDidMount() {
-		if (
-			this.props.saved_posts &&
-			this.props.saved_posts.includes(this.props.post._id)
-		) {
-			this.setState({ saved: true });
+		const { user, saved_posts, post } = this.props;
+
+		if (user && saved_posts && saved_posts.length > 0) {
+			saved_posts.map(savedPost =>
+				savedPost._id === post._id ? this.setState({ saved: true }) : null
+			);
 		}
 	}
 
-	// shouldComponentUpdate(nextProps, nextState) {
-	// 	if (nextProps.user) {
-	// 		return true;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
-
 	componentDidUpdate(prevProps) {
+		// console.log(prevProps);
+
 		if (isEmpty(prevProps.user) && this.state.saved) {
+			console.log('updated');
 			this.setState({ saved: false });
 		}
 	}
@@ -81,17 +83,21 @@ class PostItem extends Component {
 					}}
 					alt='meaningful text'
 				/>
-				<Grid container alignItems='center'>
-					<Typography variant='overline' style={{ flex: 1 }}>
+				<Grid container alignItems='center' style={{ marginBottom: '1rem' }}>
+					<Typography variant='subtitle2' style={{ flex: 1 }}>
 						{moment(post.created_at).format('MMM D')}
 					</Typography>
 					<IconButton
-						aria-label='save post'
+						aria-label='toggle save post'
 						size='small'
 						style={{ padding: 0 }}
 						onClick={this.handleSavePostClick}
 					>
-						{!this.state.saved ? <SaveIcon /> : <UnsaveIcon />}
+						{!this.state.saved ? (
+							<SaveIcon style={{ fontSize: '1.75rem' }} />
+						) : (
+							<UnsaveIcon style={{ fontSize: '1.75rem' }} />
+						)}
 					</IconButton>
 				</Grid>
 				<Grid
@@ -121,7 +127,7 @@ class PostItem extends Component {
 						>
 							{post.subtitle}
 						</Typography>
-						{post.author ? (
+						{post.author && post.author !== undefined ? (
 							<Grid
 								container
 								justify='space-between'
@@ -130,7 +136,7 @@ class PostItem extends Component {
 							>
 								<Link
 									component={RouterLink}
-									to='/users/user-with-id'
+									to={`/users/${post.author._id}`}
 									underline='none'
 									color='textSecondary'
 								>
@@ -139,9 +145,9 @@ class PostItem extends Component {
 							</Grid>
 						) : null}
 						<Grid container spacing={1} style={{ marginTop: '1rem' }}>
-							{post.tags
-								? post.tags.map(tag => (
-										<TagChip key={tag._id} tag={tag} small />
+							{post.tags && post.tags.length > 0
+								? post.tags.map((tag, index) => (
+										<TagChip key={index} tag={tag} small />
 								  ))
 								: null}
 						</Grid>
@@ -154,15 +160,18 @@ class PostItem extends Component {
 								justify='flex-start'
 								alignItems='center'
 							>
+								{/* <Button variant='contained' startIcon={<UpvoteIcon />}>
+									{post.vote_count === 0 ? '•' : post.vote_count}
+								</Button>*/}
 								<IconButton
 									aria-label='upvote post'
 									size='small'
-									style={{ padding: 0 }}
+									style={{ padding: '0' }}
 									onClick={this.handleUpvotePostClick}
 								>
-									<UpvoteIcon />
+									<UpvoteIcon style={{ fontSize: '1.75rem' }} />
 								</IconButton>
-								<Typography variant='subtitle2'>
+								<Typography variant='body2' style={{ lineHeight: 0.75 }}>
 									{post.vote_count === 0 ? '•' : post.vote_count}
 								</Typography>
 								{/*
@@ -185,10 +194,13 @@ class PostItem extends Component {
 
 const mapStateToProps = state => ({
 	user: state.auth.user,
+	isAuthenticated: state.auth.isAuthenticated,
 	saved_posts: state.auth.user.saved_posts
 });
 
-export default connect(
-	mapStateToProps,
-	{ votePost, savePost }
-)(PostItem);
+export default compose(
+	connect(
+		mapStateToProps,
+		{ votePost, savePost }
+	)
+)(withRouter(PostItem));

@@ -3,10 +3,7 @@ import {
 	GET_ERRORS,
 	GET_POSTS,
 	ADD_POST,
-	// SET_POST,
-	// UPVOTE_POST,
 	VOTE_POST,
-	// SAVE_POST,
 	SYNC_SAVED_POSTS
 } from './types';
 
@@ -88,23 +85,19 @@ export const votePost = (postId, action, user) => dispatch => {
 
 export const savePost = (postId, user) => dispatch => {
 	axios
-		.post(`/api/reactions/post/${postId}/save`, { userId: user.id })
-		.then(res =>
-			dispatch({ type: SYNC_SAVED_POSTS, payload: res.data.saved_posts })
-		)
+		.post(`/api/reactions/post/${postId._id}/save`, { userId: user.id })
+		.then(res => {
+			const payload = res.data.saved_posts.find(
+				post => post._id === postId._id
+			);
+			return dispatch({ type: SYNC_SAVED_POSTS, payload });
+		})
 		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
 };
 
-// export const setPost = post => {
-// 	return {
-// 		type: SET_POST,
-// 		payload: post
-// 	};
-// };
-
-// export const upvotePost = id => {
-// 	return {
-// 		type: UPVOTE_POST,
-// 		payload: id
-// 	};
-// };
+export const getTrendingPosts = () => {
+	axios
+		.get('/api/posts/trending')
+		.then(res => console.log(res))
+		.catch(err => console.log(err));
+};

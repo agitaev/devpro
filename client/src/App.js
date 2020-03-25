@@ -14,7 +14,10 @@ import PrivateRoute from './components/private/PrivateRoute';
 import Dashboard from './components/dashboard/Dashboard';
 import Post from './components/view/Post';
 import CreatePost from './components/view/CreatePost';
-import Profile from './components/private/Profile';
+import Profile from './components/view/Profile';
+import BottomNavbar from './components/layout/BottomNavbar';
+import { Hidden } from '@material-ui/core';
+import TrendingBoard from './components/dashboard/TrendingBoard';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -44,10 +47,9 @@ class App extends Component {
 				<Router>
 					<div className='App'>
 						<Navbar />
-						<Switch>
-							<PrivateRoute exact path='/posts/new' component={CreatePost} />
-							<PrivateRoute exact path='/me' component={Profile} />
-						</Switch>
+						<Hidden mdUp>
+							<BottomNavbar />
+						</Hidden>
 						<Route exact path='/' component={Dashboard} />
 						<Route exact path='/register' component={Register} />
 						<Route exact path='/login' component={Login} />
@@ -56,6 +58,16 @@ class App extends Component {
 							path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
 							component={Post}
 						/>
+						<Route
+							exact
+							path='/users/:postId([0-9a-fA-F]{24})' // match mongodb objectid
+							component={Profile}
+						/>
+						<Route exact path='/trending' component={TrendingBoard} />
+						<Switch>
+							<PrivateRoute exact path='/posts/new' component={CreatePost} />
+							<PrivateRoute path='/me' component={Profile} />
+						</Switch>
 					</div>
 				</Router>
 			</Provider>

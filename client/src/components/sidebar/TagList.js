@@ -12,23 +12,26 @@ class TagList extends Component {
 	};
 
 	componentDidMount() {
-		if (this.props.user_tags && !localStorage.getItem('recommended_tags')) {
-			// this.setState({ user_tags: this.props.user_tags });
-			axios
-				.post('/api/recommender', { tags: ['javascript'] })
-				.then(res =>
-					res.data.map(tag => {
-						let tags = this.state.tags.concat(tag);
-						this.setState({ tags });
-
-						localStorage.setItem('recommended_tags', JSON.stringify(tags));
-					})
-				)
-				.catch(err => console.log(err));
-		} else {
-			const tags = JSON.parse(localStorage.getItem('recommended_tags'));
-			this.setState({ tags });
-		}
+		// if (this.props.user_tags && !localStorage.getItem('recommended_tags')) {
+		// 	// this.setState({ user_tags: this.props.user_tags });
+		// 	axios
+		// 		.post('/api/recommender', { tags: ['javascript'] })
+		// 		.then(res =>
+		// 			res.data.map(tag => {
+		// 				console.log(tag);
+		// 				let tags = this.state.tags.concat(tag);
+		// 				this.setState({ tags });
+		// 				return localStorage.setItem(
+		// 					'recommended_tags',
+		// 					JSON.stringify(tags)
+		// 				);
+		// 			})
+		// 		)
+		// 		.catch(err => console.log(err));
+		// } else {
+		// 	const tags = JSON.parse(localStorage.getItem('recommended_tags'));
+		// 	this.setState({ tags });
+		// }
 	}
 
 	UNSAFE_componentWillReceiveProps(nextProps) {

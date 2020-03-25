@@ -27,7 +27,10 @@ export default (state = initialState, action) => {
 		case SYNC_SAVED_POSTS:
 			return {
 				...state,
-				user: { ...state.user, saved_posts: action.payload }
+				user: {
+					...state.user,
+					saved_posts: [...state.user.saved_posts, action.payload]
+				}
 			};
 		default:
 			return state;

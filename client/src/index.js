@@ -15,16 +15,30 @@ const theme = createMuiTheme({
 			'Arial',
 			'-apple-system'
 		].join(','),
+		h2: {
+			fontWeight: 500
+		},
+		h4: {
+			fontSize: '2rem'
+		},
 		h5: {
 			fontWeight: 400,
 			letterSpacing: '0.28px'
 		},
-		h2: {
-			fontWeight: 500
-		},
 		subtitle1: {
 			fontWeight: 500,
 			opacity: 0.8
+		},
+		subtitle2: {
+			fontSize: '0.85rem',
+			fontWeight: 400,
+			opacity: 0.6
+		},
+		overline: {
+			fontFamily: 'Roboto Mono',
+			fontWeight: 400,
+			fontSize: '1rem',
+			textTransform: 'unset'
 		}
 	},
 	palette: {
@@ -37,7 +51,7 @@ const theme = createMuiTheme({
 			contrastText: '#ffffff'
 		},
 		background: {
-			default: '#fff'
+			default: '#fafafa'
 		},
 		text: {
 			primary: '#424242'

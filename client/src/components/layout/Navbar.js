@@ -99,17 +99,10 @@ const Navbar = ({ logoutUser, auth }) => {
 								<Button color='inherit' component={Link} to='/me'>
 									Profile
 								</Button>
-								<Button color='inherit' onClick={() => logoutUser()}>
-									Sign Out
-								</Button>
 							</React.Fragment>
 						) : (
 							<React.Fragment>
-								<Button
-									color='inherit'
-									component={Link}
-									to={`/login?id=${auth.user.id}`}
-								>
+								<Button color='inherit' component={Link} to='/login'>
 									Sign In
 								</Button>
 								<Button color='inherit' component={Link} to='/register'>

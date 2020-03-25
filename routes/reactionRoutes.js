@@ -53,24 +53,27 @@ router.post('/post/:postId([0-9a-fA-F]{24})/save', async (req, res) => {
 	const { userId } = req.body;
 
 	try {
-		await User.findById(userId).exec(async (error, response) => {
-			if (!response) {
+		await User.findById(userId).exec(async (error, user) => {
+			if (!user) {
 				res.status(401).json({ error: 'unauthorized' });
 			} else {
-				await Post.findById(postId).exec(async (error, response) => {
-					if (!response) {
+				await Post.findById(postId).exec(async (error, post) => {
+					if (!post) {
 						res.status(404).json({ error: 'post not found' });
 					} else {
 						await User.findOneAndUpdate(
 							{ _id: userId },
-							{ $addToSet: { saved_posts: postId } }
-						).exec((error, response) => {
-							if (error) {
-								res.status(400).json(err);
-							} else {
-								res.status(202).send(response);
-							}
-						});
+							{ $addToSet: { saved_posts: postId } },
+							{ new: true }
+						)
+							.populate('saved_posts')
+							.exec((error, response) => {
+								if (error) {
+									res.status(400).json(err);
+								} else {
+									res.status(202).send(response);
+								}
+							});
 					}
 				});
 			}

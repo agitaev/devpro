@@ -85,25 +85,33 @@ router.post('/:postId([0-9a-fA-F]{24})/action', async (req, res) => {
 			}
 		).exec(async (error, response) => {
 			if (error) {
+				console.log('cannot find user', error);
 				res.status(400).json(error);
 			} else if (!response) {
 				// if response is null, user already voted
+				console.log('already voted', response);
 				res.status(400).send({ error: 'already voted' });
 			} else {
 				await Post.findOneAndUpdate(
 					{ _id: postId },
 					{ $inc: { vote_count: count } },
 					{ new: true }
-				).exec((error, post) => {
-					if (error) {
-						res.status(400).json(error);
-					} else {
-						res.status(202).send(post);
-					}
-				});
+				)
+					.populate('tags')
+					.populate('author')
+					.exec((err, post) => {
+						if (err) {
+							console.log('cannot find post', err);
+							res.status(400).json(err);
+						} else {
+							console.log(post);
+							res.status(202).send(post);
+						}
+					});
 			}
 		});
 	} catch (e) {
+		console.log('caught an error', e);
 		res.status(400).send(e);
 	}
 });
@@ -130,6 +138,27 @@ router.get('/:id([0-9a-fA-F]{24})', async (req, res) => {
 		res.status(404).send({ error: 'not found' });
 	}
 	// }
+});
+
+// @route GET api/posts/trending
+// @desc Fetch trending/popular posts
+// @access public
+router.get('/trending', async (req, res) => {
+	try {
+		await Post.find({})
+			.populate('author')
+			.populate('tags')
+			.sort({ vote_count: -1 })
+			.exec((err, posts) => {
+				if (err) {
+					res.status(404).json(err);
+				} else {
+					res.status(200).send(posts);
+				}
+			});
+	} catch (e) {
+		res.status(400).send({ error: 'unable to fetch trends' });
+	}
 });
 
 module.exports = router;

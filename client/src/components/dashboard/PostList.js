@@ -13,8 +13,16 @@ class PostList extends Component {
 	componentDidMount() {
 		if (!localStorage.getItem('posts')) {
 			this.props.getPosts();
+			this.setState({ posts: this.props.posts });
 		} else {
 			const posts = JSON.parse(localStorage.getItem('posts'));
+			this.setState({ posts });
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		const { posts } = this.props;
+		if (prevProps.posts !== posts) {
 			this.setState({ posts });
 		}
 	}

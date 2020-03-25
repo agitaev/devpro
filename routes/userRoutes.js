@@ -30,7 +30,7 @@ router.post('/register', (req, res) => {
 			const newUser = new User({
 				name: req.body.name,
 				email: req.body.email,
-				username: 'anonymous',
+				username: 'bam',
 				password: req.body.password,
 				followed_tags: req.body.followed_tags
 			});
@@ -67,8 +67,10 @@ router.post('/login', (req, res) => {
 	// Find user by email
 	User.findOne({ email })
 		.populate('followed_tags')
+		.populate('voted_posts')
+		.populate('saved_posts')
 		.exec((err, user) => {
-			console.log(user);
+			// console.log(user);
 			// Check if user exists
 			if (!user) {
 				return res.status(404).json({ emailnotfound: 'Email not found' });

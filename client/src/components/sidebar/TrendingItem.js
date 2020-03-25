@@ -11,6 +11,7 @@ class TrendingItem extends Component {
 	onMouseOut = () => this.setState({ elevation: 0 });
 
 	render() {
+		const { post } = this.props;
 		return (
 			<Paper
 				style={{ padding: '.5rem', background: 'inherit' }}
@@ -30,8 +31,8 @@ class TrendingItem extends Component {
 						<Typography
 							gutterBottom
 							component={RouterLink}
-							variant='subtitle2'
-							to={`/posts/postid`}
+							variant='subtitle1'
+							to={`/posts/${post._id}`}
 							style={{
 								fontSize: '.85rem',
 								textDecoration: 'none',
@@ -40,17 +41,19 @@ class TrendingItem extends Component {
 							}}
 							color='inherit'
 						>
-							DevTools failed to parse SourceMap
+							{post.title}
 						</Typography>
-						<Typography
-							variant='caption'
-							color='textSecondary'
-							component={RouterLink}
-							to='/users/dhh'
-							style={{ textDecoration: 'none' }}
-						>
-							David Hainheimeier Hanssen
-						</Typography>
+						{post.author ? (
+							<Typography
+								variant='caption'
+								color='textSecondary'
+								component={RouterLink}
+								to={`/users/${post.author._id}`}
+								style={{ textDecoration: 'none' }}
+							>
+								{post.author.name}
+							</Typography>
+						) : null}
 					</Grid>
 				</Grid>
 			</Paper>
