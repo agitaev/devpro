@@ -61,7 +61,7 @@ const UserSchema = new Schema(
 	}
 );
 
-UserSchema.virtual('posts', {
+UserSchema.virtual('created_posts', {
 	ref: 'Post',
 	localField: '_id',
 	foreignField: 'author'

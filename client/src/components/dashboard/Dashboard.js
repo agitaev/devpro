@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-import { Container, Grid, Typography, Hidden } from '@material-ui/core';
+import { Container, Grid, Typography, Hidden, Paper } from '@material-ui/core';
 import PostList from './PostList';
 import TagList from '../sidebar/TagList';
 import TrendingList from '../sidebar/TrendingList';
@@ -13,14 +12,11 @@ class Dashboard extends Component {
 		return (
 			<Container style={{ margin: '2rem auto 5rem' }}>
 				<Grid container spacing={2}>
-					<Grid item lg={9}>
+					<Grid item sm={12} md={9}>
 						<PostList />
 					</Grid>
-					<Grid item lg={3}>
-						<Hidden mdDown>
-							<Typography variant='subtitle1' gutterBottom>
-								Trending posts
-							</Typography>
+					<Grid item md={3}>
+						<Hidden smDown>
 							<TrendingList />
 							{this.props.isAuthenticated ? <TagList /> : null}
 						</Hidden>

@@ -7,6 +7,7 @@ const validateRegisterInput = data => {
 	// Convert empty fields to an empty string so we can use validator functions
 	data.name = !isEmpty(data.name) ? data.name : '';
 	data.email = !isEmpty(data.email) ? data.email : '';
+	data.username = !isEmpty(data.username) ? data.username : '';
 	data.password = !isEmpty(data.password) ? data.password : '';
 	data.passwordVerification = !isEmpty(data.passwordVerification)
 		? data.passwordVerification
@@ -24,8 +25,13 @@ const validateRegisterInput = data => {
 		errors.email = 'Email is invalid';
 	}
 
+	// Username checks
+	if (!Validator.isLength(data.username, { min: 3, max: 20 })) {
+		errors.username = 'Username must include at least 3 characters';
+	}
+
 	// Password checks
-	if (Validator.isEmpty(data.password)) {
+	else if (Validator.isEmpty(data.password)) {
 		errors.password = 'Password field is required';
 	}
 
@@ -38,7 +44,7 @@ const validateRegisterInput = data => {
 	}
 
 	if (!Validator.equals(data.password, data.passwordVerification)) {
-		errors.passwordVerification = 'Passwords must match';
+		errors.passwordVerification = 'Passwords did not match';
 	}
 
 	// Followed tags field check

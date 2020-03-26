@@ -20,12 +20,15 @@ router.get('/', async (req, res) => {
 			.sort({ created_at: 'desc' }) // newest on top
 			.exec((err, posts) => {
 				if (err) {
+					console.log(err);
 					res.send(400).send(err);
 				} else {
+					// console.log(posts);
 					res.send(posts);
 				}
 			});
 	} catch (e) {
+		console.log(e);
 		res.status(400).send({ error: 'bad request' });
 	}
 });
@@ -56,10 +59,11 @@ router.post('/new', (req, res) => {
 				tags
 			});
 			try {
-				post
-					.save()
-					.then(post => res.status(201).send(post))
-					.catch(err => console.log(err));
+				post.save((err, model) => {
+					model.populate('tags author', (err, post) => {
+						res.status(201).send(post);
+					});
+				});
 			} catch (e) {
 				res.status(400).send({ error: 'bad request' });
 			}
@@ -71,13 +75,13 @@ router.post('/new', (req, res) => {
 // @desc Upvote/Downvote post
 // @access public
 router.post('/:postId([0-9a-fA-F]{24})/action', async (req, res) => {
-	const { action, user } = req.body;
+	const { action, userId } = req.body;
 	const { postId } = req.params;
 	const count = action === 'upvote' ? 1 : -1;
 
 	try {
 		await User.findOneAndUpdate(
-			{ _id: user.id, 'voted_posts.post': { $ne: postId } },
+			{ _id: userId, 'voted_posts.post': { $ne: postId } },
 			{
 				$push: {
 					voted_posts: { post: postId, action: count > 0 ? 1 : 0 }

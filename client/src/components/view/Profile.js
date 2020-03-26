@@ -29,16 +29,18 @@ class Profile extends Component {
 		self: false,
 		user: {},
 		elevation: 0,
-		tabValue: 'posts'
+		tabValue: 'settings'
 	};
 
 	onMouseOver = () => this.setState({ elevation: 2 });
 	onMouseOut = () => this.setState({ elevation: 0 });
 
 	componentDidMount() {
-		console.log(this.props);
 		const { auth, match } = this.props;
-		if (auth.isAuthenticated && match.path === '/me') {
+		const isUserPage = /[0-9a-fA-F]{24}/.test(match.url.split('/')[2]);
+		const isSelf = isUserPage && match.url.split('/')[2] === auth.user.id;
+
+		if ((auth.isAuthenticated && match.path === '/me') || isSelf) {
 			this.setState({ self: true, user: auth.user });
 		}
 	}
@@ -49,6 +51,7 @@ class Profile extends Component {
 
 	render() {
 		const { match } = this.props;
+		const { user } = this.state;
 
 		return (
 			<Container maxWidth='lg' style={{ marginTop: '2rem' }}>
@@ -65,8 +68,10 @@ class Profile extends Component {
 								marginTop: '2rem'
 							}}
 						>
-							<Typography variant='h4'>{this.state.user.name}</Typography>
-							<Typography variant='overline'>agitaev</Typography>
+							<Typography variant='h4'>{user.name}</Typography>
+							<Typography variant='overline'>
+								{user.username ? `@${user.username}` : ''}
+							</Typography>
 							<Divider style={{ margin: '1rem auto' }} />
 							<Button
 								variant='contained'
@@ -124,7 +129,11 @@ class Profile extends Component {
 							<Route exact path={match.path}>
 								<h3>Settings</h3>
 							</Route>
-							<Route exact path={`${match.path}/posts`} component={UserPosts} />
+							<Route
+								exact
+								path={`${match.path}/posts`}
+								render={routeProps => <UserPosts posts={user.saved_posts} />}
+							/>
 							<Route
 								exact
 								path={`${match.path}/comments`}

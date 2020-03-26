@@ -12,15 +12,18 @@ const validatePostInput = data => {
 	// Title checks
 	if (Validator.isEmpty(data.title)) {
 		errors.title = 'Title field is required';
-	} else if (data.title.length > 50) {
+	} else if (!Validator.isLength(data.title, { max: 70 })) {
 		errors.title =
-			"Let's keep it short and clear. Title must include no more than 50 characters";
+			"Let's keep it short and clear. Title must include no more than 70 characters";
+	} else if (!Validator.isLength(data.title, { min: 24 })) {
+		errors.title =
+			"That's pretty short. Title must at least 24 characters long";
 	}
 
 	// Subtitle checks
-	if (data.subtitle.length > 140) {
+	if (!Validator.isLength(data.subtitle, { max: 200 })) {
 		errors.subtitle =
-			"That's too long. Subtitle can include no more than 140 characters";
+			"That's too long. Subtitle can include no more than 200 characters";
 	}
 
 	// Body checks
@@ -36,7 +39,7 @@ const validatePostInput = data => {
 	}
 
 	// Check if it includes at least one tag
-	if (data.tags === undefined || data.tags.length == 0) {
+	if (!data.tags || data.tags.length === 0) {
 		errors.tags = 'Please include at least one tag';
 	} else if (data.tags.length > 4) {
 		errors.tags = 'Cannot accept more than 4 tags';

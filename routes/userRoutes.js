@@ -27,24 +27,31 @@ router.post('/register', (req, res) => {
 		if (user) {
 			return res.status(400).json({ email: 'Email already exists' });
 		} else {
-			const newUser = new User({
-				name: req.body.name,
-				email: req.body.email,
-				username: 'bam',
-				password: req.body.password,
-				followed_tags: req.body.followed_tags
-			});
+			// check if username is unique
+			User.findOne({ username: req.body.username }).then(user => {
+				if (user) {
+					return res.status(400).json({ username: 'Username is taken' });
+				} else {
+					const newUser = new User({
+						name: req.body.name,
+						email: req.body.email,
+						username: req.body.username,
+						password: req.body.password,
+						followed_tags: req.body.followed_tags
+					});
 
-			// Hash password before saving in database
-			bcrypt.genSalt(10, (err, salt) => {
-				bcrypt.hash(newUser.password, salt, (err, hash) => {
-					if (err) throw err;
-					newUser.password = hash;
-					newUser
-						.save()
-						.then(user => res.json(user))
-						.catch(err => console.log(err));
-				});
+					// Hash password before saving in database
+					bcrypt.genSalt(10, (err, salt) => {
+						bcrypt.hash(newUser.password, salt, (err, hash) => {
+							if (err) throw err;
+							newUser.password = hash;
+							newUser
+								.save()
+								.then(user => res.json(user))
+								.catch(err => console.log(err));
+						});
+					});
+				}
 			});
 		}
 	});
@@ -69,6 +76,7 @@ router.post('/login', (req, res) => {
 		.populate('followed_tags')
 		.populate('voted_posts')
 		.populate('saved_posts')
+		.populate('created_posts')
 		.exec((err, user) => {
 			// console.log(user);
 			// Check if user exists
@@ -84,6 +92,7 @@ router.post('/login', (req, res) => {
 					const payload = {
 						id: user.id,
 						name: user.name,
+						username: user.username,
 						saved_posts: user.saved_posts,
 						voted_posts: user.voted_posts,
 						followed_tags: user.followed_tags

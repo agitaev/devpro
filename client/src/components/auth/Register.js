@@ -21,6 +21,7 @@ class Register extends Component {
 		this.state = {
 			name: '',
 			email: '',
+			username: '',
 			password: '',
 			passwordVerification: '',
 			followed_tags: [],
@@ -60,6 +61,7 @@ class Register extends Component {
 		const newUser = {
 			name: this.state.name,
 			email: this.state.email,
+			username: this.state.username,
 			password: this.state.password,
 			passwordVerification: this.state.passwordVerification,
 			followed_tags: this.state.followed_tags
@@ -113,6 +115,19 @@ class Register extends Component {
 								value={this.state.name}
 								error={errors.name ? true : false}
 								helperText={errors.name}
+							/>
+							<TextField
+								size='small'
+								style={{ margin: '.5rem 0' }}
+								variant='outlined'
+								fullWidth
+								onChange={this.onChange}
+								id='username'
+								label='Username'
+								type='text'
+								value={this.state.username}
+								error={errors.username ? true : false}
+								helperText={errors.username}
 							/>
 							<TextField
 								size='small'

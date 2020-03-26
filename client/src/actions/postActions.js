@@ -8,8 +8,8 @@ import {
 } from './types';
 
 // Retrieve Posts
-export const getPosts = () => dispatch => {
-	axios
+export const getPosts = () => async dispatch => {
+	await axios
 		.get('/api/posts')
 		.then(res => {
 			const posts = res.data;
@@ -17,21 +17,21 @@ export const getPosts = () => dispatch => {
 			localStorage.setItem('posts', JSON.stringify(posts));
 		})
 		.catch(err => {
-			dispatch({ type: GET_ERRORS, payload: err });
+			console.log(err);
 		});
 };
 
 // Retrieve Single Post
-export const getPost = postId => dispatch => {
-	axios
-		.get(`/api/posts/${postId}`)
-		.then(res => {
-			const post = res.data;
-			// dispatch({ type: GET_POST, payload: post });
-			localStorage.setItem('post', JSON.stringify(post));
-		})
-		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
-};
+// export const getPost = postId => dispatch => {
+// 	axios
+// 		.get(`/api/posts/${postId}`)
+// 		.then(res => {
+// 			const post = res.data;
+// 			// dispatch({ type: GET_POST, payload: post });
+// 			localStorage.setItem('post', JSON.stringify(post));
+// 		})
+// 		.catch(err => console.log(err));
+// };
 
 // Create Post
 export const createPost = (postData, history) => dispatch => {
@@ -39,25 +39,27 @@ export const createPost = (postData, history) => dispatch => {
 	let promises = [];
 
 	// loop through each tag and collect promises
-	postData.tags.forEach(tag =>
-		promises.push(
-			axios
-				.get(`/api/tags/${tag}`)
-				.then(res => tags.push(res.data[0]._id))
-				.catch(err =>
-					dispatch({ type: GET_ERRORS, payload: err.response.data })
-				)
-		)
-	);
+	if (postData.tags.length > 0) {
+		postData.tags.forEach(tag =>
+			promises.push(
+				axios
+					.get(`/api/tags/${tag}`)
+					.then(res => tags.push(res.data[0]._id))
+					.catch(err =>
+						dispatch({ type: GET_ERRORS, payload: err.response.data })
+					)
+			)
+		);
+	}
 
 	// resolve promises
 	axios
 		.all(promises)
-		.then(res => {
+		.then(() => {
 			axios
 				.post('/api/posts/new', { ...postData, tags })
 				.then(res => {
-					// console.log(res.data);
+					console.log(res.data);
 					dispatch({
 						type: ADD_POST,
 						payload: {
@@ -65,6 +67,11 @@ export const createPost = (postData, history) => dispatch => {
 							tags
 						}
 					});
+
+					let oldPosts = JSON.parse(localStorage.getItem('posts'));
+					console.log('old posts', oldPosts);
+					oldPosts.push(res.data);
+					localStorage.setItem('posts', JSON.stringify(oldPosts));
 
 					history.push('/');
 				})
@@ -76,28 +83,21 @@ export const createPost = (postData, history) => dispatch => {
 };
 
 // control post votes
-export const votePost = (postId, action, user) => dispatch => {
+export const votePost = (postId, action, userId) => dispatch => {
 	axios
-		.post(`/api/posts/${postId}/action`, { action, user })
-		.then(res => dispatch({ type: VOTE_POST, payload: res.data }))
-		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
+		.post(`/api/posts/${postId}/action`, { action, userId })
+		.then(res => {
+			dispatch({ type: VOTE_POST, payload: res.data });
+		})
+		.catch(err => console.log(err));
 };
 
-export const savePost = (postId, user) => dispatch => {
+export const savePost = (postId, userId) => dispatch => {
 	axios
-		.post(`/api/reactions/post/${postId._id}/save`, { userId: user.id })
+		.post(`/api/reactions/post/${postId}/save`, { userId })
 		.then(res => {
-			const payload = res.data.saved_posts.find(
-				post => post._id === postId._id
-			);
+			const payload = res.data.saved_posts.find(post => post._id === postId);
 			return dispatch({ type: SYNC_SAVED_POSTS, payload });
 		})
 		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
-};
-
-export const getTrendingPosts = () => {
-	axios
-		.get('/api/posts/trending')
-		.then(res => console.log(res))
-		.catch(err => console.log(err));
 };

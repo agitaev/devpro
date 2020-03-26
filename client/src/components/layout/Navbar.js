@@ -1,5 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import {
+	Link as RouterLink,
+	useRouteMatch,
+	withRouter
+} from 'react-router-dom';
 import { logoutUser } from '../../actions/authActions';
 import {
 	AppBar,
@@ -8,11 +12,13 @@ import {
 	Grid,
 	Button,
 	InputBase,
-	Container
+	Container,
+	IconButton
 } from '@material-ui/core';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Casino as CasinoIcon, Search as SearchIcon } from '@material-ui/icons';
 import { connect } from 'react-redux';
+import { BorderColorOutlined as CreatePostIcon } from '@material-ui/icons/';
 
 const useStyles = makeStyles(theme => ({
 	grow: {
@@ -69,16 +75,17 @@ const useStyles = makeStyles(theme => ({
 
 const Navbar = ({ logoutUser, auth }) => {
 	const classes = useStyles();
+	const match = useRouteMatch();
 
 	return (
 		<AppBar position='sticky'>
 			<Container maxWidth='lg'>
 				<Toolbar variant='dense'>
-					<Grid container alignItems='center' className={classes.logoMobile}>
+					<Grid container alignItems='center'>
 						<CasinoIcon />
 						<Typography
 							variant='h6'
-							component={Link}
+							component={RouterLink}
 							to='/'
 							style={{
 								marginLeft: '.25rem',
@@ -93,19 +100,19 @@ const Navbar = ({ logoutUser, auth }) => {
 					<Grid container justify='flex-end' className={classes.sectionDesktop}>
 						{auth.isAuthenticated ? (
 							<React.Fragment>
-								<Button color='inherit' component={Link} to='/posts/new'>
+								<Button color='inherit' component={RouterLink} to='/posts/new'>
 									I Have An Idea
 								</Button>
-								<Button color='inherit' component={Link} to='/me'>
+								<Button color='inherit' component={RouterLink} to='/me'>
 									Profile
 								</Button>
 							</React.Fragment>
 						) : (
 							<React.Fragment>
-								<Button color='inherit' component={Link} to='/login'>
+								<Button color='inherit' component={RouterLink} to='/login'>
 									Sign In
 								</Button>
-								<Button color='inherit' component={Link} to='/register'>
+								<Button color='inherit' component={RouterLink} to='/register'>
 									Sign Up
 								</Button>
 							</React.Fragment>
@@ -124,6 +131,18 @@ const Navbar = ({ logoutUser, auth }) => {
 							/>
 						</div>
 					</Grid>
+					<Grid container justify='flex-end' className={classes.sectionMobile}>
+						<IconButton
+							component={RouterLink}
+							to='/posts/new'
+							aria-label='create new post'
+							aria-controls='menu-appbar'
+							aria-haspopup='true'
+							color='inherit'
+						>
+							<CreatePostIcon />
+						</IconButton>
+					</Grid>
 				</Toolbar>
 			</Container>
 		</AppBar>
@@ -137,4 +156,4 @@ const mapStateToProps = state => ({
 export default connect(
 	mapStateToProps,
 	{ logoutUser }
-)(Navbar);
+)(withRouter(Navbar));

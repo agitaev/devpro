@@ -45,7 +45,7 @@ router.get('/:title', async (req, res) => {
 	try {
 		const tag = await Tag.find({ title }, (err, tag) => {
 			if (tag.length === 0) {
-				res.status(404).send({ tags: `${title}` });
+				res.status(404).send({ tags: `Tag ${title} does not exist` });
 			} else {
 				res.send(tag);
 			}

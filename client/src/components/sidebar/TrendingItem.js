@@ -1,40 +1,81 @@
 import React, { Component } from 'react';
-import { Paper, Typography, Grid } from '@material-ui/core';
+import { Paper, Typography, Grid, IconButton } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
+import {
+	StarBorderOutlined as SaveIcon,
+	StarOutlined as UnsaveIcon
+} from '@material-ui/icons';
+import { connect } from 'react-redux';
+import isEmpty from 'is-empty';
+import { savePost } from '../../actions/postActions';
 
 class TrendingItem extends Component {
 	state = {
-		elevation: 0
+		elevation: 0,
+		saved: false
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
 	onMouseOut = () => this.setState({ elevation: 0 });
 
+	handleSavePostClick = () => {
+		if (this.props.isAuthenticated) {
+			this.props.savePost(this.props.post._id, this.props.user.id);
+			this.setState({ saved: !this.state.saved });
+		} else {
+			this.props.history.push('/login');
+			console.log('unauthorized');
+		}
+	};
+
+	componentDidMount() {
+		const { user, saved_posts, post } = this.props;
+		// console.log(user);l=
+
+		if (user && saved_posts && saved_posts.length > 0) {
+			saved_posts.map(savedPost =>
+				savedPost._id === post._id ? this.setState({ saved: true }) : null
+			);
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if (isEmpty(prevProps.user) && this.state.saved) {
+			console.log('updated');
+			this.setState({ saved: false });
+		}
+	}
+
 	render() {
 		const { post } = this.props;
 		return (
 			<Paper
-				style={{ padding: '.5rem', background: 'inherit' }}
+				style={{ padding: '1rem', background: 'inherit' }}
 				elevation={this.state.elevation}
 				onMouseOver={this.onMouseOver}
 				onMouseOut={this.onMouseOut}
 			>
-				<Grid container spacing={1} alignItems='center'>
-					<Grid item xs={4} sm={4}>
-						<img
-							src='https://via.placeholder.com/400x300'
-							style={{ width: '100%', height: 'auto', display: 'block' }}
-							alt='meaningful text'
-						/>
-					</Grid>
-					<Grid container item xs={8} sm={8} direction='column'>
+				{/*<img
+				src='https://via.placeholder.com/400x300'
+				style={{ width: '100%', height: 'auto', display: 'block' }}
+				alt='meaningful text'
+			/>*/}
+				<Grid container alignItems='flex-start' justify='space-between'>
+					<Grid
+						container
+						item
+						xs={11}
+						lg={10}
+						direction='column'
+						style={{ paddingRight: '.50rem' }}
+					>
 						<Typography
 							gutterBottom
 							component={RouterLink}
-							variant='subtitle1'
+							variant='h5'
 							to={`/posts/${post._id}`}
 							style={{
-								fontSize: '.85rem',
+								fontSize: '1.2rem',
 								textDecoration: 'none',
 								lineHeight: 'normal',
 								display: 'block'
@@ -55,10 +96,33 @@ class TrendingItem extends Component {
 							</Typography>
 						) : null}
 					</Grid>
+					<Grid container item xs={1} lg={2} justify='flex-end'>
+						<IconButton
+							aria-label='toggle save post'
+							size='small'
+							style={{ padding: 0 }}
+							onClick={this.handleSavePostClick}
+						>
+							{!this.state.saved ? (
+								<SaveIcon style={{ fontSize: '1.75rem' }} />
+							) : (
+								<UnsaveIcon style={{ fontSize: '1.75rem' }} />
+							)}
+						</IconButton>
+					</Grid>
 				</Grid>
 			</Paper>
 		);
 	}
 }
 
-export default TrendingItem;
+const mapStateToProps = state => ({
+	user: state.auth.user,
+	isAuthenticated: state.auth.isAuthenticated,
+	saved_posts: state.auth.user.saved_posts
+});
+
+export default connect(
+	mapStateToProps,
+	{ savePost }
+)(TrendingItem);

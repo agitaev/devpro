@@ -9,9 +9,6 @@ class TrendingBoard extends Component {
 		return (
 			<Container style={{ margin: '2rem auto 5rem' }}>
 				<Hidden mdUp>
-					<Typography variant='subtitle1' gutterBottom>
-						Trending posts
-					</Typography>
 					<TrendingList />
 					{this.props.isAuthenticated ? <TagList /> : null}
 				</Hidden>

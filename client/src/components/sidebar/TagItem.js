@@ -34,7 +34,7 @@ class TagItem extends Component {
 			>
 				<Grid container justify='space-between' alignItems='center'>
 					<Grid item>
-						<TagChip tag={tag} />
+						<TagChip tag={tag} color='primary' />
 					</Grid>
 					<Grid item>
 						<Button size='small' onClick={this.onFollowTag}>

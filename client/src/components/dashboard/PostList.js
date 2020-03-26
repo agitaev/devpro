@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getPosts } from '../../actions/postActions';
@@ -7,14 +7,22 @@ import PostItem from './PostItem';
 
 class PostList extends Component {
 	state = {
-		posts: []
+		posts: [],
+		isLoading: true
 	};
 
 	componentDidMount() {
-		if (!localStorage.getItem('posts')) {
+		if (
+			!(
+				JSON.parse(localStorage.getItem('posts')) &&
+				JSON.parse(localStorage.getItem('posts')).length > 0
+			)
+		) {
 			this.props.getPosts();
-			this.setState({ posts: this.props.posts });
 		} else {
+			// temporary solution
+			this.props.getPosts();
+
 			const posts = JSON.parse(localStorage.getItem('posts'));
 			this.setState({ posts });
 		}
@@ -39,7 +47,7 @@ class PostList extends Component {
 			<Grid container justify='space-evenly' spacing={1}>
 				{posts && posts !== undefined
 					? posts.map((post, id) => (
-							<Grid item xs={12} sm={6} md={4} lg={4} key={id}>
+							<Grid item xs={12} sm={6} lg={4} key={id}>
 								<PostItem post={post} withVoteController />
 							</Grid>
 					  ))

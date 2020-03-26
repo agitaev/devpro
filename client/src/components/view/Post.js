@@ -7,7 +7,8 @@ import {
 	Typography,
 	Grid,
 	Avatar,
-	Divider
+	Divider,
+	Button
 } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
@@ -41,14 +42,14 @@ class Post extends Component {
 		return (
 			<React.Fragment>
 				{post ? (
-					<Container maxWidth='lg' style={{ marginBottom: '3rem' }}>
-						<img
+					<Container maxWidth='lg' style={{ marginBottom: '6rem' }}>
+						{/*<img
 							src='https://via.placeholder.com/800x400'
 							style={{ width: '100%', height: 'auto' }}
 							alt='meaningful text'
-						/>
+						/>*/}
 						<Grid container justify='center'>
-							<Grid item sm={12} md={8} lg={6}>
+							<Grid container item sm={12} md={8} lg={6}>
 								<div style={{ marginTop: '2rem' }}>
 									<header>
 										<Typography variant='h2' gutterBottom>
@@ -130,6 +131,22 @@ class Post extends Component {
 										)}
 									</div>
 								</div>
+								{/*<Grid container item spacing={1}>
+									<Grid container item xs={6} justify='center'>
+										<Button variant='contained' color='primary'>
+											Up next:
+											<br />
+											Hope you think twice for your double mind
+										</Button>
+									</Grid>
+									<Grid container item xs={6} justify='center'>
+										<Button variant='contained' color='primary'>
+											Up next:
+											<br />
+											Hope you think twice for your double mind
+										</Button>
+									</Grid>
+								</Grid>*/}
 							</Grid>
 						</Grid>
 						<Divider />
@@ -139,10 +156,10 @@ class Post extends Component {
 							</Typography>
 							<div>
 								<Grid container direction='row'>
-									<Grid item xs={12} sm={6}>
+									<Grid item xs={12} md={6}>
 										{post.author ? <PostItem post={post} /> : ''}
 									</Grid>
-									<Grid item xs={12} sm={6}>
+									<Grid item xs={12} md={6}>
 										{post.author ? <PostItem post={post} /> : ''}
 									</Grid>
 								</Grid>
@@ -159,7 +176,6 @@ class Post extends Component {
 
 const mapStateToProps = (state, props) => {
 	const post = state.posts.find(post => post._id === props.match.params.postId);
-	console.log(post);
 	return { post };
 };
 

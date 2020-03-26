@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Paper, Typography, Grid, Link, IconButton } from '@material-ui/core';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import compose from 'recompose/compose';
@@ -7,6 +7,7 @@ import {
 	StarBorderOutlined as SaveIcon,
 	StarOutlined as UnsaveIcon
 } from '@material-ui/icons';
+import { Skeleton } from '@material-ui/lab';
 import moment from 'moment/';
 import TagChip from '../element/TagChip';
 import { connect } from 'react-redux';
@@ -17,7 +18,9 @@ class PostItem extends Component {
 	state = {
 		elevation: 0,
 		post: { author: {}, tags: [] },
-		saved: false
+		saved: false,
+		voted: false,
+		isLoading: false
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
@@ -25,24 +28,30 @@ class PostItem extends Component {
 
 	handleSavePostClick = () => {
 		if (this.props.isAuthenticated) {
-			this.props.savePost(this.props.post, this.props.user);
+			this.props.savePost(this.props.post._id, this.props.user.id);
 			this.setState({ saved: !this.state.saved });
 		} else {
-			// this.props.history.push('/login');
+			this.props.history.push('/login');
 			console.log('unauthorized');
 		}
 	};
 
 	handleUpvotePostClick = () => {
-		this.props.votePost(this.props.post._id, 'upvote', this.props.user);
+		if (this.props.isAuthenticated) {
+			this.props.votePost(this.props.post._id, 'upvote', this.props.user.id);
+		} else {
+			this.props.history.push('/login');
+			console.log('unauthorized');
+		}
 	};
 
-	handleDownvotePostClick = () => {
-		this.props.votePost(this.props.post._id, 'downvote', this.props.user);
-	};
+	// handleDownvotePostClick = () => {
+	// 	this.props.votePost(this.props.post._id, 'downvote', this.props.user.id);
+	// };
 
 	componentDidMount() {
-		const { user, saved_posts, post } = this.props;
+		const { user, saved_posts, voted_posts, post } = this.props;
+		// console.log(user);l=
 
 		if (user && saved_posts && saved_posts.length > 0) {
 			saved_posts.map(savedPost =>
@@ -62,6 +71,7 @@ class PostItem extends Component {
 
 	render() {
 		const { post } = this.props;
+		const { isLoading } = this.state;
 
 		return (
 			<Paper
@@ -73,7 +83,7 @@ class PostItem extends Component {
 				onMouseOver={this.onMouseOver}
 				onMouseOut={this.onMouseOut}
 			>
-				<img
+				{/*<img
 					src='https://via.placeholder.com/1200x800'
 					style={{
 						width: '100%',
@@ -82,23 +92,41 @@ class PostItem extends Component {
 						marginBottom: '1rem'
 					}}
 					alt='meaningful text'
-				/>
+				/>*/}
 				<Grid container alignItems='center' style={{ marginBottom: '1rem' }}>
-					<Typography variant='subtitle2' style={{ flex: 1 }}>
-						{moment(post.created_at).format('MMM D')}
-					</Typography>
-					<IconButton
-						aria-label='toggle save post'
-						size='small'
-						style={{ padding: 0 }}
-						onClick={this.handleSavePostClick}
-					>
-						{!this.state.saved ? (
-							<SaveIcon style={{ fontSize: '1.75rem' }} />
-						) : (
-							<UnsaveIcon style={{ fontSize: '1.75rem' }} />
-						)}
-					</IconButton>
+					{isLoading ? (
+						<Skeleton
+							animation='wave'
+							height={13}
+							width={75}
+							style={{ marginBottom: 6, marginRight: '70%', flex: 1 }}
+						/>
+					) : (
+						<Typography variant='subtitle2' style={{ flex: 1 }}>
+							{moment(post.created_at).format('MMM D')}
+						</Typography>
+					)}
+					{isLoading ? (
+						<Skeleton
+							variant='circle'
+							animation='wave'
+							height={30}
+							width={30}
+						/>
+					) : (
+						<IconButton
+							aria-label='toggle save post'
+							size='small'
+							style={{ padding: 0 }}
+							onClick={this.handleSavePostClick}
+						>
+							{!this.state.saved ? (
+								<SaveIcon style={{ fontSize: '1.75rem' }} />
+							) : (
+								<UnsaveIcon style={{ fontSize: '1.75rem' }} />
+							)}
+						</IconButton>
+					)}
 				</Grid>
 				<Grid
 					container
@@ -107,27 +135,62 @@ class PostItem extends Component {
 					alignItems='flex-start'
 				>
 					<Grid item style={{ paddingRight: '.5rem', flex: 1 }}>
-						<Typography
-							gutterBottom
-							variant='h5'
-							component={RouterLink}
-							to={`/posts/${post._id}`}
-							color='inherit'
-							style={{
-								textDecoration: 'none',
-								lineHeight: 'normal'
-							}}
-						>
-							{post.title}
-						</Typography>
-						<Typography
-							gutterBottom
-							style={{ marginTop: '1rem' }}
-							variant='subtitle1'
-						>
-							{post.subtitle}
-						</Typography>
-						{post.author && post.author !== undefined ? (
+						{isLoading ? (
+							<Fragment>
+								<Skeleton animation='wave' height={20} width='70%' />
+								<Skeleton
+									animation='wave'
+									height={20}
+									width='40%'
+									style={{ marginBottom: '1rem' }}
+								/>
+							</Fragment>
+						) : (
+							<Typography
+								gutterBottom
+								variant='h5'
+								component={RouterLink}
+								to={`/posts/${post._id}`}
+								color='inherit'
+								style={{
+									textDecoration: 'none',
+									lineHeight: 'normal'
+								}}
+							>
+								{post.title}
+							</Typography>
+						)}
+						{isLoading ? (
+							<Fragment>
+								<Skeleton animation='wave' height={15} />
+								<Skeleton animation='wave' height={15} width='75%' />
+							</Fragment>
+						) : (
+							<Typography
+								gutterBottom
+								variant='subtitle1'
+								component={RouterLink}
+								to={`/posts/${post._id}`}
+								color='inherit'
+								style={{
+									textDecoration: 'none',
+									lineHeight: 'normal',
+									marginTop: '1rem',
+									display: 'block',
+									fontWeight: 400
+								}}
+							>
+								{post.subtitle}
+							</Typography>
+						)}
+						{isLoading ? (
+							<Skeleton
+								animatino='wave'
+								height={13}
+								width='40%'
+								style={{ margin: '1rem 0' }}
+							/>
+						) : post.author && post.author !== undefined ? (
 							<Grid
 								container
 								justify='space-between'
@@ -140,51 +203,55 @@ class PostItem extends Component {
 									underline='none'
 									color='textSecondary'
 								>
-									{post.author.name}
+									{post.author.name ? post.author.name : ''}
 								</Link>
 							</Grid>
 						) : null}
-						<Grid container spacing={1} style={{ marginTop: '1rem' }}>
-							{post.tags && post.tags.length > 0
-								? post.tags.map((tag, index) => (
-										<TagChip key={index} tag={tag} small />
-								  ))
-								: null}
-						</Grid>
-					</Grid>
-					{this.props.withVoteController && (
-						<Grid item>
-							<Grid
-								container
-								direction='column'
-								justify='flex-start'
-								alignItems='center'
-							>
-								{/* <Button variant='contained' startIcon={<UpvoteIcon />}>
-									{post.vote_count === 0 ? '•' : post.vote_count}
-								</Button>*/}
-								<IconButton
-									aria-label='upvote post'
-									size='small'
-									style={{ padding: '0' }}
-									onClick={this.handleUpvotePostClick}
-								>
-									<UpvoteIcon style={{ fontSize: '1.75rem' }} />
-								</IconButton>
-								<Typography variant='body2' style={{ lineHeight: 0.75 }}>
-									{post.vote_count === 0 ? '•' : post.vote_count}
-								</Typography>
-								{/*
-									<IconButton
-										aria-label='downvote post'
-										size='small'
-										onClick={this.handleDownvotePostClick}
-									>
-										<DownvoteIcon />
-									</IconButton>
-								*/}
+						{isLoading ? (
+							<Fragment>
+								<Skeleton
+									variant='rect'
+									animation='wave'
+									width='80%'
+									style={{ marginBottom: '.25rem' }}
+								/>
+								<Skeleton variant='rect' animation='wave' width='50%' />
+							</Fragment>
+						) : (
+							<Grid container spacing={1} style={{ marginTop: '1rem' }}>
+								{post.tags && post.tags.length > 0
+									? post.tags.map((tag, index) => (
+											<TagChip key={index} tag={tag} small />
+									  ))
+									: null}
 							</Grid>
-						</Grid>
+						)}
+					</Grid>
+					{isLoading ? (
+						<Skeleton variant='rect' animation='wave' height={50} width={30} />
+					) : (
+						this.props.withVoteController && (
+							<Grid item>
+								<Grid
+									container
+									direction='column'
+									justify='flex-start'
+									alignItems='center'
+								>
+									<IconButton
+										aria-label='upvote post'
+										size='small'
+										style={{ padding: '0' }}
+										onClick={this.handleUpvotePostClick}
+									>
+										<UpvoteIcon style={{ fontSize: '1.75rem' }} />
+									</IconButton>
+									<Typography variant='body2' style={{ lineHeight: 0.75 }}>
+										{post.vote_count === 0 ? '•' : post.vote_count}
+									</Typography>
+								</Grid>
+							</Grid>
+						)
 					)}
 				</Grid>
 			</Paper>
@@ -195,7 +262,8 @@ class PostItem extends Component {
 const mapStateToProps = state => ({
 	user: state.auth.user,
 	isAuthenticated: state.auth.isAuthenticated,
-	saved_posts: state.auth.user.saved_posts
+	saved_posts: state.auth.user.saved_posts,
+	voted_posts: state.auth.user.voted_posts
 });
 
 export default compose(

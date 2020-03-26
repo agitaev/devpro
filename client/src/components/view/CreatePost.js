@@ -23,7 +23,6 @@ class CreatePost extends Component {
 
 	UNSAFE_componentWillReceiveProps(nextProps) {
 		if (nextProps.errors) {
-			console.log(nextProps);
 			this.setState({ errors: nextProps.errors });
 		}
 	}
@@ -34,14 +33,20 @@ class CreatePost extends Component {
 
 	onSubmit = e => {
 		e.preventDefault();
+		const tags =
+			this.state.tags.length === 1 && this.state.tags[0] === ''
+				? []
+				: this.state.tags.split(',').map(tag => tag.trim());
 
 		const post = {
 			title: this.state.title,
 			subtitle: this.state.subtitle,
 			body: this.state.body,
-			tags: this.state.tags.split(',').map(tag => tag.trim()),
-			author: this.props.auth.user.id
+			author: this.props.auth.user.id,
+			tags
 		};
+
+		console.log('post being created', post);
 
 		this.props.createPost(post, this.props.history);
 	};
@@ -50,7 +55,7 @@ class CreatePost extends Component {
 		const { title, subtitle, body, tags, errors } = this.state;
 
 		return (
-			<Container maxWidth='lg' style={{ margin: '4rem auto' }}>
+			<Container maxWidth='lg' style={{ margin: '4rem auto 6rem' }}>
 				<Grid container justify='center'>
 					<Grid item xs={12} sm={10} md={8}>
 						<BackToHomeButton />
