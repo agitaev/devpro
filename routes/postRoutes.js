@@ -40,6 +40,8 @@ router.post('/new', (req, res) => {
 	// Form validation
 	const { errors, isValid } = validatePostInput(req.body);
 	const { author, title, subtitle, body, tags } = req.body;
+	// console.log(errors);
+	// console.log(req.body);
 
 	if (!isValid) {
 		return res.status(400).json(errors);
@@ -90,7 +92,7 @@ router.post('/:postId([0-9a-fA-F]{24})/action', async (req, res) => {
 		).exec(async (error, response) => {
 			if (error) {
 				console.log('cannot find user', error);
-				res.status(400).json(error);
+				res.status(401).json(error);
 			} else if (!response) {
 				// if response is null, user already voted
 				console.log('already voted', response);

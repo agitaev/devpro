@@ -4,10 +4,13 @@ import {
 	TextField,
 	Grid,
 	Typography,
-	Button
+	Button,
+	Snackbar
 } from '@material-ui/core';
+import _ from 'underscore';
 import compose from 'recompose/compose';
-import BackToHomeButton from '../element/BackToHomeButton';
+import BackToHomeButton from '../chunks/BackToHomeButton';
+import Alert from '../chunks/Alert';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createPost } from '../../actions/postActions';
@@ -18,7 +21,9 @@ class CreatePost extends Component {
 		subtitle: '',
 		body: '',
 		tags: '',
-		errors: {}
+		errors: {},
+		showSnackbar: false,
+		snackbarTimer: 3
 	};
 
 	UNSAFE_componentWillReceiveProps(nextProps) {
@@ -31,7 +36,7 @@ class CreatePost extends Component {
 		this.setState({ [e.target.id]: e.target.value });
 	};
 
-	onSubmit = e => {
+	onSubmit = async e => {
 		e.preventDefault();
 		const tags =
 			this.state.tags.length === 1 && this.state.tags[0] === ''
@@ -46,16 +51,51 @@ class CreatePost extends Component {
 			tags
 		};
 
-		console.log('post being created', post);
-
 		this.props.createPost(post, this.props.history);
+		this.setState({ showSnackbar: true });
+
+		await setInterval(() => {
+			if (this.state.snackbarTimer === 1) {
+				clearInterval();
+				this.setState({ showSnackbar: false });
+			} else {
+				this.setState({ snackbarTimer: this.state.snackbarTimer - 1 });
+			}
+		}, 1000);
 	};
 
 	render() {
-		const { title, subtitle, body, tags, errors } = this.state;
+		const {
+			title,
+			subtitle,
+			body,
+			tags,
+			errors,
+			showSnackbar,
+			snackbarTimer
+		} = this.state;
 
 		return (
 			<Container maxWidth='lg' style={{ margin: '4rem auto 6rem' }}>
+				{_.isEmpty(errors) ? (
+					<Snackbar
+						style={{ top: '60px' }}
+						open={showSnackbar}
+						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+					>
+						<Alert severity='success'>
+							Success! You will be redirected in {snackbarTimer}...
+						</Alert>
+					</Snackbar>
+				) : (
+					<Snackbar
+						style={{ top: '60px' }}
+						open={showSnackbar}
+						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+					>
+						<Alert severity='warning'>Validation error occured!</Alert>
+					</Snackbar>
+				)}
 				<Grid container justify='center'>
 					<Grid item xs={12} sm={10} md={8}>
 						<BackToHomeButton />

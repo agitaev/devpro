@@ -1,69 +1,87 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTags } from '../../actions/tagActions';
 import { Grid, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import TagItem from './TagItem';
 import axios from 'axios';
 
 class TagList extends Component {
 	state = {
 		tags: [],
-		user_tags: []
+		// user_tags: [],
+		isLoading: true
 	};
 
 	componentDidMount() {
 		if (this.props.user_tags && !localStorage.getItem('recommended_tags')) {
-			this.setState({ user_tags: this.props.user_tags });
 			axios
-				.post('/api/recommender', { tags: this.state.user_tags })
-				.then(res =>
-					res.data.map(tag => {
-						console.log(tag);
-						let tags = this.state.tags.concat(tag);
-						this.setState({ tags });
-						return localStorage.setItem(
-							'recommended_tags',
-							JSON.stringify(tags)
-						);
-					})
-				)
+				.post('/api/recommender', { tags: this.props.user_tags })
+				.then(res => {
+					if (res.data.error) {
+						this.setState({ tags: [], isLoading: false });
+					} else {
+						let tags = [];
+
+						res.data.map(tag => tags.push(tag));
+						this.setState({ tags, isLoading: false });
+						localStorage.setItem('recommended_tags', JSON.stringify(tags));
+					}
+				})
 				.catch(err => console.log(err));
 		} else {
 			const tags = JSON.parse(localStorage.getItem('recommended_tags'));
-			this.setState({ tags });
+			this.setState({ tags, isLoading: false });
 		}
 	}
 
-	UNSAFE_componentWillReceiveProps(nextProps) {
-		// console.log(nextProps);
-		if (nextProps.user_tags) {
-			this.setState({ user_tags: nextProps.user_tags });
-		}
-	}
+	// UNSAFE_componentWillReceiveProps(nextProps) {
+	// 	console.log(nextProps);
+	// 	if (nextProps.user_tags) {
+	// 		this.setState({ user_tags: nextProps.user_tags });
+	// 	}
+	// }
 
 	render() {
-		const { tags } = this.state;
+		const { tags, isLoading } = this.state;
 
 		return (
-			<React.Fragment>
-				<Typography variant='subtitle1' gutterBottom>
-					{tags && tags.length > 0 ? 'Recommended tags' : null}
-				</Typography>
-				<Grid
-					container
-					direction='column'
-					style={{ paddingBottom: '1rem' }}
-					justify='space-between'
-				>
-					{tags && tags !== undefined
-						? tags.map(tag => (
-								<Grid item key={tag._id}>
-									<TagItem tag={tag} />
-								</Grid>
-						  ))
-						: null}
-				</Grid>
-			</React.Fragment>
+			<Fragment>
+				{isLoading ? (
+					<Skeleton
+						animation='wave'
+						width='30%'
+						style={{ marginBottom: '.5rem' }}
+					/>
+				) : (
+					<Typography variant='subtitle1' gutterBottom>
+						{tags && tags.length > 0 && tags[0] !== ''
+							? 'Recommended tags'
+							: null}
+					</Typography>
+				)}
+				{isLoading ? (
+					<Fragment>
+						<Skeleton animation='wave' height={30} />
+						<Skeleton animation='wave' height={30} />
+					</Fragment>
+				) : (
+					<Grid
+						container
+						direction='column'
+						style={{ paddingBottom: '1rem' }}
+						justify='space-between'
+					>
+						{tags && tags !== undefined
+							? tags.map(tag => (
+									<Grid item key={tag._id}>
+										<TagItem tag={tag} />
+									</Grid>
+							  ))
+							: null}
+					</Grid>
+				)}
+			</Fragment>
 		);
 	}
 }

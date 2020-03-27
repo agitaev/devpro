@@ -5,9 +5,18 @@ import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from './types';
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
+	console.log(history);
 	axios
 		.post('/api/users/register', userData)
-		.then(res => history.push('/login')) // redirect to login on successful register
+		.then(res =>
+			history.push({
+				pathname: '/',
+				state: {
+					fromlocation: history.location.pathname,
+					email: userData.email
+				}
+			})
+		)
 		.catch(err =>
 			dispatch({
 				type: GET_ERRORS,
@@ -63,4 +72,15 @@ export const logoutUser = () => dispatch => {
 	setAuthToken(false);
 	// Set current user to empty object {} which will set isAuthenticated to false
 	dispatch(setCurrentUser({}));
+};
+
+// Verify user email
+export const confirmUserEmail = token => {
+	axios
+		.post('/api/users/email_confirmation', { token })
+		.then(res => {
+			console.log('res.data', res.data);
+			loginUser(res.data);
+		})
+		.catch(err => console.log(err));
 };

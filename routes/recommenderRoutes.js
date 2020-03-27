@@ -11,7 +11,11 @@ router.post('/', async (req, res) => {
 	const { tags } = req.body;
 
 	await fetchRecommendations(tags).then(async result => {
-		await res.status(201).send(result);
+		if (result.length > 0) {
+			await res.status(201).send(result);
+		} else {
+			await res.status(200).send({ error: 'no recommendations found' });
+		}
 	});
 });
 

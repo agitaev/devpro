@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { isEmpty } from 'underscore';
-import { getPosts } from '../../actions/postActions';
+import { getPosts, votePost, savePost } from '../../actions/postActions';
 import {
 	Container,
 	Typography,
 	Grid,
 	Avatar,
 	Divider,
-	Button
+	Button,
+	ButtonGroup,
+	Hidden
 } from '@material-ui/core';
+import {
+	ExpandLessOutlined as UpvoteIcon,
+	StarBorderOutlined as SaveIcon,
+	StarOutlined as UnsaveIcon
+} from '@material-ui/icons';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import TagChip from '../element/TagChip';
+import TagChip from '../chunks/TagChip';
 import PostItem from '../dashboard/PostItem';
 
 class Post extends Component {
@@ -21,23 +28,11 @@ class Post extends Component {
 	};
 
 	componentDidMount() {
-		// console.log('mounted');
 		this.props.getPosts();
-		// console.log(this.props);
-		// const post = JSON.parse(localStorage.getItem('post'));
-		// if (isEmpty(this.state.post)) this.setState({ post });
 	}
 
-	// shouldComponentUpdate() {
-	// 	if (this.props.post) {
-	// 		return true;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
-
 	render() {
-		const { post } = this.props;
+		const { post, userId } = this.props;
 
 		return (
 			<React.Fragment>
@@ -58,16 +53,44 @@ class Post extends Component {
 										<Typography variant='h5' gutterBottom>
 											{post.subtitle ? post.subtitle : ''}
 										</Typography>
-										<Typography
-											variant='subtitle1'
-											component={RouterLink}
-											to={`/users/${post.author ? post.author._id : ''}`}
-											color='inherit'
-											style={{ textDecoration: 'none' }}
-											gutterBottom
-										>
-											{post.author ? `By ${post.author.name}` : 'loading...'}
-										</Typography>
+										<Grid container justify='space-between' alignItems='center'>
+											<Grid item>
+												<Typography
+													variant='subtitle1'
+													component={RouterLink}
+													to={`/users/${post.author ? post.author._id : ''}`}
+													color='inherit'
+													style={{ textDecoration: 'none' }}
+													gutterBottom
+												>
+													{post.author
+														? `By ${post.author.name}`
+														: 'loading...'}
+												</Typography>
+											</Grid>
+											<Grid item>
+												<Hidden smDown>
+													<ButtonGroup size='small'>
+														<Button
+															startIcon={<SaveIcon />}
+															onClick={() =>
+																this.props.savePost(post._id, userId)
+															}
+														>
+															save
+														</Button>
+														<Button
+															startIcon={<UpvoteIcon />}
+															onClick={() =>
+																this.props.votePost(post._id, userId)
+															}
+														>
+															upvote
+														</Button>
+													</ButtonGroup>
+												</Hidden>
+											</Grid>
+										</Grid>
 									</header>
 								</div>
 								<div style={{ padding: '1rem 0' }}>
@@ -131,22 +154,6 @@ class Post extends Component {
 										)}
 									</div>
 								</div>
-								{/*<Grid container item spacing={1}>
-									<Grid container item xs={6} justify='center'>
-										<Button variant='contained' color='primary'>
-											Up next:
-											<br />
-											Hope you think twice for your double mind
-										</Button>
-									</Grid>
-									<Grid container item xs={6} justify='center'>
-										<Button variant='contained' color='primary'>
-											Up next:
-											<br />
-											Hope you think twice for your double mind
-										</Button>
-									</Grid>
-								</Grid>*/}
 							</Grid>
 						</Grid>
 						<Divider />
@@ -176,10 +183,13 @@ class Post extends Component {
 
 const mapStateToProps = (state, props) => {
 	const post = state.posts.find(post => post._id === props.match.params.postId);
-	return { post };
+	return {
+		post,
+		userId: state.auth.user.id
+	};
 };
 
 export default connect(
 	mapStateToProps,
-	{ getPosts }
+	{ getPosts, votePost, savePost }
 )(Post);

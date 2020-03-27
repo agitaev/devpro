@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const keys = require('../config/keys');
+const sendConfirmationEmail = require('../config/mailer');
 
 // Load input validation
 const validateRegisterInput = require('../validation/register');
@@ -12,6 +12,7 @@ const validateLoginInput = require('../validation/login');
 
 // Load User model
 const User = require('../models/User');
+
 // @route POST api/users/register
 // @desc Register user
 // @access Public
@@ -44,10 +45,27 @@ router.post('/register', (req, res) => {
 					bcrypt.genSalt(10, (err, salt) => {
 						bcrypt.hash(newUser.password, salt, (err, hash) => {
 							if (err) throw err;
+							// email confirmation
+							newUser.confirmation_token = jwt.sign(
+								{ email: req.body.email },
+								keys.secretOrKey,
+								{
+									expiresIn: 31556926 // 1 year in seconds
+								}
+							);
+							// end email confirmation
 							newUser.password = hash;
 							newUser
 								.save()
-								.then(user => res.json(user))
+								.then(user => {
+									res.json(user);
+									sendConfirmationEmail({
+										user,
+										url: `http://localhost:3000/email_confirmation?token=${user.confirmation_token}&email=${user.email}`
+									})
+										.then(email => console.log(email))
+										.catch(mailError => console.log(mailError));
+								})
 								.catch(err => console.log(err));
 						});
 					});
@@ -95,6 +113,7 @@ router.post('/login', (req, res) => {
 						username: user.username,
 						saved_posts: user.saved_posts,
 						voted_posts: user.voted_posts,
+						created_posts: user.created_posts,
 						followed_tags: user.followed_tags
 					};
 
@@ -119,6 +138,25 @@ router.post('/login', (req, res) => {
 				}
 			});
 		});
+});
+
+// @route POST api/users/email_confirmation
+// @desc Update user property to CONFIRMED
+// @access Public
+router.post('/email_confirmation', (req, res) => {
+	const { token } = req.body;
+
+	User.findOneAndUpdate(
+		{ confirmation_token: token },
+		{ confirmation_token: '', verified: true },
+		{ new: true }
+	).exec((err, user) => {
+		if (err) {
+			res.status(400).send(err);
+		} else {
+			res.send(user);
+		}
+	});
 });
 
 module.exports = router;

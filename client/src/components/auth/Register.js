@@ -13,7 +13,7 @@ import {
 	TextField,
 	Chip
 } from '@material-ui/core';
-import BackToHomeButton from '../element/BackToHomeButton';
+import BackToHomeButton from '../chunks/BackToHomeButton';
 
 class Register extends Component {
 	constructor() {
@@ -84,7 +84,7 @@ class Register extends Component {
 		const { errors, populated_tags, followed_tags } = this.state;
 
 		return (
-			<Container style={{ margin: '4rem auto' }}>
+			<Container style={{ margin: '4rem auto 6rem' }}>
 				<Grid container justify='center'>
 					<Grid item xs={10} sm={8} md={6} lg={5}>
 						<BackToHomeButton />

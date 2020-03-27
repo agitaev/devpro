@@ -9,7 +9,7 @@ import {
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
 import moment from 'moment/';
-import TagChip from '../element/TagChip';
+import TagChip from '../chunks/TagChip';
 import { connect } from 'react-redux';
 import { votePost, savePost } from '../../actions/postActions';
 import isEmpty from 'is-empty';
@@ -83,16 +83,6 @@ class PostItem extends Component {
 				onMouseOver={this.onMouseOver}
 				onMouseOut={this.onMouseOut}
 			>
-				{/*<img
-					src='https://via.placeholder.com/1200x800'
-					style={{
-						width: '100%',
-						height: 'auto',
-						display: 'block',
-						marginBottom: '1rem'
-					}}
-					alt='meaningful text'
-				/>*/}
 				<Grid container alignItems='center' style={{ marginBottom: '1rem' }}>
 					{isLoading ? (
 						<Skeleton

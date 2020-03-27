@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Paper, Typography, Grid, IconButton } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import {
 	StarBorderOutlined as SaveIcon,
 	StarOutlined as UnsaveIcon
@@ -125,4 +125,4 @@ const mapStateToProps = state => ({
 export default connect(
 	mapStateToProps,
 	{ savePost }
-)(TrendingItem);
+)(withRouter(TrendingItem));

@@ -26,7 +26,7 @@ const validateRegisterInput = data => {
 	}
 
 	// Username checks
-	if (!Validator.isLength(data.username, { min: 3, max: 20 })) {
+	if (!Validator.isLength(data.username, { min: 3, max: 24 })) {
 		errors.username = 'Username must include at least 3 characters';
 	}
 

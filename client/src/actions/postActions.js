@@ -35,11 +35,12 @@ export const getPosts = () => async dispatch => {
 
 // Create Post
 export const createPost = (postData, history) => dispatch => {
+	console.log(postData);
 	let tags = [];
 	let promises = [];
 
 	// loop through each tag and collect promises
-	if (postData.tags.length > 0) {
+	if (postData.tags.length > 0 && postData.tags[0] !== '') {
 		postData.tags.forEach(tag =>
 			promises.push(
 				axios
@@ -59,7 +60,6 @@ export const createPost = (postData, history) => dispatch => {
 			axios
 				.post('/api/posts/new', { ...postData, tags })
 				.then(res => {
-					console.log(res.data);
 					dispatch({
 						type: ADD_POST,
 						payload: {
@@ -69,7 +69,6 @@ export const createPost = (postData, history) => dispatch => {
 					});
 
 					let oldPosts = JSON.parse(localStorage.getItem('posts'));
-					console.log('old posts', oldPosts);
 					oldPosts.push(res.data);
 					localStorage.setItem('posts', JSON.stringify(oldPosts));
 

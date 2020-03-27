@@ -22,7 +22,7 @@ import UserPosts from '../layout/UserPosts';
 import UserComments from '../layout/UserComments';
 import UserVotes from '../layout/UserVotes';
 import UserFavorites from '../layout/UserFavorites';
-import BackToHomeButton from '../element/BackToHomeButton';
+import BackToHomeButton from '../chunks/BackToHomeButton';
 
 class Profile extends Component {
 	state = {

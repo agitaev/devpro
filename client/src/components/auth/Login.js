@@ -10,7 +10,7 @@ import {
 	Typography,
 	TextField
 } from '@material-ui/core';
-import BackToHomeButton from '../element/BackToHomeButton';
+import BackToHomeButton from '../chunks/BackToHomeButton';
 
 class Login extends Component {
 	state = {

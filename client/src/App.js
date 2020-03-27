@@ -18,6 +18,7 @@ import Profile from './components/view/Profile';
 import BottomNavbar from './components/layout/BottomNavbar';
 import { Hidden } from '@material-ui/core';
 import TrendingBoard from './components/dashboard/TrendingBoard';
+import EmailConfirmation from './components/auth/EmailConfirmation';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -53,6 +54,11 @@ class App extends Component {
 						<Route exact path='/' component={Dashboard} />
 						<Route exact path='/register' component={Register} />
 						<Route exact path='/login' component={Login} />
+						<Route
+							exact
+							path='/email_confirmation'
+							component={EmailConfirmation}
+						/>
 						<Route
 							exact
 							path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid

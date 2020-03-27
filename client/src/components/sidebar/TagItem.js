@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Paper, Grid, Button } from '@material-ui/core';
-import TagChip from '../element/TagChip';
+import TagChip from '../chunks/TagChip';
 import { connect } from 'react-redux';
 import { followTag } from '../../actions/tagActions';
 

@@ -12,8 +12,8 @@ const UserSchema = new Schema(
 		},
 		username: {
 			type: String,
-			// required: true,
-			// unique: true,
+			required: true,
+			unique: true,
 			immutable: true,
 			trim: true
 		},
@@ -51,7 +51,12 @@ const UserSchema = new Schema(
 				},
 				action: Number
 			}
-		]
+		],
+		verified: {
+			type: Boolean,
+			default: false
+		},
+		confirmation_token: String
 	},
 	{
 		timestamps: {
