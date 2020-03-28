@@ -110,7 +110,6 @@ router.post('/:postId([0-9a-fA-F]{24})/action', async (req, res) => {
 							console.log('cannot find post', err);
 							res.status(400).json(err);
 						} else {
-							console.log(post);
 							res.status(202).send(post);
 						}
 					});

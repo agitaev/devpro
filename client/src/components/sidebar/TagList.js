@@ -9,7 +9,6 @@ import axios from 'axios';
 class TagList extends Component {
 	state = {
 		tags: [],
-		// user_tags: [],
 		isLoading: true
 	};
 

@@ -12,3 +12,4 @@ export const SAVE_POST = 'SAVE_POST';
 export const SYNC_SAVED_POSTS = 'SYNC_SAVED_POSTS';
 export const GET_TAGS = 'GET_TAGS';
 export const GET_TRENDING_POSTS = 'GET_TRENDING_POSTS';
+export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';

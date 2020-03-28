@@ -18,11 +18,12 @@ import {
 	withRouter
 } from 'react-router-dom';
 import compose from 'recompose/compose';
+import BackToHomeButton from '../chunks/BackToHomeButton';
 import UserPosts from '../layout/UserPosts';
 import UserComments from '../layout/UserComments';
 import UserVotes from '../layout/UserVotes';
 import UserFavorites from '../layout/UserFavorites';
-import BackToHomeButton from '../chunks/BackToHomeButton';
+import UserSettings from '../layout/UserSettings';
 
 class Profile extends Component {
 	state = {
@@ -54,7 +55,10 @@ class Profile extends Component {
 		const { user } = this.state;
 
 		return (
-			<Container maxWidth='lg' style={{ marginTop: '2rem' }}>
+			<Container
+				maxWidth='lg'
+				style={{ marginTop: '2rem', marginBottom: '6rem' }}
+			>
 				<Grid container spacing={4} justify='space-between'>
 					<Grid item md={3} xs={12}>
 						<BackToHomeButton />
@@ -86,7 +90,7 @@ class Profile extends Component {
 					<Grid item md={9} xs={12}>
 						<Paper style={{ marginBottom: '2rem' }}>
 							<Tabs
-								variant='fullWidth'
+								variant='scrollable'
 								value={this.state.tabValue}
 								indicatorColor='primary'
 								textColor='primary'
@@ -126,24 +130,32 @@ class Profile extends Component {
 							</Tabs>
 						</Paper>
 						<Switch>
-							<Route exact path={match.path}>
-								<h3>Settings</h3>
-							</Route>
+							<Route
+								exact
+								path={`${match.path}/`}
+								render={routeProps => <UserSettings />}
+							/>
 							<Route
 								exact
 								path={`${match.path}/posts`}
-								render={routeProps => <UserPosts posts={user.saved_posts} />}
+								render={routeProps => <UserPosts posts={user.created_posts} />}
 							/>
 							<Route
 								exact
 								path={`${match.path}/comments`}
 								component={UserComments}
 							/>
-							<Route exact path={`${match.path}/votes`} component={UserVotes} />
+							<Route
+								exact
+								path={`${match.path}/votes`}
+								render={routeProps => <UserVotes posts={user.voted_posts} />}
+							/>
 							<Route
 								exact
 								path={`${match.path}/favorites`}
-								component={UserFavorites}
+								render={routeProps => (
+									<UserFavorites posts={user.saved_posts} />
+								)}
 							/>
 						</Switch>
 					</Grid>

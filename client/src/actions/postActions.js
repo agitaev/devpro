@@ -4,7 +4,8 @@ import {
 	GET_POSTS,
 	ADD_POST,
 	VOTE_POST,
-	SYNC_SAVED_POSTS
+	SYNC_SAVED_POSTS,
+	SET_SEARCH_TEXT
 } from './types';
 
 // Retrieve Posts
@@ -20,18 +21,6 @@ export const getPosts = () => async dispatch => {
 			console.log(err);
 		});
 };
-
-// Retrieve Single Post
-// export const getPost = postId => dispatch => {
-// 	axios
-// 		.get(`/api/posts/${postId}`)
-// 		.then(res => {
-// 			const post = res.data;
-// 			// dispatch({ type: GET_POST, payload: post });
-// 			localStorage.setItem('post', JSON.stringify(post));
-// 		})
-// 		.catch(err => console.log(err));
-// };
 
 // Create Post
 export const createPost = (postData, history) => dispatch => {
@@ -99,4 +88,11 @@ export const savePost = (postId, userId) => dispatch => {
 			return dispatch({ type: SYNC_SAVED_POSTS, payload });
 		})
 		.catch(err => dispatch({ type: GET_ERRORS, payload: err }));
+};
+
+export const setSearchText = query => {
+	return {
+		type: SET_SEARCH_TEXT,
+		payload: query
+	};
 };

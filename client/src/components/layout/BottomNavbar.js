@@ -7,7 +7,8 @@ import {
 	ExploreOutlined as ExploreIcon,
 	ExpandLessOutlined as UpvoteIcon,
 	StarBorderOutlined as SaveIcon,
-	ChevronLeftOutlined as BackIcon
+	ChevronLeftOutlined as BackIcon,
+	SearchOutlined as SearchIcon
 } from '@material-ui/icons';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 		bottom: 0,
 		zIndex: 1100
 	},
-	menuIcon: {
+	icon: {
 		'& span': {
 			color: theme.palette.primary.contrastText
 		}
@@ -41,12 +42,6 @@ const BottomNavbar = props => {
 		setValue(newValue);
 	};
 
-	// const [pathname, setPathname] = React.useState('/');
-	// if (/[0-9a-fA-F]{24}/.test(window.location.pathname)) {
-	// 	setPathname('/posts');
-	// 	console.log(pathname);
-	// }
-
 	return (
 		<Fragment>
 			{isPostPage ? (
@@ -57,7 +52,7 @@ const BottomNavbar = props => {
 					className={classes.root}
 				>
 					<BottomNavigationAction
-						className={classes.menuIcon}
+						className={classes.icon}
 						label='Back To Home'
 						value='back'
 						component={RouterLink}
@@ -65,14 +60,14 @@ const BottomNavbar = props => {
 						icon={<BackIcon />}
 					/>
 					<BottomNavigationAction
-						className={classes.menuIcon}
+						className={classes.icon}
 						label='Save Post'
 						value='save'
 						onClick={() => props.savePost(postId, props.userId)}
 						icon={<SaveIcon />}
 					/>
 					<BottomNavigationAction
-						className={classes.menuIcon}
+						className={classes.icon}
 						label='Updoot'
 						value='upvote'
 						onClick={() => props.votePost(postId, 'upvote', props.userId)}
@@ -87,7 +82,7 @@ const BottomNavbar = props => {
 					className={classes.root}
 				>
 					<BottomNavigationAction
-						className={classes.menuIcon}
+						className={classes.icon}
 						label='Feed'
 						value='feed'
 						component={RouterLink}
@@ -95,7 +90,7 @@ const BottomNavbar = props => {
 						icon={<FeedIcon />}
 					/>
 					<BottomNavigationAction
-						className={classes.menuIcon}
+						className={classes.icon}
 						label='Explore'
 						value='explore'
 						component={RouterLink}
@@ -103,7 +98,15 @@ const BottomNavbar = props => {
 						icon={<ExploreIcon />}
 					/>
 					<BottomNavigationAction
-						className={classes.menuIcon}
+						className={classes.icon}
+						label='Search'
+						value='search'
+						component={RouterLink}
+						to='/searchboard'
+						icon={<SearchIcon />}
+					/>
+					<BottomNavigationAction
+						className={classes.icon}
 						label='Profile'
 						value='profile'
 						component={RouterLink}

@@ -10,8 +10,8 @@ const sendConfirmationEmail = async ({ user, url }) => {
 		}
 	});
 
-	console.log('user', user);
-	console.log('url', url);
+	// console.log('user', user);
+	// console.log('url', url);
 	return await transporter.sendMail({
 		from: '"Fred Foo 👻" <foo@bar.com>',
 		to: user.email,

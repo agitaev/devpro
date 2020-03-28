@@ -20,7 +20,7 @@ class PostItem extends Component {
 		post: { author: {}, tags: [] },
 		saved: false,
 		voted: false,
-		isLoading: false
+		isLoading: true
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
@@ -45,13 +45,9 @@ class PostItem extends Component {
 		}
 	};
 
-	// handleDownvotePostClick = () => {
-	// 	this.props.votePost(this.props.post._id, 'downvote', this.props.user.id);
-	// };
-
 	componentDidMount() {
 		const { user, saved_posts, voted_posts, post } = this.props;
-		// console.log(user);l=
+		if (post) this.setState({ isLoading: false });
 
 		if (user && saved_posts && saved_posts.length > 0) {
 			saved_posts.map(savedPost =>
@@ -61,10 +57,7 @@ class PostItem extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		// console.log(prevProps);
-
 		if (isEmpty(prevProps.user) && this.state.saved) {
-			console.log('updated');
 			this.setState({ saved: false });
 		}
 	}

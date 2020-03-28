@@ -1,27 +1,31 @@
-import { GET_POSTS, ADD_POST, VOTE_POST } from '../actions/types';
+import {
+	GET_POSTS,
+	ADD_POST,
+	VOTE_POST,
+	SET_SEARCH_TEXT
+} from '../actions/types';
 
-const initialState = [];
+const initialState = { list: [], searchText: '' };
 
 export default (state = initialState, action) => {
 	switch (action.type) {
 		case GET_POSTS:
-			return action.payload;
+			return { ...state, list: action.payload };
 		case ADD_POST:
-			return [...state, action.payload];
+			return { ...state, list: [...state.list, action.payload] };
 		case VOTE_POST: {
-			const postIndex = state.findIndex(
+			console.log('paylaod', action.payload);
+			const postIndex = state.list.findIndex(
 				post => post._id === action.payload._id
 			);
-			return state.map((post, index) => {
-				if (index !== postIndex) {
-					return post;
-				}
-				return {
-					...post,
-					...action.payload
-				};
-			});
+			const posts = state.list.map((post, index) =>
+				index !== postIndex ? post : { ...post, ...action.payload }
+			);
+
+			return { ...state, list: posts };
 		}
+		case SET_SEARCH_TEXT:
+			return { ...state, searchText: action.payload };
 		default:
 			return state;
 	}

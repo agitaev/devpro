@@ -16,7 +16,8 @@ class Login extends Component {
 	state = {
 		email: '',
 		password: '',
-		errors: {}
+		errors: {},
+		isLoading: false
 	};
 
 	componentDidMount() {
@@ -27,16 +28,8 @@ class Login extends Component {
 		}
 	}
 
-	UNSAFE_componentWillReceiveProps(nextProps) {
-		if (nextProps.auth.isAuthenticated) {
-			this.props.history.push('/'); // push user to dashboard when they login
-		}
-
-		if (nextProps.errors) {
-			this.setState({
-				errors: nextProps.errors
-			});
-		}
+	static getDerivedStateFromProps(props, state) {
+		return props.errors ? { errors: props.errors } : { errors: {} };
 	}
 
 	onChange = e => {
@@ -51,13 +44,17 @@ class Login extends Component {
 			password: this.state.password
 		};
 
-		this.props.loginUser(userData);
-		// since we handle the redirect within our component,
-		// we don't need to pass in this.props.history as a parameter
+		this.props.loginUser(userData, this.props.history);
+
+		// change button behaviour
+		this.setState({ isLoading: true });
+		setTimeout(() => {
+			this.setState({ isLoading: false });
+		}, 3000);
 	};
 
 	render() {
-		const { errors } = this.state;
+		const { errors, isLoading } = this.state;
 
 		return (
 			<Container style={{ margin: '4rem auto' }}>
@@ -109,12 +106,13 @@ class Login extends Component {
 							/>
 							<Button
 								type='submit'
-								variant='contained'
+								variant={isLoading ? 'outlined' : 'contained'}
 								style={{ marginTop: '1rem', float: 'right' }}
 								size='large'
 								color='primary'
+								disabled={isLoading}
 							>
-								Sign in
+								{isLoading ? 'Fetching...' : 'Sign in'}
 							</Button>
 						</form>
 					</Grid>
@@ -132,8 +130,7 @@ Login.propTypes = {
 
 const mapStateToProps = state => ({
 	auth: state.auth,
-	errors: state.errors,
-	posts: state.posts
+	errors: state.errors
 });
 
 export default connect(

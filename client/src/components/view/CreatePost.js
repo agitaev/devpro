@@ -14,6 +14,7 @@ import Alert from '../chunks/Alert';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createPost } from '../../actions/postActions';
+import { Autocomplete } from '@material-ui/lab';
 
 class CreatePost extends Component {
 	state = {
@@ -76,7 +77,7 @@ class CreatePost extends Component {
 		} = this.state;
 
 		return (
-			<Container maxWidth='lg' style={{ margin: '4rem auto 6rem' }}>
+			<Container maxWidth='lg' style={{ margin: '4rem auto 10rem' }}>
 				{_.isEmpty(errors) ? (
 					<Snackbar
 						style={{ top: '60px' }}
@@ -191,7 +192,7 @@ class CreatePost extends Component {
 								<Typography variant='h6' gutterBottom>
 									Tags
 								</Typography>
-								<TextField
+								{/*<TextField
 									size='small'
 									variant='outlined'
 									fullWidth
@@ -206,6 +207,30 @@ class CreatePost extends Component {
 											: 'Add up to 4 tags separated by comma to describe the stack'
 									}
 									error={errors.tags ? true : false}
+								/>*/}
+								<Autocomplete
+									multiple
+									id='tags'
+									options={[
+										{ title: 'this is title' },
+										{ title: 'this is another title' }
+									]}
+									getOptionLabel={option => option.title}
+									renderInput={params => (
+										<TextField
+											{...params}
+											size='small'
+											variant='outlined'
+											fullWidth
+											InputLabelProps={{ shrink: false }}
+											helperText={
+												errors.tags
+													? errors.tags
+													: 'Add up to 4 tags separated by comma to describe the stack'
+											}
+											error={errors.tags ? true : false}
+										/>
+									)}
 								/>
 							</div>
 							<Button

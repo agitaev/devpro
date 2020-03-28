@@ -19,6 +19,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import { Casino as CasinoIcon, Search as SearchIcon } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { BorderColorOutlined as CreatePostIcon } from '@material-ui/icons/';
+import { setSearchText } from '../../actions/postActions';
 
 const useStyles = makeStyles(theme => ({
 	grow: {
@@ -73,7 +74,7 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const Navbar = ({ logoutUser, auth }) => {
+const Navbar = ({ auth, setSearchText, logoutUser, searchText }) => {
 	const classes = useStyles();
 	const match = useRouteMatch();
 
@@ -101,7 +102,7 @@ const Navbar = ({ logoutUser, auth }) => {
 						{auth.isAuthenticated ? (
 							<React.Fragment>
 								<Button color='inherit' component={RouterLink} to='/posts/new'>
-									I Have An Idea
+									Create Post
 								</Button>
 								<Button color='inherit' component={RouterLink} to='/me'>
 									Profile
@@ -123,11 +124,13 @@ const Navbar = ({ logoutUser, auth }) => {
 							</div>
 							<InputBase
 								placeholder='Search'
+								value={searchText}
 								classes={{
 									root: classes.inputRoot,
 									input: classes.inputInput
 								}}
 								inputProps={{ 'aria-label': 'search' }}
+								onChange={e => setSearchText(e.target.value)}
 							/>
 						</div>
 					</Grid>
@@ -150,10 +153,11 @@ const Navbar = ({ logoutUser, auth }) => {
 };
 
 const mapStateToProps = state => ({
-	auth: state.auth
+	auth: state.auth,
+	searchText: state.posts.searchText
 });
 
 export default connect(
 	mapStateToProps,
-	{ logoutUser }
+	{ setSearchText }
 )(withRouter(Navbar));

@@ -182,7 +182,9 @@ class Post extends Component {
 }
 
 const mapStateToProps = (state, props) => {
-	const post = state.posts.find(post => post._id === props.match.params.postId);
+	const post = state.posts.list.find(
+		post => post._id === props.match.params.postId
+	);
 	return {
 		post,
 		userId: state.auth.user.id

@@ -81,7 +81,7 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res) => {
 	// Form validation
 	const { errors, isValid } = validateLoginInput(req.body);
-
+	const { db } = User;
 	// Check validation
 	if (!isValid) {
 		return res.status(400).json(errors);
@@ -89,55 +89,78 @@ router.post('/login', (req, res) => {
 
 	const { email, password } = req.body;
 
-	// Find user by email
-	User.findOne({ email })
-		.populate('followed_tags')
-		.populate('voted_posts')
-		.populate('saved_posts')
-		.populate('created_posts')
-		.exec((err, user) => {
-			// console.log(user);
-			// Check if user exists
-			if (!user) {
-				return res.status(404).json({ emailnotfound: 'Email not found' });
+	// db state 0 => disconnected		HTTP 504
+	// db state 1 => connected			HTTP 200
+	// db state 2 => connecting
+	// db state 3 => disconnecting
+
+	const checkDbState = setInterval(() => {
+		console.log(db.readyState);
+		switch (db.readyState) {
+			case 0: {
+				res
+					.status(504)
+					.send({ server: 'Unable to connect. Please try again later.' });
+				clearInterval(checkDbState);
 			}
-
-			// Check password
-			bcrypt.compare(password, user.password).then(isMatch => {
-				if (isMatch) {
-					// User matched
-					// Create JWT Payload
-					const payload = {
-						id: user.id,
-						name: user.name,
-						username: user.username,
-						saved_posts: user.saved_posts,
-						voted_posts: user.voted_posts,
-						created_posts: user.created_posts,
-						followed_tags: user.followed_tags
-					};
-
-					// Sign token
-					jwt.sign(
-						payload,
-						keys.secretOrKey,
-						{
-							expiresIn: 31556926 // 1 year in seconds
-						},
-						(err, token) => {
-							res.json({
-								success: true,
-								token: 'Bearer ' + token
-							});
+			case 1: {
+				// Find user by email
+				User.findOne({ email })
+					.populate('followed_tags')
+					.populate('saved_posts')
+					.populate('created_posts')
+					.populate('voted_posts.post')
+					.exec((err, user) => {
+						// Check if user exists
+						if (!user) {
+							return res.status(404).json({ emailnotfound: 'Email not found' });
 						}
-					);
-				} else {
-					return res
-						.status(400)
-						.json({ passwordincorrect: 'Password incorrect' });
-				}
-			});
-		});
+
+						// Check password
+						bcrypt.compare(password, user.password).then(isMatch => {
+							if (isMatch) {
+								// User matched
+								// Create JWT Payload
+								const payload = {
+									id: user.id,
+									name: user.name,
+									username: user.username,
+									saved_posts: user.saved_posts,
+									voted_posts: user.voted_posts,
+									created_posts: user.created_posts,
+									followed_tags: user.followed_tags
+								};
+
+								console.log(payload);
+
+								// Sign token
+								jwt.sign(
+									payload,
+									keys.secretOrKey,
+									{
+										expiresIn: 31556926 // 1 year in seconds
+									},
+									(err, token) => {
+										res.json({
+											success: true,
+											token: 'Bearer ' + token
+										});
+									}
+								);
+							} else {
+								return res
+									.status(400)
+									.json({ passwordincorrect: 'Password incorrect' });
+							}
+						});
+					});
+
+				clearInterval(checkDbState);
+			}
+			default:
+				return;
+		}
+	}, 1000);
 });
 
 // @route POST api/users/email_confirmation
