@@ -8,9 +8,11 @@ import {
 	Grid,
 	Button,
 	Typography,
-	TextField
+	TextField,
+	Snackbar
 } from '@material-ui/core';
 import BackToHomeButton from '../chunks/BackToHomeButton';
+import Alert from '../chunks/Alert';
 
 class Login extends Component {
 	state = {
@@ -58,6 +60,11 @@ class Login extends Component {
 
 		return (
 			<Container style={{ margin: '4rem auto' }}>
+				{errors.server && (
+					<Snackbar>
+						<Alert>{errors.server}</Alert>
+					</Snackbar>
+				)}
 				<Grid container justify='center'>
 					<Grid item xs={10} sm={8} md={6} lg={5}>
 						<BackToHomeButton />

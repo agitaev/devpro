@@ -2,10 +2,13 @@ import React from 'react';
 import { Paper, Typography, Grid, Button, IconButton } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import { ExpandLessOutlined as UpvoteIcon } from '@material-ui/icons';
+import {
+	ExpandLessOutlined as UpvoteIcon,
+	ExpandMoreOutlined as DownvoteIcon
+} from '@material-ui/icons';
 
 const UserVote = props => {
-	const { post } = props;
+	const { post } = props.post;
 
 	return (
 		<div style={{ marginTop: '1rem' }}>
@@ -23,7 +26,7 @@ const UserVote = props => {
 						style={{ background: '#f4f4f4' }}
 					>
 						<IconButton aria-label='upvote post'>
-							<UpvoteIcon />
+							{props.post.action === 1 ? <UpvoteIcon /> : <DownvoteIcon />}
 						</IconButton>
 					</Grid>
 					<Grid item xs={7} sm={8} lg={9}>

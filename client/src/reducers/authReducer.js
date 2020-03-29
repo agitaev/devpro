@@ -1,7 +1,8 @@
 import {
 	SET_CURRENT_USER,
 	USER_LOADING,
-	SYNC_SAVED_POSTS
+	SYNC_SAVED_POSTS,
+	SYNC_VOTED_POSTS
 } from '../actions/types';
 const isEmpty = require('is-empty');
 
@@ -32,6 +33,10 @@ export default (state = initialState, action) => {
 					saved_posts: [...state.user.saved_posts, action.payload]
 				}
 			};
+		case SYNC_VOTED_POSTS: {
+			console.log(action.payload);
+			return state;
+		}
 		default:
 			return state;
 	}

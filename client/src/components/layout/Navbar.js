@@ -81,7 +81,7 @@ const Navbar = ({ auth, setSearchText, logoutUser, searchText }) => {
 	return (
 		<AppBar position='sticky'>
 			<Container maxWidth='lg'>
-				<Toolbar variant='dense'>
+				<Toolbar variant='dense' disableGutters>
 					<Grid container alignItems='center'>
 						<CasinoIcon />
 						<Typography

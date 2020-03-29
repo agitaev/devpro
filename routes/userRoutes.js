@@ -131,8 +131,6 @@ router.post('/login', (req, res) => {
 									followed_tags: user.followed_tags
 								};
 
-								console.log(payload);
-
 								// Sign token
 								jwt.sign(
 									payload,

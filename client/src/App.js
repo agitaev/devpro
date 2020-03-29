@@ -19,8 +19,8 @@ import BottomNavbar from './components/layout/BottomNavbar';
 import { Hidden } from '@material-ui/core';
 import TrendingBoard from './components/dashboard/TrendingBoard';
 import EmailConfirmation from './components/auth/EmailConfirmation';
-import SearchBoard from './components/dashboard/SearchBoard';
 import TagPosts from './components/layout/TagPosts';
+import SearchBoard from './components/dashboard/SearchBoard';
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -73,7 +73,7 @@ class App extends Component {
 						/>
 						<Route exact path='/tags/:tag' component={TagPosts} />
 						<Route exact path='/trending' component={TrendingBoard} />
-						<Route exact path='/searchboard' component={SearchBoard} />
+						<Route exact path='/search' component={SearchBoard} />
 						<Switch>
 							<PrivateRoute exact path='/posts/new' component={CreatePost} />
 							<PrivateRoute path='/me' component={Profile} />

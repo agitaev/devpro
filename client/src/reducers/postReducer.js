@@ -14,7 +14,6 @@ export default (state = initialState, action) => {
 		case ADD_POST:
 			return { ...state, list: [...state.list, action.payload] };
 		case VOTE_POST: {
-			console.log('paylaod', action.payload);
 			const postIndex = state.list.findIndex(
 				post => post._id === action.payload._id
 			);

@@ -97,14 +97,16 @@ const BottomNavbar = props => {
 						to='/trending'
 						icon={<ExploreIcon />}
 					/>
-					<BottomNavigationAction
-						className={classes.icon}
-						label='Search'
-						value='search'
-						component={RouterLink}
-						to='/searchboard'
-						icon={<SearchIcon />}
-					/>
+					{
+						<BottomNavigationAction
+							className={classes.icon}
+							label='Search'
+							value='search'
+							component={RouterLink}
+							to='/search'
+							icon={<SearchIcon />}
+						/>
+					}
 					<BottomNavigationAction
 						className={classes.icon}
 						label='Profile'

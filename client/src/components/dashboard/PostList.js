@@ -64,9 +64,15 @@ PostList.propTypes = {
 const mapStateToProps = state => {
 	const { list, searchText } = state.posts;
 
-	return {
-		posts: list.filter(post => post.title.includes(searchText))
-	};
+	if (searchText !== '') {
+		return {
+			posts: list.filter(post => post.title.includes(searchText))
+		};
+	} else {
+		return {
+			posts: list
+		};
+	}
 };
 
 export default connect(

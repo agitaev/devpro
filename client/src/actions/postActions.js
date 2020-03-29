@@ -5,7 +5,8 @@ import {
 	ADD_POST,
 	VOTE_POST,
 	SYNC_SAVED_POSTS,
-	SET_SEARCH_TEXT
+	SET_SEARCH_TEXT,
+	SYNC_VOTED_POSTS
 } from './types';
 
 // Retrieve Posts
@@ -76,6 +77,7 @@ export const votePost = (postId, action, userId) => dispatch => {
 		.post(`/api/posts/${postId}/action`, { action, userId })
 		.then(res => {
 			dispatch({ type: VOTE_POST, payload: res.data });
+			// dispatch({ type: SYNC_VOTED_POSTS, payload: res.data });
 		})
 		.catch(err => console.log(err));
 };

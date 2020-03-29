@@ -10,6 +10,7 @@ export const VOTE_POST = 'VOTE_POST';
 export const GET_POST = 'GET_POST';
 export const SAVE_POST = 'SAVE_POST';
 export const SYNC_SAVED_POSTS = 'SYNC_SAVED_POSTS';
+export const SYNC_VOTED_POSTS = 'SYNC_VOTED_POSTS';
 export const GET_TAGS = 'GET_TAGS';
 export const GET_TRENDING_POSTS = 'GET_TRENDING_POSTS';
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';

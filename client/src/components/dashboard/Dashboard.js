@@ -12,6 +12,7 @@ import TagList from '../sidebar/TagList';
 import TrendingList from '../sidebar/TrendingList';
 import { connect } from 'react-redux';
 import Alert from '../chunks/Alert';
+import SearchBar from './SearchBoard';
 
 class Dashboard extends Component {
 	state = {
@@ -37,7 +38,7 @@ class Dashboard extends Component {
 		const { showSnackbar, email } = this.state;
 
 		return (
-			<Container style={{ margin: '2rem auto 5rem' }}>
+			<Container style={{ margin: '1rem auto 5rem', padding: 0 }}>
 				{showSnackbar ? (
 					<Snackbar
 						style={{ top: '60px' }}
