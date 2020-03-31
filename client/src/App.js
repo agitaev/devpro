@@ -16,11 +16,16 @@ import Post from './components/view/Post';
 import CreatePost from './components/view/CreatePost';
 import Profile from './components/view/Profile';
 import BottomNavbar from './components/layout/BottomNavbar';
-import { Hidden } from '@material-ui/core';
 import TrendingBoard from './components/dashboard/TrendingBoard';
 import EmailConfirmation from './components/auth/EmailConfirmation';
 import TagPosts from './components/layout/TagPosts';
 import SearchBoard from './components/dashboard/SearchBoard';
+
+import { Hidden, ThemeProvider, createMuiTheme } from '@material-ui/core';
+import { light, dark } from './utils/theme';
+
+const lightTheme = createMuiTheme(light);
+const darkTheme = createMuiTheme(dark);
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -47,39 +52,41 @@ class App extends Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<Router>
-					<div className='App'>
-						<Navbar />
-						<Hidden mdUp>
-							<BottomNavbar />
-						</Hidden>
-						<Route exact path='/' component={Dashboard} />
-						<Route exact path='/register' component={Register} />
-						<Route exact path='/login' component={Login} />
-						<Route
-							exact
-							path='/email_confirmation'
-							component={EmailConfirmation}
-						/>
-						<Route
-							exact
-							path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
-							component={Post}
-						/>
-						<Route
-							exact
-							path='/users/:postId([0-9a-fA-F]{24})' // match mongodb objectid
-							component={Profile}
-						/>
-						<Route exact path='/tags/:tag' component={TagPosts} />
-						<Route exact path='/trending' component={TrendingBoard} />
-						<Route exact path='/search' component={SearchBoard} />
-						<Switch>
-							<PrivateRoute exact path='/posts/new' component={CreatePost} />
-							<PrivateRoute path='/me' component={Profile} />
-						</Switch>
-					</div>
-				</Router>
+				<ThemeProvider theme={lightTheme}>
+					<Router>
+						<div className='App'>
+							<Navbar />
+							<Hidden mdUp>
+								<BottomNavbar />
+							</Hidden>
+							<Route exact path='/' component={Dashboard} />
+							<Route exact path='/register' component={Register} />
+							<Route exact path='/login' component={Login} />
+							<Route
+								exact
+								path='/email_confirmation'
+								component={EmailConfirmation}
+							/>
+							<Route
+								exact
+								path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
+								component={Post}
+							/>
+							<Route
+								exact
+								path='/users/:userId([0-9a-fA-F]{24})' // match mongodb objectid
+								component={Profile}
+							/>
+							<Route exact path='/tags/:tag' component={TagPosts} />
+							<Route exact path='/trending' component={TrendingBoard} />
+							<Route exact path='/search' component={SearchBoard} />
+							<Switch>
+								<PrivateRoute exact path='/posts/new' component={CreatePost} />
+								<PrivateRoute path='/me' component={Profile} />
+							</Switch>
+						</div>
+					</Router>
+				</ThemeProvider>
 			</Provider>
 		);
 	}

@@ -9,6 +9,7 @@ import {
 
 const UserVote = props => {
 	const { post } = props.post;
+	console.log(post);
 
 	return (
 		<div style={{ marginTop: '1rem' }}>
@@ -26,7 +27,11 @@ const UserVote = props => {
 						style={{ background: '#f4f4f4' }}
 					>
 						<IconButton aria-label='upvote post'>
-							{props.post.action === 1 ? <UpvoteIcon /> : <DownvoteIcon />}
+							{post.action && post.action === 1 ? (
+								<UpvoteIcon />
+							) : (
+								<DownvoteIcon />
+							)}
 						</IconButton>
 					</Grid>
 					<Grid item xs={7} sm={8} lg={9}>

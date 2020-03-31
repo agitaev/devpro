@@ -40,8 +40,6 @@ router.post('/new', (req, res) => {
 	// Form validation
 	const { errors, isValid } = validatePostInput(req.body);
 	const { author, title, subtitle, body, tags } = req.body;
-	// console.log(errors);
-	// console.log(req.body);
 
 	if (!isValid) {
 		return res.status(400).json(errors);

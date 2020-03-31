@@ -34,8 +34,13 @@ export default (state = initialState, action) => {
 				}
 			};
 		case SYNC_VOTED_POSTS: {
-			console.log(action.payload);
-			return state;
+			return {
+				...state,
+				user: {
+					...state.user,
+					voted_posts: [...state.user.voted_posts, action.payload]
+				}
+			};
 		}
 		default:
 			return state;

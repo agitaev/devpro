@@ -1,7 +1,12 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from './types';
+import {
+	GET_ERRORS,
+	SET_CURRENT_USER,
+	USER_LOADING,
+	LOGOUT_USER
+} from './types';
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -75,6 +80,7 @@ export const logoutUser = () => dispatch => {
 	setAuthToken(false);
 	// Set current user to empty object {} which will set isAuthenticated to false
 	dispatch(setCurrentUser({}));
+	dispatch({ type: LOGOUT_USER });
 };
 
 // Verify user email

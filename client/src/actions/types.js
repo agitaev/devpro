@@ -1,6 +1,7 @@
 export const GET_ERRORS = 'GET_ERRORS';
 export const USER_LOADING = 'USER_LOADING';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+export const LOGOUT_USER = 'LOGOUT_USER';
 export const GET_POSTS = 'GET_POSTS';
 export const SET_POST = 'SET_POST';
 export const ADD_POST = 'ADD_POST';
@@ -11,6 +12,8 @@ export const GET_POST = 'GET_POST';
 export const SAVE_POST = 'SAVE_POST';
 export const SYNC_SAVED_POSTS = 'SYNC_SAVED_POSTS';
 export const SYNC_VOTED_POSTS = 'SYNC_VOTED_POSTS';
+export const SYNC_CREATED_POSTS = 'SYNC_CREATED_POSTS';
 export const GET_TAGS = 'GET_TAGS';
 export const GET_TRENDING_POSTS = 'GET_TRENDING_POSTS';
 export const SET_SEARCH_TEXT = 'SET_SEARCH_TEXT';
+export const RESET_ERRORS = 'RESET_ERRORS';

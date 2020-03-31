@@ -34,9 +34,9 @@ const validatePostInput = data => {
 	}
 
 	// Check if person is authorized (less likely)
-	if (Validator.isEmpty(data.author)) {
-		errors.author = 'How did you get here?';
-	}
+	// if (Validator.isEmpty(data.author)) {
+	// 	errors.author = 'How did you get here?';
+	// }
 
 	// Check if it includes at least one tag
 	if (!data.tags || data.tags.length === 0) {

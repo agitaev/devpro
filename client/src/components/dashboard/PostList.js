@@ -8,17 +8,8 @@ import PostItemSkeleton from '../../skeletons/PostItemSkeleton';
 import _ from 'underscore';
 
 class PostList extends Component {
-	state = {
-		posts: []
-	};
-
 	componentDidMount() {
-		if (localStorage.getItem('posts')) {
-			this.setState({
-				posts: JSON.parse(localStorage.getItem('posts'))
-			});
-		}
-
+		// console.log('mounted');
 		this.props.getPosts();
 	}
 
@@ -30,7 +21,7 @@ class PostList extends Component {
 	}
 
 	render() {
-		const { posts } = this.state;
+		const { posts } = this.props;
 		const skeletons = [];
 		_.times(9, index =>
 			skeletons.push(

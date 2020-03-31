@@ -161,6 +161,23 @@ router.post('/login', (req, res) => {
 	}, 1000);
 });
 
+// @route GET api/users/:id
+// @desc Get user by ID
+// @access Public
+router.get('/:id', (req, res) => {
+	const { id } = req.params;
+
+	User.findById(id)
+		.populate('followed_tags')
+		.populate('saved_posts')
+		.populate('created_posts')
+		.populate('voted_posts.post')
+		.exec((err, user) => {
+			if (err) res.status(400).send(err);
+			res.send(user);
+		});
+});
+
 // @route POST api/users/email_confirmation
 // @desc Update user property to CONFIRMED
 // @access Public

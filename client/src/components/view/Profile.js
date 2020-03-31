@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
 	Container,
@@ -24,6 +24,7 @@ import UserComments from '../layout/UserComments';
 import UserVotes from '../layout/UserVotes';
 import UserFavorites from '../layout/UserFavorites';
 import UserSettings from '../layout/UserSettings';
+import axios from 'axios';
 
 class Profile extends Component {
 	state = {
@@ -43,6 +44,11 @@ class Profile extends Component {
 
 		if ((auth.isAuthenticated && match.path === '/me') || isSelf) {
 			this.setState({ self: true, user: auth.user });
+		} else if (isUserPage) {
+			axios
+				.get(`/api/users/${match.params.userId}`)
+				.then(res => this.setState({ user: res.data }))
+				.catch(err => console.log(err.response));
 		}
 	}
 
@@ -52,7 +58,7 @@ class Profile extends Component {
 
 	render() {
 		const { match } = this.props;
-		const { user } = this.state;
+		const { user, self } = this.state;
 
 		return (
 			<Container
@@ -77,87 +83,101 @@ class Profile extends Component {
 								{user.username ? `@${user.username}` : ''}
 							</Typography>
 							<Divider style={{ margin: '1rem auto' }} />
-							<Button
-								variant='contained'
-								color='primary'
-								fullWidth
-								onClick={() => this.props.logoutUser()}
-							>
-								sign out
-							</Button>
+							{self ? (
+								<Button
+									variant='contained'
+									color='primary'
+									fullWidth
+									onClick={() => this.props.logoutUser()}
+								>
+									sign out
+								</Button>
+							) : (
+								<Button variant='contained' color='primary' fullWidth>
+									follow
+								</Button>
+							)}
 						</Paper>
 					</Grid>
 					<Grid item md={9} xs={12}>
-						<Paper style={{ marginBottom: '2rem' }}>
-							<Tabs
-								variant='scrollable'
-								value={this.state.tabValue}
-								indicatorColor='primary'
-								textColor='primary'
-								onChange={this.handleTabChange}
-								aria-label='disabled tabs example'
-							>
-								<Tab
-									label='Settings'
-									value='settings'
-									component={RouterLink}
-									to={match.url}
-								/>
-								<Tab
-									label='Posts'
-									value='posts'
-									component={RouterLink}
-									to={`${match.url}/posts`}
-								/>
-								<Tab
-									label='Comments'
-									value='comments'
-									component={RouterLink}
-									to={`${match.url}/comments`}
-								/>
-								<Tab
-									label='Votes'
-									value='votes'
-									component={RouterLink}
-									to={`${match.url}/votes`}
-								/>
-								<Tab
-									label='Favorites'
-									value='favorites'
-									component={RouterLink}
-									to={`${match.url}/favorites`}
-								/>
-							</Tabs>
-						</Paper>
-						<Switch>
-							<Route
-								exact
-								path={`${match.path}/`}
-								render={routeProps => <UserSettings />}
-							/>
-							<Route
-								exact
-								path={`${match.path}/posts`}
-								render={routeProps => <UserPosts posts={user.created_posts} />}
-							/>
-							<Route
-								exact
-								path={`${match.path}/comments`}
-								component={UserComments}
-							/>
-							<Route
-								exact
-								path={`${match.path}/votes`}
-								render={routeProps => <UserVotes posts={user.voted_posts} />}
-							/>
-							<Route
-								exact
-								path={`${match.path}/favorites`}
-								render={routeProps => (
-									<UserFavorites posts={user.saved_posts} />
-								)}
-							/>
-						</Switch>
+						{self && (
+							<Fragment>
+								<Paper style={{ marginBottom: '2rem' }}>
+									<Tabs
+										variant='scrollable'
+										value={this.state.tabValue}
+										indicatorColor='primary'
+										textColor='primary'
+										onChange={this.handleTabChange}
+										aria-label='disabled tabs example'
+									>
+										<Tab
+											label='Settings'
+											value='settings'
+											component={RouterLink}
+											to={match.url}
+										/>
+										<Tab
+											label='Posts'
+											value='posts'
+											component={RouterLink}
+											to={`${match.url}/posts`}
+										/>
+										<Tab
+											label='Comments'
+											value='comments'
+											component={RouterLink}
+											to={`${match.url}/comments`}
+										/>
+										<Tab
+											label='Votes'
+											value='votes'
+											component={RouterLink}
+											to={`${match.url}/votes`}
+										/>
+										<Tab
+											label='Favorites'
+											value='favorites'
+											component={RouterLink}
+											to={`${match.url}/favorites`}
+										/>
+									</Tabs>
+								</Paper>
+								<Switch>
+									<Route
+										exact
+										path={`${match.path}/`}
+										render={routeProps => <UserSettings />}
+									/>
+									<Route
+										exact
+										path={`${match.path}/posts`}
+										render={routeProps => (
+											<UserPosts posts={user.created_posts} />
+										)}
+									/>
+									<Route
+										exact
+										path={`${match.path}/comments`}
+										component={UserComments}
+									/>
+									<Route
+										exact
+										path={`${match.path}/votes`}
+										render={routeProps => (
+											<UserVotes posts={user.voted_posts} />
+										)}
+									/>
+									<Route
+										exact
+										path={`${match.path}/favorites`}
+										render={routeProps => (
+											<UserFavorites posts={user.saved_posts} />
+										)}
+									/>
+								</Switch>
+							</Fragment>
+						)}
 					</Grid>
 				</Grid>
 			</Container>

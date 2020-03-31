@@ -3,25 +3,28 @@ import { GET_TAGS, GET_ERRORS } from './types';
 
 // Retrieve tags
 export const getTags = () => dispatch => {
-	axios
-		.get('/api/tags')
-		.then(res => {
-			const tags = res.data;
-			dispatch({ type: GET_TAGS, payload: tags });
-			localStorage.setItem('tags', JSON.stringify(tags));
-		})
-		.catch(err => {
-			dispatch({ type: GET_ERRORS, payload: err });
-		});
+	fetch('/api/tags')
+		.then(res => res.json())
+		.then(tags => dispatch({ type: GET_TAGS, payload: tags }))
+		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response }));
 };
 
-export const getRecommendations = tags => {
-	// console.log(tags);
-};
-
-export const followTag = (tagId, userId) => {
-	axios
-		.post(`/api/reactions/tag/${tagId}/subscribe`, { userId })
-		.then(res => console.log(res))
-		.catch(err => console.log(err));
+export const followTag = (tag, userId) => {
+	if (!/[0-9a-fA-F]{24}/.test(tag)) {
+		const jsonBody = { userId };
+		fetch(`/api/tags/${tag}`)
+			.then(res => res.json())
+			.then(data => {
+				return fetch(`/api/reactions/tag/${data[0]._id}/subscribe`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(jsonBody)
+				});
+			})
+			.then(res => res.json())
+			.then(res => console.log(res))
+			.catch(err => console.log(err));
+	}
 };

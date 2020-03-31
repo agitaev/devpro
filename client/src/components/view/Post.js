@@ -38,11 +38,6 @@ class Post extends Component {
 			<React.Fragment>
 				{post ? (
 					<Container maxWidth='lg' style={{ marginBottom: '6rem' }}>
-						{/*<img
-							src='https://via.placeholder.com/800x400'
-							style={{ width: '100%', height: 'auto' }}
-							alt='meaningful text'
-						/>*/}
 						<Grid container justify='center'>
 							<Grid container item sm={12} md={8} lg={6}>
 								<div style={{ marginTop: '2rem' }}>
@@ -94,9 +89,6 @@ class Post extends Component {
 									</header>
 								</div>
 								<div style={{ padding: '1rem 0' }}>
-									<Typography variant='h6' gutterBottom>
-										Description
-									</Typography>
 									<Typography variant='body1' gutterBottom>
 										{post.body}
 									</Typography>

@@ -11,25 +11,37 @@ import _ from 'underscore';
 import compose from 'recompose/compose';
 import BackToHomeButton from '../chunks/BackToHomeButton';
 import Alert from '../chunks/Alert';
+import { Autocomplete } from '@material-ui/lab';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { createPost } from '../../actions/postActions';
-import { Autocomplete } from '@material-ui/lab';
+import { getTags } from '../../actions/tagActions';
 
 class CreatePost extends Component {
 	state = {
 		title: '',
 		subtitle: '',
 		body: '',
-		tags: '',
+		tags: [],
 		errors: {},
 		showSnackbar: false,
-		snackbarTimer: 3
+		snackbarTimer: 3,
+		tagOptions: []
 	};
 
-	UNSAFE_componentWillReceiveProps(nextProps) {
-		if (nextProps.errors) {
-			this.setState({ errors: nextProps.errors });
+	componentDidMount() {
+		this.props.getTags();
+	}
+
+	static getDerivedStateFromProps(props, state) {
+		if (props.tags) {
+			return { tagOptions: props.tags };
+		}
+	}
+
+	componentDidUpdate(prevProps) {
+		if (prevProps.errors !== this.props.errors) {
+			this.setState({ errors: this.props.errors });
 		}
 	}
 
@@ -39,11 +51,8 @@ class CreatePost extends Component {
 
 	onSubmit = async e => {
 		e.preventDefault();
-		const tags =
-			this.state.tags.length === 1 && this.state.tags[0] === ''
-				? []
-				: this.state.tags.split(',').map(tag => tag.trim());
 
+		const tags = this.state.tags.map(({ _id }) => _id);
 		const post = {
 			title: this.state.title,
 			subtitle: this.state.subtitle,
@@ -54,15 +63,10 @@ class CreatePost extends Component {
 
 		this.props.createPost(post, this.props.history);
 		this.setState({ showSnackbar: true });
+	};
 
-		await setInterval(() => {
-			if (this.state.snackbarTimer === 1) {
-				clearInterval();
-				this.setState({ showSnackbar: false });
-			} else {
-				this.setState({ snackbarTimer: this.state.snackbarTimer - 1 });
-			}
-		}, 1000);
+	handleSnackbarTimer = () => {
+		this.setState({ showSnackbar: false });
 	};
 
 	render() {
@@ -82,16 +86,20 @@ class CreatePost extends Component {
 					<Snackbar
 						style={{ top: '60px' }}
 						open={showSnackbar}
+						onClose={this.handleSnackbarTimer}
+						autoHideDuration={3000}
 						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 					>
 						<Alert severity='success'>
-							Success! You will be redirected in {snackbarTimer}...
+							Success! You will be redirected in few seconds...
 						</Alert>
 					</Snackbar>
 				) : (
 					<Snackbar
 						style={{ top: '60px' }}
 						open={showSnackbar}
+						onClose={this.handleSnackbarTimer}
+						autoHideDuration={3000}
 						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 					>
 						<Alert severity='warning'>Validation error occured!</Alert>
@@ -192,29 +200,11 @@ class CreatePost extends Component {
 								<Typography variant='h6' gutterBottom>
 									Tags
 								</Typography>
-								{/*<TextField
-									size='small'
-									variant='outlined'
-									fullWidth
-									type='text'
-									id='tags'
-									value={tags}
-									onChange={this.onChange}
-									InputLabelProps={{ shrink: false }}
-									helperText={
-										errors.tags
-											? errors.tags
-											: 'Add up to 4 tags separated by comma to describe the stack'
-									}
-									error={errors.tags ? true : false}
-								/>*/}
 								<Autocomplete
+									onChange={(event, tags) => this.setState({ tags })}
 									multiple
 									id='tags'
-									options={[
-										{ title: 'this is title' },
-										{ title: 'this is another title' }
-									]}
+									options={this.state.tagOptions}
 									getOptionLabel={option => option.title}
 									renderInput={params => (
 										<TextField
@@ -252,12 +242,15 @@ class CreatePost extends Component {
 
 const mapStateToProps = state => ({
 	auth: state.auth,
-	errors: state.errors
+	errors: state.errors,
+	tags: state.tags
+		// sort alphabetically
+		.sort((x, y) => (x.title < y.title ? -1 : x.title > y.title ? 1 : 0))
 });
 
 export default compose(
 	connect(
 		mapStateToProps,
-		{ createPost }
+		{ createPost, getTags }
 	)
 )(withRouter(CreatePost));
