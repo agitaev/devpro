@@ -9,15 +9,7 @@ import _ from 'underscore';
 
 class PostList extends Component {
 	componentDidMount() {
-		// console.log('mounted');
 		this.props.getPosts();
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		const { posts } = this.props;
-		if (prevProps.posts !== posts) {
-			this.setState({ posts, isLoading: false });
-		}
 	}
 
 	render() {

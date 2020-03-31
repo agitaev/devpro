@@ -25,12 +25,12 @@ export const getPosts = () => dispatch => {
 
 // Create Post
 export const createPost = (data, history) => dispatch => {
+	console.log(data);
 	axios
 		.post('/api/posts/new', data)
 		.then(res => {
-			console.log(res);
 			dispatch({ type: ADD_POST, payload: data });
-			dispatch({ type: SYNC_CREATED_POSTS, payload: data });
+			// dispatch({ type: SYNC_CREATED_POSTS, payload: data });
 
 			// let oldPosts = JSON.parse(localStorage.getItem('posts'));
 			// oldPosts.push(res.data);

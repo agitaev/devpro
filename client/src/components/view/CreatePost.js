@@ -25,7 +25,6 @@ class CreatePost extends Component {
 		tags: [],
 		errors: {},
 		showSnackbar: false,
-		snackbarTimer: 3,
 		tagOptions: []
 	};
 
