@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const path = require('path');
 
-if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 require('./db/mongoose');
 const app = express();
 
