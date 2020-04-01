@@ -56,9 +56,6 @@ class App extends Component {
 					<Router>
 						<div className='App'>
 							<Navbar />
-							<Hidden mdUp>
-								<BottomNavbar />
-							</Hidden>
 							<Route exact path='/' component={Dashboard} />
 							<Route exact path='/register' component={Register} />
 							<Route exact path='/login' component={Login} />
@@ -84,6 +81,9 @@ class App extends Component {
 								<PrivateRoute exact path='/posts/new' component={CreatePost} />
 								<PrivateRoute path='/me' component={Profile} />
 							</Switch>
+							<Hidden mdUp>
+								<BottomNavbar />
+							</Hidden>
 						</div>
 					</Router>
 				</ThemeProvider>

@@ -19,8 +19,8 @@ class TrendingList extends Component {
 	}
 
 	static getDerivedStateFromProps(props, state) {
-		if (props.posts) {
-			return { posts: props.posts };
+		if (props.posts.length > 0) {
+			return { posts: props.posts, isLoading: false };
 		}
 	}
 

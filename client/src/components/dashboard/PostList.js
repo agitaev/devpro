@@ -24,7 +24,11 @@ class PostList extends Component {
 		);
 
 		return (
-			<Grid container justify='space-evenly' spacing={1}>
+			<Grid
+				container
+				justify='space-evenly'
+				style={{ margin: 0, width: '100%' }}
+			>
 				{posts && posts !== undefined && posts.length > 0 ? (
 					posts.map((post, id) => (
 						<Grid item xs={12} sm={6} lg={4} key={id}>

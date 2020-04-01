@@ -38,7 +38,7 @@ class Dashboard extends Component {
 		const { showSnackbar, email } = this.state;
 
 		return (
-			<Container style={{ margin: '1rem auto 5rem', padding: 0 }}>
+			<Container style={{ margin: '0 auto 5rem', padding: 0 }}>
 				{showSnackbar ? (
 					<Snackbar
 						style={{ top: '60px' }}
@@ -52,11 +52,11 @@ class Dashboard extends Component {
 						</Alert>
 					</Snackbar>
 				) : null}
-				<Grid container spacing={2}>
+				<Grid container style={{ margin: 0, width: '100%' }} spacing={2}>
 					<Grid item sm={12} md={9}>
 						<PostList />
 					</Grid>
-					<Grid item md={3}>
+					<Grid item md={3} style={{ marginTop: '1rem' }}>
 						<Hidden smDown>
 							<TrendingList />
 							{this.props.isAuthenticated ? <TagList /> : null}

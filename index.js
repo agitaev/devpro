@@ -8,7 +8,7 @@ const app = express();
 // setup mongodb databse
 require('dotenv').config();
 mongoose.connect(
-	process.env.MONGOLAB_ORANGE_URI || process.env.MONGODB_URI,
+	process.env.MONGODB_URI,
 	{
 		useNewUrlParser: true,
 		useFindAndModify: false,

@@ -117,7 +117,7 @@ class PostItem extends Component {
 				) : null}
 				<Paper
 					style={{
-						padding: '1.4rem',
+						padding: '1.2rem',
 						backgroundColor: 'inherit'
 					}}
 					elevation={this.state.elevation}
