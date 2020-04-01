@@ -4,6 +4,7 @@ const passport = require('passport');
 const path = require('path');
 
 const app = express();
+require('dotenv').config();
 require('./db/mongoose');
 
 const users = require('./routes/userRoutes');
