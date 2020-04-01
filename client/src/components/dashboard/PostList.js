@@ -55,6 +55,7 @@ const mapStateToProps = state => {
 	} else if (allow_personalized_feed) {
 		const userTags = state.auth.user.followed_tags.map(tag => tag.title);
 
+		// logic for retrieving personalized feed
 		let personalizedPosts = [];
 		let junkPosts = [];
 		for (let i = 0; i < list.length; i++) {

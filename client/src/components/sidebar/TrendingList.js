@@ -20,7 +20,7 @@ class TrendingList extends Component {
 
 	static getDerivedStateFromProps(props, state) {
 		if (props.posts) {
-			return { posts: props.posts, isLoading: false };
+			return { posts: props.posts };
 		}
 	}
 
@@ -29,7 +29,7 @@ class TrendingList extends Component {
 		const skeletons = [];
 		_.times(4, index => {
 			skeletons.push(
-				<Fragment>
+				<Fragment key={index}>
 					<br />
 					<Skeleton
 						animation='wave'
@@ -43,6 +43,7 @@ class TrendingList extends Component {
 						height={30}
 						style={{ marginLeft: '.5rem', paddingBottom: '1rem' }}
 					/>
+					<br />
 				</Fragment>
 			);
 		});
@@ -62,7 +63,7 @@ class TrendingList extends Component {
 				)}
 				<Paper style={{ marginBottom: '1rem' }}>
 					{isLoading ? (
-						{ skeletons }
+						<Fragment>{skeletons}</Fragment>
 					) : (
 						<Grid container justify='space-between'>
 							{this.props.posts && this.props.posts.length > 0
