@@ -6,7 +6,7 @@ export default (state = initialState, action) => {
 		case GET_ERRORS:
 			return action.payload;
 		case RESET_ERRORS:
-			return initialState;
+			return null;
 		default:
 			return state;
 	}

@@ -7,10 +7,7 @@ import {
 	ExpandMoreOutlined as DownvoteIcon
 } from '@material-ui/icons';
 
-const UserVote = props => {
-	const { post } = props.post;
-	console.log(post);
-
+const UserVote = ({ post }) => {
 	return (
 		<div style={{ marginTop: '1rem' }}>
 			<Paper style={{ padding: '.5rem' }}>
@@ -35,9 +32,9 @@ const UserVote = props => {
 						</IconButton>
 					</Grid>
 					<Grid item xs={7} sm={8} lg={9}>
-						<Typography variant='h6'>{post.title}</Typography>
+						<Typography variant='h6'>{post.post.title}</Typography>
 						<Typography variant='subtitle1' noWrap>
-							{post.subtitle}
+							{post.post.subtitle}
 						</Typography>
 					</Grid>
 					<Grid container item xs={2} justify='center' alignItems='center'>

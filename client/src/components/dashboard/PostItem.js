@@ -32,7 +32,7 @@ class PostItem extends Component {
 		voted: false,
 		isLoading: true,
 		error: {},
-		showSnackbar: false
+		snackbar: false
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
@@ -76,28 +76,28 @@ class PostItem extends Component {
 
 	static getDerivedStateFromProps(props, state) {
 		return props.error.id === props.post._id
-			? { error: props.error, showSnackbar: true }
+			? { error: props.error, snackbar: true }
 			: {};
 	}
 
 	handleCloseSnackbar = () => {
 		this.props.resetErrors();
-		this.setState({ showSnackbar: false, error: {} });
+		this.setState({ snackbar: false, error: {} });
 	};
 
 	render() {
 		const { post } = this.props;
-		const { isLoading, error, showSnackbar } = this.state;
+		const { isLoading, error, snackbar } = this.state;
 
 		return (
 			<Fragment>
-				{showSnackbar ? (
+				{snackbar ? (
 					<Snackbar
 						message={error.error}
 						disableWindowBlurListener
 						autoHideDuration={4000}
 						style={{ top: '60px' }}
-						open={showSnackbar}
+						open={snackbar}
 						onClose={this.handleCloseSnackbar}
 						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 						action={

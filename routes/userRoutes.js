@@ -128,7 +128,10 @@ router.post('/login', (req, res) => {
 									saved_posts: user.saved_posts,
 									voted_posts: user.voted_posts,
 									created_posts: user.created_posts,
-									followed_tags: user.followed_tags
+									followed_tags: user.followed_tags,
+									allow_personalized_feed: user.allow_personalized_feed,
+									allow_notifications: user.allow_notifications,
+									allow_dark_mode: user.allow_dark_mode
 								};
 
 								// Sign token
@@ -194,6 +197,60 @@ router.post('/email_confirmation', (req, res) => {
 		} else {
 			res.send(user);
 		}
+	});
+});
+
+// @route POST api/users/toggle_allow_notifications
+// @desc Toggle notification settings
+// @access public
+router.post('/toggle_allow_notifications', (req, res) => {
+	console.log(req.body);
+	const { userId } = req.body;
+
+	User.findOne({ _id: userId }, (error, user) => {
+		user.allow_notifications = !user.allow_notifications;
+		user.save((error, user) => {
+			if (!error) {
+				console.log(user);
+				res.send(user);
+			} else {
+				console.log(error);
+			}
+		});
+	});
+});
+
+// @route POST api/users/toggle_allow_personalized_feed
+// @desc Toggle personalized feed settings
+// @access public
+router.post('/toggle_allow_personalized_feed', (req, res) => {
+	const { userId } = req.body;
+
+	User.findOne({ _id: userId }, (error, user) => {
+		user.allow_personalized_feed = !user.allow_personalized_feed;
+		user.save((error, user) => {
+			if (!error) {
+				console.log(user);
+				res.send(user);
+			}
+		});
+	});
+});
+
+// @route POST api/users/toggle_dark_mode
+// @desc Toggle dark mode settings
+// @access public
+router.post('/toggle_dark_mode', (req, res) => {
+	const { userId } = req.body;
+
+	User.findOne({ _id: userId }, (error, user) => {
+		user.allow_dark_mode = !user.allow_dark_mode;
+		user.save((error, user) => {
+			if (!error) {
+				console.log(user);
+				res.send(user);
+			}
+		});
 	});
 });
 

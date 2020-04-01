@@ -56,7 +56,19 @@ const UserSchema = new Schema(
 			type: Boolean,
 			default: false
 		},
-		confirmation_token: String
+		confirmation_token: String,
+		allow_personalized_feed: {
+			type: Boolean,
+			default: false
+		},
+		allow_notifications: {
+			type: Boolean,
+			default: false
+		},
+		allow_dark_mode: {
+			type: Boolean,
+			default: false
+		}
 	},
 	{
 		timestamps: {

@@ -14,7 +14,7 @@ import Alert from '../chunks/Alert';
 import { Autocomplete } from '@material-ui/lab';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { createPost } from '../../actions/postActions';
+import { createPost, resetErrors } from '../../actions/postActions';
 import { getTags } from '../../actions/tagActions';
 
 class CreatePost extends Component {
@@ -42,6 +42,10 @@ class CreatePost extends Component {
 		if (prevProps.errors !== this.props.errors) {
 			this.setState({ errors: this.props.errors });
 		}
+	}
+
+	componentWillUnmount() {
+		this.props.resetErrors();
 	}
 
 	onChange = e => {
@@ -250,6 +254,6 @@ const mapStateToProps = state => ({
 export default compose(
 	connect(
 		mapStateToProps,
-		{ createPost, getTags }
+		{ createPost, getTags, resetErrors }
 	)
 )(withRouter(CreatePost));

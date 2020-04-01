@@ -46,15 +46,34 @@ PostList.propTypes = {
 
 const mapStateToProps = state => {
 	const { list, searchText } = state.posts;
+	const { allow_personalized_feed } = state.auth.user;
 
 	if (searchText !== '') {
 		return {
 			posts: list.filter(post => post.title.includes(searchText))
 		};
-	} else {
+	} else if (allow_personalized_feed) {
+		const userTags = state.auth.user.followed_tags.map(tag => tag.title);
+
+		let personalizedPosts = [];
+		let junkPosts = [];
+		for (let i = 0; i < list.length; i++) {
+			for (let k = 0; k < list[i].tags.length; k++) {
+				if (userTags.includes(list[i].tags[k].title)) {
+					personalizedPosts.push(list[i]);
+				} else if (!_.any(junkPosts, e => _.isEqual(e, list[i]))) {
+					junkPosts.push(list[i]);
+				}
+			}
+		}
+
+		const postSet = new Set(personalizedPosts.concat(junkPosts));
+		const posts = Array.from(postSet);
 		return {
-			posts: list
+			posts
 		};
+	} else {
+		return { posts: list };
 	}
 };
 

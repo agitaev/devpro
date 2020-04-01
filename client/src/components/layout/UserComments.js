@@ -1,10 +1,11 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
 
 const UserComments = props => {
 	return (
-		<div>
-			<p>user comments</p>
-		</div>
+		<Typography variant='overline' align='center'>
+			Your comments will be shown here.
+		</Typography>
 	);
 };
 
