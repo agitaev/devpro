@@ -214,7 +214,7 @@ class PostItem extends Component {
 							)}
 							{isLoading ? (
 								<Skeleton
-									animatino='wave'
+									animation='wave'
 									height={13}
 									width='40%'
 									style={{ margin: '1rem 0' }}
