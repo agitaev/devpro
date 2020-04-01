@@ -6,7 +6,7 @@ export const getTags = () => dispatch => {
 	fetch('/api/tags')
 		.then(res => res.json())
 		.then(tags => dispatch({ type: GET_TAGS, payload: tags }))
-		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response }));
+		.catch(err => console.log(err));
 };
 
 export const followTag = (tag, userId) => {

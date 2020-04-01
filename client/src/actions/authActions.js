@@ -10,7 +10,6 @@ import {
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
-	console.log(history);
 	axios
 		.post('/api/users/register', userData)
 		.then(res =>

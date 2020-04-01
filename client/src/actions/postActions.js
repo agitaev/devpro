@@ -19,7 +19,7 @@ export const getPosts = () => dispatch => {
 			dispatch({ type: GET_POSTS, payload: posts });
 		})
 		.catch(err => {
-			console.log(err.response);
+			// console.log(err.response);
 		});
 };
 
