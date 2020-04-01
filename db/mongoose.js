@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 require('dotenv').config();
-// mongoose.set('debug', true);
 
 mongoose.connect(
-	process.env.MONGODB_URI,
+	process.env.MONGOLAB_ORANGE_URI || process.env.MONGODB_URI,
 	{
 		useNewUrlParser: true,
 		useFindAndModify: false,

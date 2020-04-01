@@ -33,21 +33,21 @@ const UserSchema = new Schema(
 		followed_tags: [
 			{
 				type: Schema.Types.ObjectId,
-				ref: 'tag'
+				ref: 'Tag'
 				// required: [true, 'Undefined tag']
 			}
 		],
 		saved_posts: [
 			{
 				type: Schema.Types.ObjectId,
-				ref: 'post'
+				ref: 'Post'
 			}
 		],
 		voted_posts: [
 			{
 				post: {
 					type: Schema.Types.ObjectId,
-					ref: 'post'
+					ref: 'Post'
 				},
 				action: Number
 			}
@@ -79,11 +79,11 @@ const UserSchema = new Schema(
 );
 
 UserSchema.virtual('created_posts', {
-	ref: 'post',
+	ref: 'Post',
 	localField: '_id',
 	foreignField: 'author'
 });
 
-const User = mongoose.model('user', UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

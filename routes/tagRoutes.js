@@ -12,13 +12,13 @@ router.get('/', async (req, res) => {
 	try {
 		await Tag.find({}).exec((err, tags) => {
 			if (err) {
-				res.send(404).send(err);
+				res.send(404).json({ error: 'tags not found' });
 			} else {
 				res.send(tags);
 			}
 		});
 	} catch (e) {
-		res.status(400).send({ error: 'good request' });
+		res.status(400).json({ error: 'good request' });
 	}
 });
 

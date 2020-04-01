@@ -84,7 +84,7 @@ class CreatePost extends Component {
 		} = this.state;
 
 		return (
-			<Container maxWidth='lg' style={{ margin: '4rem auto 10rem' }}>
+			<Container maxWidth='lg' style={{ margin: '2rem auto 10rem' }}>
 				{_.isEmpty(errors) ? (
 					<Snackbar
 						style={{ top: '60px' }}
@@ -109,7 +109,7 @@ class CreatePost extends Component {
 					</Snackbar>
 				)}
 				<Grid container justify='center'>
-					<Grid item xs={12} sm={10} md={8}>
+					<Grid item xs={12} md={8}>
 						<BackToHomeButton />
 						<Typography
 							variant='h4'

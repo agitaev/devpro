@@ -66,7 +66,7 @@ class Login extends Component {
 					</Snackbar>
 				)}
 				<Grid container justify='center'>
-					<Grid item xs={10} sm={8} md={6} lg={5}>
+					<Grid item xs={10} md={6} lg={5}>
 						<BackToHomeButton />
 						<div style={{ margin: '1.5rem 0 1rem' }}>
 							<Typography variant='h4'>
