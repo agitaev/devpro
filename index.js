@@ -1,20 +1,29 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
-
-require('./db/mongoose');
+const morgan = require('morgan');
 const app = express();
 
-const users = require('./routes/userRoutes');
-const posts = require('./routes/postRoutes');
-const tags = require('./routes/tagRoutes');
-const reactions = require('./routes/reactionRoutes');
-const recommender = require('./routes/recommenderRoutes');
-
-// bodyparser middleware
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// setup mongodb databse
+require('dotenv').config();
+mongoose.connect(
+	process.env.MONGOLAB_ORANGE_URI || process.env.MONGODB_URI,
+	{
+		useNewUrlParser: true,
+		useFindAndModify: false,
+		useUnifiedTopology: true,
+		useCreateIndex: true,
+		serverSelectionTimeoutMS: 5000
+	},
+	error => {
+		if (!error) {
+			console.log('[mongodb] connected successfully');
+		} else {
+			console.log(`[mongodb] error on connection: ${error}`);
+		}
+	}
+);
 
 // serve assets in production environment
 if (process.env.NODE_ENV === 'production') {
@@ -23,6 +32,19 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 	});
 }
+
+const users = require('./routes/userRoutes');
+const posts = require('./routes/postRoutes');
+const tags = require('./routes/tagRoutes');
+const reactions = require('./routes/reactionRoutes');
+const recommender = require('./routes/recommenderRoutes');
+
+// http request header logger
+app.use(morgan('tiny'));
+
+// bodyparser middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Passport middleware
 app.use(passport.initialize());
