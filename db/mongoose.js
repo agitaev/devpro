@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
+require('dotenv').config();
 // mongoose.set('debug', true);
 
-if (process.env.NODE_ENV !== 'production') require('dotenv').config();
-
 mongoose.connect(
-	'mongodb://admin:agitaev5494@ds125041.mlab.com:25041/devpro_v2',
+	process.env.MONGODB_URI,
 	{
 		useNewUrlParser: true,
 		useFindAndModify: false,

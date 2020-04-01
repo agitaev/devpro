@@ -61,7 +61,9 @@ router.post('/new', (req, res) => {
 			});
 			try {
 				post.save((err, model) => {
+					if (err) console.log('[postRoutes:savePost]', err);
 					model.populate('tags author', (err, post) => {
+						if (err) console.log('[postRoutes]', err);
 						res.status(201).send(post);
 					});
 				});

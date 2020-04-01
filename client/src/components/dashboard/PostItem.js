@@ -75,9 +75,11 @@ class PostItem extends Component {
 	}
 
 	static getDerivedStateFromProps(props, state) {
-		return props.error.id === props.post._id
-			? { error: props.error, snackbar: true }
-			: {};
+		return props.error && props.error.hasOwnProperty('id')
+			? props.error.id === props.post._id
+				? { error: props.error, snackbar: true }
+				: {}
+			: null;
 	}
 
 	handleCloseSnackbar = () => {

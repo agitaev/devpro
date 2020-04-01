@@ -25,20 +25,24 @@ export const getPosts = () => dispatch => {
 
 // Create Post
 export const createPost = (data, history) => dispatch => {
-	console.log(data);
 	axios
 		.post('/api/posts/new', data)
 		.then(res => {
 			dispatch({ type: ADD_POST, payload: data });
-			// dispatch({ type: SYNC_CREATED_POSTS, payload: data });
+			dispatch(resetErrors);
 
+			// dispatch({ type: SYNC_CREATED_POSTS, payload: data });
 			// let oldPosts = JSON.parse(localStorage.getItem('posts'));
 			// oldPosts.push(res.data);
 			// localStorage.setItem('posts', JSON.stringify(oldPosts));
 
 			history.push('/');
 		})
-		.catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+		.catch(err => {
+			err.response.hasOwnProperty('data')
+				? dispatch({ type: GET_ERRORS, payload: err.response.data })
+				: console.log(err.response);
+		});
 };
 
 // control post votes
