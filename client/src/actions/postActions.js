@@ -4,10 +4,10 @@ import {
 	GET_POSTS,
 	ADD_POST,
 	VOTE_POST,
-	SYNC_SAVED_POSTS,
 	SET_SEARCH_TEXT,
-	SYNC_VOTED_POSTS,
 	RESET_ERRORS,
+	SYNC_SAVED_POSTS,
+	SYNC_VOTED_POSTS,
 	SYNC_CREATED_POSTS
 } from './types';
 
@@ -29,9 +29,9 @@ export const createPost = (data, history) => dispatch => {
 		.post('/api/posts/new', data)
 		.then(res => {
 			dispatch({ type: ADD_POST, payload: data });
+			dispatch({ type: SYNC_CREATED_POSTS, payload: data });
 			dispatch(resetErrors);
 
-			// dispatch({ type: SYNC_CREATED_POSTS, payload: data });
 			// let oldPosts = JSON.parse(localStorage.getItem('posts'));
 			// oldPosts.push(res.data);
 			// localStorage.setItem('posts', JSON.stringify(oldPosts));
@@ -46,9 +46,9 @@ export const createPost = (data, history) => dispatch => {
 };
 
 // control post votes
-export const votePost = (postId, action, userId) => dispatch => {
+export const votePost = (postId, userId) => dispatch => {
 	axios
-		.post(`/api/posts/${postId}/action`, { action, userId })
+		.post(`/api/posts/${postId}/vote`, { userId })
 		.then(res => {
 			dispatch({ type: VOTE_POST, payload: res.data });
 			dispatch({ type: SYNC_VOTED_POSTS, payload: res.data });

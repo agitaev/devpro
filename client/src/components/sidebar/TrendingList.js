@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Grid, Typography, Paper } from '@material-ui/core';
 import TrendingItem from './TrendingItem';
-import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 import { Skeleton } from '@material-ui/lab';
 import { connect } from 'react-redux';
 import { getPosts } from '../../actions/postActions';

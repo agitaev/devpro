@@ -109,7 +109,7 @@ router.post('/login', (req, res) => {
 					.populate('followed_tags')
 					.populate('saved_posts')
 					.populate('created_posts')
-					.populate('voted_posts.post')
+					.populate('voted_posts')
 					.exec((err, user) => {
 						// Check if user exists
 						if (!user) {

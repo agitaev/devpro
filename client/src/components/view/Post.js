@@ -14,8 +14,8 @@ import {
 } from '@material-ui/core';
 import {
 	ExpandLessOutlined as UpvoteIcon,
-	StarBorderOutlined as SaveIcon,
-	StarOutlined as UnsaveIcon
+	StarBorderOutlined as SaveIcon
+	// StarOutlined as UnsaveIcon
 } from '@material-ui/icons';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';

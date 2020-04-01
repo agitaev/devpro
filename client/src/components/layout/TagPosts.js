@@ -1,22 +1,14 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { getPosts } from '../../actions/postActions';
-import {
-	Container,
-	Hidden,
-	Grid,
-	Typography,
-	Paper,
-	Button
-} from '@material-ui/core';
-import _ from 'underscore';
+import { Container, Grid, Typography, Paper, Button } from '@material-ui/core';
+import { useRouteMatch } from 'react-router-dom';
+import { followTag } from '../../actions/tagActions';
 import PostItemSkeleton from '../../skeletons/PostItemSkeleton';
 import PostItem from '../dashboard/PostItem';
-import { useRouteMatch } from 'react-router-dom';
-import axios from 'axios';
-import { followTag } from '../../actions/tagActions';
+import _ from 'underscore';
 
 const skeletons = [];
 _.times(9, index =>
@@ -33,7 +25,7 @@ const TagPosts = ({ posts, userId, getPosts }) => {
 
 	useEffect(() => {
 		getPosts();
-	}, []);
+	}, [getPosts]);
 
 	useEffect(() => {
 		setTagPosts(posts);

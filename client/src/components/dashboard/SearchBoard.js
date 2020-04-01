@@ -62,7 +62,7 @@ const SearchBar = ({ getPosts, posts }) => {
 	// if not, fetch it
 	useEffect(() => {
 		getPosts();
-	}, []);
+	}, [getPosts]);
 
 	// assign posts to local variable
 	useEffect(() => {

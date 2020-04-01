@@ -70,7 +70,7 @@ const BottomNavbar = props => {
 						className={classes.icon}
 						label='Updoot'
 						value='upvote'
-						onClick={() => props.votePost(postId, 'upvote', props.userId)}
+						onClick={() => props.votePost(postId, props.userId)}
 						icon={<UpvoteIcon />}
 					/>
 				</BottomNavigation>

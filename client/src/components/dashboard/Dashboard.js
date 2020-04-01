@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import {
-	Container,
-	Grid,
-	Typography,
-	Hidden,
-	Paper,
-	Snackbar
-} from '@material-ui/core';
+import { Container, Grid, Hidden, Snackbar } from '@material-ui/core';
 import PostList from './PostList';
 import TagList from '../sidebar/TagList';
 import TrendingList from '../sidebar/TrendingList';
 import { connect } from 'react-redux';
 import Alert from '../chunks/Alert';
-import SearchBar from './SearchBoard';
 
 class Dashboard extends Component {
 	state = {

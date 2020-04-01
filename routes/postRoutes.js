@@ -74,22 +74,17 @@ router.post('/new', (req, res) => {
 	});
 });
 
-// @route POST api/posts/:postId/action
+// @route POST api/posts/:postId/vote
 // @desc Upvote/Downvote post
 // @access public
-router.post('/:postId([0-9a-fA-F]{24})/action', async (req, res) => {
-	const { action, userId } = req.body;
+router.post('/:postId([0-9a-fA-F]{24})/vote', async (req, res) => {
+	const { userId } = req.body;
 	const { postId } = req.params;
-	const count = action === 'upvote' ? 1 : -1;
 
 	try {
 		await User.findOneAndUpdate(
-			{ _id: userId, 'voted_posts.post': { $ne: postId } },
-			{
-				$push: {
-					voted_posts: { post: postId, action: count > 0 ? 1 : 0 }
-				}
-			}
+			{ _id: userId },
+			{ $addToSet: { voted_posts: postId } }
 		).exec(async (error, response) => {
 			if (error) {
 				console.log('cannot find user', error);
@@ -101,7 +96,7 @@ router.post('/:postId([0-9a-fA-F]{24})/action', async (req, res) => {
 			} else {
 				await Post.findOneAndUpdate(
 					{ _id: postId },
-					{ $inc: { vote_count: count } },
+					{ $inc: { vote_count: 1 } },
 					{ new: true }
 				)
 					.populate('tags')

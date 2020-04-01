@@ -45,11 +45,8 @@ const UserSchema = new Schema(
 		],
 		voted_posts: [
 			{
-				post: {
-					type: Schema.Types.ObjectId,
-					ref: 'Post'
-				},
-				action: Number
+				type: Schema.Types.ObjectId,
+				ref: 'Post'
 			}
 		],
 		verified: {

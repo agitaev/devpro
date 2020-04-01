@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Hidden, Typography, Container } from '@material-ui/core';
+import { Hidden, Container } from '@material-ui/core';
 import TrendingList from '../sidebar/TrendingList';
 import TagList from '../sidebar/TagList';
 import { connect } from 'react-redux';

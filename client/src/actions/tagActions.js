@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { GET_TAGS, GET_ERRORS } from './types';
+import { GET_TAGS } from './types';
 
 // Retrieve tags
 export const getTags = () => dispatch => {

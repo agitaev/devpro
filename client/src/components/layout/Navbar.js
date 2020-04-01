@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-	Link as RouterLink,
-	useRouteMatch,
-	withRouter
-} from 'react-router-dom';
-import { logoutUser } from '../../actions/authActions';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import {
 	AppBar,
 	Toolbar,
@@ -76,7 +71,6 @@ const useStyles = makeStyles(theme => ({
 
 const Navbar = ({ auth, setSearchText, logoutUser, searchText }) => {
 	const classes = useStyles();
-	const match = useRouteMatch();
 
 	return (
 		<AppBar position='sticky'>

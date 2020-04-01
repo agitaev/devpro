@@ -21,8 +21,6 @@ import TagChip from '../chunks/TagChip';
 import { connect } from 'react-redux';
 import { votePost, savePost, resetErrors } from '../../actions/postActions';
 import isEmpty from 'is-empty';
-import Alert from '../chunks/Alert';
-import CloseIcon from '@material-ui/icons/Close';
 
 class PostItem extends Component {
 	state = {
@@ -50,7 +48,7 @@ class PostItem extends Component {
 
 	handleUpvotePostClick = () => {
 		if (this.props.isAuthenticated) {
-			this.props.votePost(this.props.post._id, 'upvote', this.props.user.id);
+			this.props.votePost(this.props.post._id, this.props.user.id);
 		} else {
 			this.props.history.push('/login');
 			console.log('unauthorized');
@@ -58,7 +56,7 @@ class PostItem extends Component {
 	};
 
 	componentDidMount() {
-		const { user, saved_posts, voted_posts, post } = this.props;
+		const { user, saved_posts, post } = this.props;
 		if (post) this.setState({ isLoading: false });
 
 		if (user && saved_posts && saved_posts.length > 0) {
@@ -300,8 +298,7 @@ const mapStateToProps = state => ({
 	user: state.auth.user,
 	error: state.errors,
 	isAuthenticated: state.auth.isAuthenticated,
-	saved_posts: state.auth.user.saved_posts,
-	voted_posts: state.auth.user.voted_posts
+	saved_posts: state.auth.user.saved_posts
 });
 
 export default compose(

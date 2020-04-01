@@ -1,7 +1,6 @@
 import React from 'react';
 import { Paper, Typography, Grid, Button, IconButton } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
-import moment from 'moment';
 import {
 	StarBorderOutlined as SaveIcon,
 	StarOutlined as UnsaveIcon

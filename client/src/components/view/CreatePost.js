@@ -73,15 +73,7 @@ class CreatePost extends Component {
 	};
 
 	render() {
-		const {
-			title,
-			subtitle,
-			body,
-			tags,
-			errors,
-			showSnackbar,
-			snackbarTimer
-		} = this.state;
+		const { title, subtitle, body, errors, showSnackbar } = this.state;
 
 		return (
 			<Container maxWidth='lg' style={{ margin: '2rem auto 10rem' }}>

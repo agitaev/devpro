@@ -1,11 +1,12 @@
 import {
-	SET_CURRENT_USER,
 	USER_LOADING,
+	SET_CURRENT_USER,
 	SYNC_SAVED_POSTS,
 	SYNC_VOTED_POSTS,
 	SWITCH_ALLOW_DARK_MODE,
 	SWITCH_ALLOW_NOTIFICATION,
-	SWITCH_ALLOW_PERSONALIZED_FEED
+	SWITCH_ALLOW_PERSONALIZED_FEED,
+	SYNC_CREATED_POSTS
 } from '../actions/types';
 const isEmpty = require('is-empty');
 
@@ -36,7 +37,7 @@ export default (state = initialState, action) => {
 					saved_posts: [...state.user.saved_posts, action.payload]
 				}
 			};
-		case SYNC_VOTED_POSTS: {
+		case SYNC_VOTED_POSTS:
 			return {
 				...state,
 				user: {
@@ -44,7 +45,14 @@ export default (state = initialState, action) => {
 					voted_posts: [...state.user.voted_posts, action.payload]
 				}
 			};
-		}
+		case SYNC_CREATED_POSTS:
+			return {
+				...state,
+				user: {
+					...state.user,
+					created_posts: [...state.user.created_posts, action.payload]
+				}
+			};
 		case SWITCH_ALLOW_PERSONALIZED_FEED: {
 			return {
 				...state,
