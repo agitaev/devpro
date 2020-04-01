@@ -25,14 +25,6 @@ mongoose.connect(
 	}
 );
 
-// serve assets in production environment
-if (process.env.NODE_ENV === 'production') {
-	app.use(express.static(path.join(__dirname, 'client/build')));
-	app.get('*', (req, res) => {
-		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-	});
-}
-
 const users = require('./routes/userRoutes');
 const posts = require('./routes/postRoutes');
 const tags = require('./routes/tagRoutes');
@@ -40,7 +32,7 @@ const reactions = require('./routes/reactionRoutes');
 const recommender = require('./routes/recommenderRoutes');
 
 // http request header logger
-app.use(morgan('tiny'));
+app.use(morgan('dev'));
 
 // bodyparser middleware
 app.use(express.json());
@@ -58,6 +50,14 @@ app.use('/api/posts', posts);
 app.use('/api/tags', tags);
 app.use('/api/reactions', reactions);
 app.use('/api/recommender', recommender);
+
+// serve assets in production environment
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.join(__dirname, 'client/build')));
+	app.get('*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
+}
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
