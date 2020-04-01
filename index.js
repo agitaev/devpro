@@ -13,11 +13,7 @@ const reactions = require('./routes/reactionRoutes');
 const recommender = require('./routes/recommenderRoutes');
 
 // bodyparser middleware
-app.use(
-	bodyParser.urlencoded({
-		extended: false
-	})
-);
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // serve assets in production environment

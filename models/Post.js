@@ -23,7 +23,7 @@ const PostSchema = new Schema(
 		},
 		author: {
 			type: Schema.Types.ObjectId,
-			ref: 'User',
+			ref: 'user',
 			required: [true, 'Undefined user']
 		},
 		vote_count: {
@@ -33,7 +33,7 @@ const PostSchema = new Schema(
 		tags: [
 			{
 				type: Schema.Types.ObjectId,
-				ref: 'Tag'
+				ref: 'tag'
 				// required: [true, 'Undefined tag']
 			}
 		]
@@ -46,6 +46,6 @@ const PostSchema = new Schema(
 	}
 );
 
-const Post = mongoose.model('Post', PostSchema);
+const Post = mongoose.model('post', PostSchema);
 
 module.exports = Post;

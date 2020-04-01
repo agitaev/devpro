@@ -25,6 +25,6 @@ tagSchema.virtual('posts', {
 	foreignField: 'tags'
 });
 
-const Tag = mongoose.model('Tag', tagSchema);
+const Tag = mongoose.model('tag', tagSchema);
 
 module.exports = Tag;
