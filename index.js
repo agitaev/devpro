@@ -4,7 +4,6 @@ const passport = require('passport');
 const path = require('path');
 
 const app = express();
-require('dotenv').config();
 require('./db/mongoose');
 
 const users = require('./routes/userRoutes');
@@ -28,6 +27,8 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 	});
 }
+
+if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
 // Passport middleware
 app.use(passport.initialize());
