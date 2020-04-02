@@ -18,7 +18,7 @@
 			"sizes": "512x512"
 		}
 	],
-	"start_url": ".",
+	"start_url": "https://devpro-v2.herokuapp.com",
 	"display": "standalone",
 	"theme_color": "#1e2025",
 	"background_color": "#1e2025"
