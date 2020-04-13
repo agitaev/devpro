@@ -32,7 +32,7 @@ const tags = require('./routes/tagRoutes');
 const reactions = require('./routes/reactionRoutes');
 const recommender = require('./routes/recommenderRoutes');
 
-// http request header logger
+// http header logger
 app.use(morgan('dev'));
 
 // bodyparser middleware

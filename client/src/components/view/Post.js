@@ -55,16 +55,9 @@ class Post extends Component {
 											/>
 										</Fragment>
 									)}
-									{post && post.subtitle ? (
-										<Typography variant='h5' gutterBottom>
-											{post.subtitle ? post.subtitle : ''}
-										</Typography>
-									) : (
-										<Fragment>
-											<Skeleton animation='wave' height={30} width='90%' />
-											<Skeleton animation='wave' height={30} width='40%' />
-										</Fragment>
-									)}
+									<Typography variant='h5' gutterBottom>
+										{post.subtitle ? post.subtitle : ''}
+									</Typography>
 									<Grid container justify='space-between' alignItems='center'>
 										<Grid item>
 											{post && post.author ? (
