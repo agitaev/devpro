@@ -29,7 +29,7 @@ $ npm install && cd client/ && npm install && cd ..
 3. Run development server:
 
 ```sh
-$ npm run dev MONGODB_URI=mongodb://admin:agitaev5494@ds125041.mlab.com:25041/devpro_v2
+$ npm run dev
 ```
 
 If the last command didn’t open the browser automatically, then navigate to http://localhost:3000 in any browser.
