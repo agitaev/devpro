@@ -10,15 +10,15 @@ import {
 	Divider,
 	Button,
 	ButtonGroup,
-	Hidden
+	Hidden,
 } from '@material-ui/core';
 import {
 	ExpandLessOutlined as UpvoteIcon,
-	StarBorderOutlined as SaveIcon
+	StarBorderOutlined as SaveIcon,
 	// StarOutlined as UnsaveIcon
 } from '@material-ui/icons';
 import { Link as RouterLink } from 'react-router-dom';
-import moment from 'moment';
+import moment from 'dayjs';
 import TagChip from '../chunks/TagChip';
 import PostItem from '../dashboard/PostItem';
 import _ from 'underscore';
@@ -130,7 +130,9 @@ class Post extends Component {
 									<Grid container spacing={2} style={{ padding: '1rem 0' }}>
 										{post &&
 											post.tags &&
-											post.tags.map(tag => <TagChip key={tag._id} tag={tag} />)}
+											post.tags.map((tag) => (
+												<TagChip key={tag._id} tag={tag} />
+											))}
 									</Grid>
 								</div>
 								<div style={{ padding: '1rem 0 3rem' }}>
@@ -148,7 +150,7 @@ class Post extends Component {
 										style={{
 											padding: '.5rem 0',
 											textDecoration: 'none',
-											color: 'inherit'
+											color: 'inherit',
 										}}
 										component={RouterLink}
 										to={`/users/${post && post.author ? post.author._id : ''}`}
@@ -200,7 +202,7 @@ class Post extends Component {
 								<Grid container direction='row'>
 									{recommended_posts.length > 0 &&
 										recommended_posts
-											.filter(x => x._id !== post._id)
+											.filter((x) => x._id !== post._id)
 											.map((x, index) =>
 												index < 2 ? (
 													<Grid item xs={12} md={6} key={x._id}>
@@ -223,8 +225,8 @@ class Post extends Component {
 const mapStateToProps = (state, props) => {
 	const { list } = state.posts;
 
-	const post = list.find(post => post._id === props.match.params.postId);
-	const postTags = post ? post.tags.map(tag => tag.title) : null;
+	const post = list.find((post) => post._id === props.match.params.postId);
+	const postTags = post ? post.tags.map((tag) => tag.title) : null;
 
 	// logic for retrieving related posts
 	let relatedPosts = [];
@@ -233,7 +235,7 @@ const mapStateToProps = (state, props) => {
 		for (let k = 0; k < list[i].tags.length; k++) {
 			if (postTags.includes(list[i].tags[k].title)) {
 				relatedPosts.push(list[i]);
-			} else if (!_.any(junkPosts, e => _.isEqual(e, list[i]))) {
+			} else if (!_.any(junkPosts, (e) => _.isEqual(e, list[i]))) {
 				junkPosts.push(list[i]);
 			}
 		}
@@ -245,7 +247,7 @@ const mapStateToProps = (state, props) => {
 	return {
 		post,
 		recommended_posts,
-		userId: state.auth.user.id
+		userId: state.auth.user.id,
 	};
 };
 

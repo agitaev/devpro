@@ -9,7 +9,7 @@ import Alert from '../chunks/Alert';
 class Dashboard extends Component {
 	state = {
 		showSnackbar: false,
-		email: ''
+		email: '',
 	};
 
 	componentDidMount() {
@@ -39,9 +39,7 @@ class Dashboard extends Component {
 						autoHideDuration={4000}
 						anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
 					>
-						<Alert severity='info'>
-							Please confirm your email sent to {email}
-						</Alert>
+						<Alert severity='info'>Confirmation email is sent to {email}</Alert>
 					</Snackbar>
 				) : null}
 				<Grid container style={{ margin: 0, width: '100%' }} spacing={2}>
@@ -60,8 +58,8 @@ class Dashboard extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	isAuthenticated: state.auth.isAuthenticated
+const mapStateToProps = (state) => ({
+	isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps)(Dashboard);

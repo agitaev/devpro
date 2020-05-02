@@ -1,9 +1,9 @@
 import React from 'react';
 import { Paper, Typography, Grid, Button } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
-import moment from 'moment';
+import moment from 'dayjs';
 
-const UserPost = props => {
+const UserPost = (props) => {
 	const { post } = props;
 
 	return (

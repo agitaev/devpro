@@ -9,7 +9,8 @@
 		"start": "node index.js",
 		"server": "nodemon index.js",
 		"dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-		"brain": "nodemon ./lib/brain.js",
+		"brain": "nodemon ./lib/tf.js",
+		"play": "nodemon ./lib/playground/playground.js",
 		"heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
 	},
 	"repository": {
@@ -30,7 +31,7 @@
 	"homepage": "https://github.com/agitaev/devpro#readme",
 	"dependencies": {
 		"@tensorflow/tfjs": "^1.7.0",
-		"@tensorflow/tfjs-node": "^1.7.0",
+		"@tensorflow/tfjs-node": "^1.7.4",
 		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.19.0",
 		"brain.js": "^2.0.0-alpha.12",
