@@ -23,6 +23,7 @@ import SearchBoard from './components/dashboard/SearchBoard';
 
 import { Hidden, ThemeProvider, createMuiTheme } from '@material-ui/core';
 import { light, dark } from './utils/theme';
+import ScrollToTop from './utils/ScrollToTop';
 
 const lightTheme = createMuiTheme(light);
 const darkTheme = createMuiTheme(dark);
@@ -54,37 +55,43 @@ class App extends Component {
 			<Provider store={store}>
 				<ThemeProvider theme={lightTheme}>
 					<Router>
-						<div className='App'>
-							<Navbar />
-							<Route exact path='/' component={Dashboard} />
-							<Route exact path='/register' component={Register} />
-							<Route exact path='/login' component={Login} />
-							<Route
-								exact
-								path='/email_confirmation'
-								component={EmailConfirmation}
-							/>
-							<Route
-								exact
-								path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
-								component={Post}
-							/>
-							<Route
-								exact
-								path='/users/:userId([0-9a-fA-F]{24})' // match mongodb objectid
-								component={Profile}
-							/>
-							<Route exact path='/tags/:tag' component={TagPosts} />
-							<Route exact path='/trending' component={TrendingBoard} />
-							<Route exact path='/search' component={SearchBoard} />
-							<Switch>
-								<PrivateRoute exact path='/posts/new' component={CreatePost} />
-								<PrivateRoute path='/me' component={Profile} />
-							</Switch>
-							<Hidden mdUp>
-								<BottomNavbar />
-							</Hidden>
-						</div>
+						<ScrollToTop>
+							<div className='App'>
+								<Navbar />
+								<Route exact path='/' component={Dashboard} />
+								<Route exact path='/register' component={Register} />
+								<Route exact path='/login' component={Login} />
+								<Route
+									exact
+									path='/email_confirmation'
+									component={EmailConfirmation}
+								/>
+								<Route
+									exact
+									path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
+									component={Post}
+								/>
+								<Route
+									exact
+									path='/users/:userId([0-9a-fA-F]{24})' // match mongodb objectid
+									component={Profile}
+								/>
+								<Route exact path='/tags/:tag' component={TagPosts} />
+								<Route exact path='/trending' component={TrendingBoard} />
+								<Route exact path='/search' component={SearchBoard} />
+								<Switch>
+									<PrivateRoute
+										exact
+										path='/posts/new'
+										component={CreatePost}
+									/>
+									<PrivateRoute path='/me' component={Profile} />
+								</Switch>
+								<Hidden mdUp>
+									<BottomNavbar />
+								</Hidden>
+							</div>
+						</ScrollToTop>
 					</Router>
 				</ThemeProvider>
 			</Provider>
