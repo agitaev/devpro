@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Grid, Typography, Divider } from '@material-ui/core';
+import { Typography, Divider } from '@material-ui/core';
 import dayjs from 'dayjs';
 
 const Comment = ({ comment }) => {
