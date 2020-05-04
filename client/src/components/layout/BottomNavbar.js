@@ -8,29 +8,29 @@ import {
 	ExpandLessOutlined as UpvoteIcon,
 	StarBorderOutlined as SaveIcon,
 	ChevronLeftOutlined as BackIcon,
-	SearchOutlined as SearchIcon
+	SearchOutlined as SearchIcon,
 } from '@material-ui/icons';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { votePost, savePost } from '../../actions/postActions';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
 	root: {
 		background: theme.palette.primary.main,
 		color: theme.palette.primary.contrastText,
 		width: '100%',
 		position: 'fixed',
 		bottom: 0,
-		zIndex: 1100
+		zIndex: 1100,
 	},
 	icon: {
 		'& span': {
-			color: theme.palette.primary.contrastText
-		}
-	}
+			color: theme.palette.primary.contrastText,
+		},
+	},
 }));
 
-const BottomNavbar = props => {
+const BottomNavbar = (props) => {
 	const classes = useStyles();
 	const [value, setValue] = React.useState('');
 	const isPostPage =
@@ -121,8 +121,8 @@ const BottomNavbar = props => {
 	);
 };
 
-const mapStateToProps = state => ({
-	userId: state.auth.user.id
+const mapStateToProps = (state) => ({
+	userId: state.auth.user.id,
 });
 
 export default connect(

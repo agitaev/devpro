@@ -20,14 +20,17 @@ import TrendingBoard from './components/dashboard/TrendingBoard';
 import EmailConfirmation from './components/auth/EmailConfirmation';
 import TagPosts from './components/layout/TagPosts';
 import SearchBoard from './components/dashboard/SearchBoard';
-
-import { Hidden, ThemeProvider, createMuiTheme } from '@material-ui/core';
-import { light, dark } from './utils/theme';
-import ScrollToTop from './utils/ScrollToTop';
 import AdminPanel from './components/admin/AdminPanel';
 
+import { Hidden, ThemeProvider, createMuiTheme } from '@material-ui/core';
+import {
+	light,
+	// dark
+} from './utils/theme';
+import ScrollToTop from './utils/ScrollToTop';
+
 const lightTheme = createMuiTheme(light);
-const darkTheme = createMuiTheme(dark);
+// const darkTheme = createMuiTheme(dark);
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -52,6 +55,8 @@ if (localStorage.jwtToken) {
 
 class App extends Component {
 	render() {
+		const isAdminPanel = window.location.pathname.split('/')[1] === 'admin';
+
 		return (
 			<Provider store={store}>
 				<ThemeProvider theme={lightTheme}>
@@ -89,9 +94,11 @@ class App extends Component {
 									<PrivateRoute path='/me' component={Profile} />
 									<PrivateRoute path='/admin' component={AdminPanel} />
 								</Switch>
-								<Hidden mdUp>
-									<BottomNavbar />
-								</Hidden>
+								{!isAdminPanel && (
+									<Hidden mdUp>
+										<BottomNavbar />
+									</Hidden>
+								)}
 							</div>
 						</ScrollToTop>
 					</Router>

@@ -6,7 +6,7 @@ import {
 	Container,
 	Typography,
 	Grid,
-	Avatar,
+	// Avatar,
 	Divider,
 	Button,
 	ButtonGroup,

@@ -8,14 +8,14 @@ import {
 	Divider,
 	Button,
 	Tab,
-	Tabs
+	Tabs,
 } from '@material-ui/core';
 import { logoutUser } from '../../actions/authActions';
 import {
 	Link as RouterLink,
 	Switch,
 	Route,
-	withRouter
+	withRouter,
 } from 'react-router-dom';
 import compose from 'recompose/compose';
 import BackToHomeButton from '../chunks/BackToHomeButton';
@@ -31,7 +31,7 @@ class Profile extends Component {
 		self: false,
 		user: {},
 		elevation: 0,
-		tabValue: 'settings'
+		tabValue: 'settings',
 	};
 
 	onMouseOver = () => this.setState({ elevation: 2 });
@@ -47,8 +47,8 @@ class Profile extends Component {
 		} else if (isUserPage) {
 			axios
 				.get(`/api/users/${match.params.userId}`)
-				.then(res => this.setState({ user: res.data }))
-				.catch(err => console.log(err.response));
+				.then((res) => this.setState({ user: res.data }))
+				.catch((err) => console.log(err.response));
 		}
 	}
 
@@ -75,7 +75,7 @@ class Profile extends Component {
 							style={{
 								background: 'inherit',
 								padding: '.75rem .75rem 1rem',
-								marginTop: '2rem'
+								marginTop: '2rem',
 							}}
 						>
 							<Typography variant='h4'>{user.name}</Typography>
@@ -147,12 +147,12 @@ class Profile extends Component {
 									<Route
 										exact
 										path={`${match.path}/`}
-										render={routeProps => <UserSettings />}
+										render={(routeProps) => <UserSettings />}
 									/>
 									<Route
 										exact
 										path={`${match.path}/posts`}
-										render={routeProps => (
+										render={(routeProps) => (
 											<UserPosts posts={user.created_posts} />
 										)}
 									/>
@@ -164,14 +164,14 @@ class Profile extends Component {
 									<Route
 										exact
 										path={`${match.path}/votes`}
-										render={routeProps => (
+										render={(routeProps) => (
 											<UserVotes posts={user.voted_posts} />
 										)}
 									/>
 									<Route
 										exact
 										path={`${match.path}/favorites`}
-										render={routeProps => (
+										render={(routeProps) => (
 											<UserFavorites posts={user.saved_posts} />
 										)}
 									/>
@@ -185,8 +185,8 @@ class Profile extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	auth: state.auth
+const mapStateToProps = (state) => ({
+	auth: state.auth,
 });
 
 export default compose(
