@@ -1,6 +1,9 @@
 {
 	"name": "devpro",
 	"version": "2.0.0",
+	"engines": {
+		"node": "12.16.x"
+	},
 	"description": "Sharing project ideas",
 	"main": "index.js",
 	"scripts": {

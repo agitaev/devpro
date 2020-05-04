@@ -8,26 +8,26 @@ import {
 	RESET_ERRORS,
 	SYNC_SAVED_POSTS,
 	SYNC_VOTED_POSTS,
-	SYNC_CREATED_POSTS
+	SYNC_CREATED_POSTS,
 } from './types';
 
 // Retrieve Posts
-export const getPosts = () => dispatch => {
+export const getPosts = () => (dispatch) => {
 	fetch('/api/posts')
-		.then(res => res.json())
-		.then(posts => {
+		.then((res) => res.json())
+		.then((posts) => {
 			dispatch({ type: GET_POSTS, payload: posts });
 		})
-		.catch(err => {
+		.catch((err) => {
 			// console.log(err.response);
 		});
 };
 
 // Create Post
-export const createPost = (data, history) => dispatch => {
+export const createPost = (data, history) => (dispatch) => {
 	axios
 		.post('/api/posts/new', data)
-		.then(res => {
+		.then((res) => {
 			dispatch({ type: ADD_POST, payload: data });
 			dispatch({ type: SYNC_CREATED_POSTS, payload: data });
 			dispatch(resetErrors);
@@ -38,7 +38,7 @@ export const createPost = (data, history) => dispatch => {
 
 			history.push('/');
 		})
-		.catch(err => {
+		.catch((err) => {
 			err.response.hasOwnProperty('data')
 				? dispatch({ type: GET_ERRORS, payload: err.response.data })
 				: console.log(err.response);
@@ -46,51 +46,51 @@ export const createPost = (data, history) => dispatch => {
 };
 
 // control post votes
-export const votePost = (postId, userId) => dispatch => {
+export const votePost = (postId, userId) => (dispatch) => {
 	axios
 		.post(`/api/posts/${postId}/vote`, { userId })
-		.then(res => {
+		.then((res) => {
 			dispatch({ type: VOTE_POST, payload: res.data });
 			dispatch({ type: SYNC_VOTED_POSTS, payload: res.data });
 		})
-		.catch(err =>
+		.catch((err) =>
 			dispatch({
 				type: GET_ERRORS,
 				payload: {
 					id: err.response.config.url.split('/')[3],
-					error: 'Unvote/Downvote is not supported (yet)'
-				}
+					error: 'Unvote/Downvote is not supported (yet)',
+				},
 			})
 		);
 };
 
-export const savePost = (postId, userId) => dispatch => {
+export const savePost = (postId, userId) => (dispatch) => {
 	axios
 		.post(`/api/reactions/post/${postId}/save`, { userId })
-		.then(res => {
-			const payload = res.data.saved_posts.find(post => post._id === postId);
+		.then((res) => {
+			const payload = res.data.saved_posts.find((post) => post._id === postId);
 			return dispatch({ type: SYNC_SAVED_POSTS, payload });
 		})
-		.catch(err =>
+		.catch((err) =>
 			dispatch({
 				type: GET_ERRORS,
 				payload: {
 					id: err.response.config.url.split('/')[3],
-					error: 'Unhandled error'
-				}
+					error: 'Unhandled error',
+				},
 			})
 		);
 };
 
-export const setSearchText = query => {
+export const setSearchText = (query) => {
 	return {
 		type: SET_SEARCH_TEXT,
-		payload: query
+		payload: query,
 	};
 };
 
 export const resetErrors = () => {
 	return {
-		type: RESET_ERRORS
+		type: RESET_ERRORS,
 	};
 };

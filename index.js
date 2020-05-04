@@ -28,6 +28,7 @@ mongoose.connect(
 const users = require('./routes/userRoutes');
 const posts = require('./routes/postRoutes');
 const tags = require('./routes/tagRoutes');
+const comments = require('./routes/commentRoutes');
 const reactions = require('./routes/reactionRoutes');
 const recommender = require('./routes/recommenderRoutes');
 
@@ -48,6 +49,7 @@ require('./config/passport')(passport);
 app.use('/api/users', users);
 app.use('/api/posts', posts);
 app.use('/api/tags', tags);
+app.use('/api/comments', comments);
 app.use('/api/reactions', reactions);
 app.use('/api/recommender', recommender);
 

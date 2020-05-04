@@ -24,12 +24,12 @@ router.post('/register', (req, res) => {
 		return res.status(400).json(errors);
 	}
 
-	User.findOne({ email: req.body.email }).then(user => {
+	User.findOne({ email: req.body.email }).then((user) => {
 		if (user) {
 			return res.status(400).json({ email: 'Email already exists' });
 		} else {
 			// check if username is unique
-			User.findOne({ username: req.body.username }).then(user => {
+			User.findOne({ username: req.body.username }).then((user) => {
 				if (user) {
 					return res.status(400).json({ username: 'Username is taken' });
 				} else {
@@ -38,7 +38,7 @@ router.post('/register', (req, res) => {
 						email: req.body.email,
 						username: req.body.username,
 						password: req.body.password,
-						followed_tags: req.body.followed_tags
+						followed_tags: req.body.followed_tags,
 					});
 
 					// Hash password before saving in database
@@ -50,23 +50,23 @@ router.post('/register', (req, res) => {
 								{ email: req.body.email },
 								keys.secretOrKey,
 								{
-									expiresIn: 31556926 // 1 year in seconds
+									expiresIn: 31556926, // 1 year in seconds
 								}
 							);
 							// end email confirmation
 							newUser.password = hash;
 							newUser
 								.save()
-								.then(user => {
+								.then((user) => {
 									res.json(user);
 									sendConfirmationEmail({
 										user,
-										url: `http://localhost:3000/email_confirmation?token=${user.confirmation_token}&email=${user.email}`
+										url: `http://localhost:3000/email_confirmation?token=${user.confirmation_token}&email=${user.email}`,
 									})
-										.then(email => console.log(email))
-										.catch(mailError => console.log(mailError));
+										.then((email) => console.log(email))
+										.catch((mailError) => console.log(mailError));
 								})
-								.catch(err => console.log(err));
+								.catch((err) => console.log(err));
 						});
 					});
 				}
@@ -95,7 +95,6 @@ router.post('/login', (req, res) => {
 	// db state 3 => disconnecting
 
 	const checkDbState = setInterval(() => {
-		console.log(db.readyState);
 		switch (db.readyState) {
 			case 0: {
 				res
@@ -110,6 +109,7 @@ router.post('/login', (req, res) => {
 					.populate('saved_posts')
 					.populate('created_posts')
 					.populate('voted_posts')
+					.populate('comments')
 					.exec((err, user) => {
 						// Check if user exists
 						if (!user) {
@@ -117,7 +117,7 @@ router.post('/login', (req, res) => {
 						}
 
 						// Check password
-						bcrypt.compare(password, user.password).then(isMatch => {
+						bcrypt.compare(password, user.password).then((isMatch) => {
 							if (isMatch) {
 								// User matched
 								// Create JWT Payload
@@ -128,10 +128,11 @@ router.post('/login', (req, res) => {
 									saved_posts: user.saved_posts,
 									voted_posts: user.voted_posts,
 									created_posts: user.created_posts,
+									comments: user.comments,
 									followed_tags: user.followed_tags,
 									allow_personalized_feed: user.allow_personalized_feed,
 									allow_notifications: user.allow_notifications,
-									allow_dark_mode: user.allow_dark_mode
+									allow_dark_mode: user.allow_dark_mode,
 								};
 
 								// Sign token
@@ -139,12 +140,12 @@ router.post('/login', (req, res) => {
 									payload,
 									keys.secretOrKey,
 									{
-										expiresIn: 31556926 // 1 year in seconds
+										expiresIn: 31556926, // 1 year in seconds
 									},
 									(err, token) => {
 										res.json({
 											success: true,
-											token: 'Bearer ' + token
+											token: 'Bearer ' + token,
 										});
 									}
 								);
@@ -174,7 +175,7 @@ router.get('/:id', (req, res) => {
 		.populate('followed_tags')
 		.populate('saved_posts')
 		.populate('created_posts')
-		.populate('voted_posts.post')
+		.populate('voted_posts')
 		.exec((err, user) => {
 			if (err) res.status(400).send(err);
 			res.send(user);

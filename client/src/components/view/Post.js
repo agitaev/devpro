@@ -23,6 +23,7 @@ import TagChip from '../chunks/TagChip';
 import PostItem from '../dashboard/PostItem';
 import _ from 'underscore';
 import { Skeleton } from '@material-ui/lab';
+import Comments from './Comments';
 
 class Post extends Component {
 	componentDidMount() {
@@ -55,7 +56,7 @@ class Post extends Component {
 											/>
 										</Fragment>
 									)}
-									{post && post.subtitle ? (
+									{post && post.title ? (
 										<Typography variant='h5' gutterBottom>
 											{post.subtitle ? post.subtitle : ''}
 										</Typography>
@@ -135,7 +136,7 @@ class Post extends Component {
 											))}
 									</Grid>
 								</div>
-								<div style={{ padding: '1rem 0 3rem' }}>
+								{/* <div style={{ padding: '1rem 0 3rem' }}>
 									{post && post._id ? (
 										<Typography variant='h6' gutterBottom>
 											Author
@@ -184,38 +185,39 @@ class Post extends Component {
 											)}
 										</Grid>
 									</Grid>
+								</div> */}
+							</div>
+							<Divider />
+							<Comments post={post} />
+							<div style={{ padding: '2rem 0 1rem' }}>
+								{post && post._id ? (
+									<Typography variant='h6' gutterBottom>
+										Related
+									</Typography>
+								) : (
+									<Skeleton animation='wave' height={35} width='15%' />
+								)}
+								<div>
+									{post && recommended_posts ? (
+										<Grid container direction='row'>
+											{recommended_posts.length > 0 &&
+												recommended_posts
+													.filter((x) => x._id !== post._id)
+													.map((x, index) =>
+														index < 2 ? (
+															<Grid item xs={12} md={6} key={x._id}>
+																<PostItem post={x} />
+															</Grid>
+														) : null
+													)}
+										</Grid>
+									) : (
+										<Skeleton animation='wave' height={400} width='100%' />
+									)}
 								</div>
 							</div>
 						</Grid>
 					</Grid>
-					<Divider />
-					<div style={{ padding: '2rem 0 1rem' }}>
-						{post && post._id ? (
-							<Typography variant='h6' gutterBottom>
-								Related
-							</Typography>
-						) : (
-							<Skeleton animation='wave' height={35} width='15%' />
-						)}
-						<div>
-							{post && recommended_posts ? (
-								<Grid container direction='row'>
-									{recommended_posts.length > 0 &&
-										recommended_posts
-											.filter((x) => x._id !== post._id)
-											.map((x, index) =>
-												index < 2 ? (
-													<Grid item xs={12} md={6} key={x._id}>
-														<PostItem post={x} />
-													</Grid>
-												) : null
-											)}
-								</Grid>
-							) : (
-								<Skeleton animation='wave' height={400} width='100%' />
-							)}
-						</div>
-					</div>
 				</Container>
 			</Fragment>
 		);

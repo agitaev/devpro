@@ -24,6 +24,7 @@ import SearchBoard from './components/dashboard/SearchBoard';
 import { Hidden, ThemeProvider, createMuiTheme } from '@material-ui/core';
 import { light, dark } from './utils/theme';
 import ScrollToTop from './utils/ScrollToTop';
+import AdminPanel from './components/admin/AdminPanel';
 
 const lightTheme = createMuiTheme(light);
 const darkTheme = createMuiTheme(dark);
@@ -86,6 +87,7 @@ class App extends Component {
 										component={CreatePost}
 									/>
 									<PrivateRoute path='/me' component={Profile} />
+									<PrivateRoute path='/admin' component={AdminPanel} />
 								</Switch>
 								<Hidden mdUp>
 									<BottomNavbar />

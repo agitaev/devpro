@@ -17,6 +17,12 @@ router.get('/', async (req, res) => {
 		await Post.find({})
 			.populate('author')
 			.populate('tags')
+			.populate('comments')
+			.populate({
+				path: 'comments',
+				populate: { path: 'author', model: 'User' },
+				options: { sort: { created_at: 'desc' } },
+			})
 			.sort({ created_at: 'desc' }) // newest on top
 			.exec((err, posts) => {
 				if (err) {
@@ -46,7 +52,7 @@ router.post('/new', (req, res) => {
 		return res.status(400).json(errors);
 	}
 
-	Post.findOne({ title }).then(post => {
+	Post.findOne({ title }).then((post) => {
 		if (post) {
 			return res
 				.status(400)
@@ -57,7 +63,7 @@ router.post('/new', (req, res) => {
 				subtitle,
 				title,
 				body,
-				tags
+				tags,
 			});
 			try {
 				post.save((err, model) => {
