@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import AdminLeftPanel from './AdminLeftPanel';
 import { Switch, Route, withRouter } from 'react-router-dom';
+import AdminPosts from './AdminPosts';
+import AdminComments from './AdminComments';
+import { logoutUser } from '../../actions/authActions';
+import AdminOverview from './AdminOverview';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -21,8 +25,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const AdminPanel = ({ isAdmin, match }) => {
+const AdminPanel = ({ isAdmin, match, history, logoutUser }) => {
 	const classes = useStyles();
+
+	useEffect(() => {
+		if (!isAdmin) {
+			logoutUser();
+			history.push('/login');
+		}
+	}, [isAdmin, logoutUser, history]);
 
 	return (
 		<div className={classes.root}>
@@ -32,17 +43,17 @@ const AdminPanel = ({ isAdmin, match }) => {
 					<Route
 						exact
 						path={`${match.path}/`}
-						render={(routeProps) => <p>overview</p>}
+						render={(routeProps) => <AdminOverview />}
 					/>
 					<Route
 						exact
 						path={`${match.path}/posts`}
-						render={(routeProps) => <p>posts</p>}
+						render={(routeProps) => <AdminPosts />}
 					/>
 					<Route
 						exact
 						path={`${match.path}/comments`}
-						render={(routeProps) => <p>comments</p>}
+						render={(routeProps) => <AdminComments />}
 					/>
 				</Switch>
 			</main>
@@ -54,4 +65,7 @@ const mapStateToProps = (state) => ({
 	isAdmin: state.auth.user.username === 'admin',
 });
 
-export default connect(mapStateToProps)(withRouter(AdminPanel));
+export default connect(
+	mapStateToProps,
+	{ logoutUser }
+)(withRouter(AdminPanel));

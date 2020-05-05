@@ -14,7 +14,8 @@ const User = require('../models/User');
 // @access Public
 router.get('/', async (req, res) => {
 	try {
-		await Post.find({})
+		// retrieve only approved posts
+		await Post.find({ approved: true })
 			.populate('author')
 			.populate('tags')
 			.populate('comments')
@@ -29,7 +30,6 @@ router.get('/', async (req, res) => {
 					console.log(err);
 					res.send(400).send(err);
 				} else {
-					// console.log(posts);
 					res.send(posts);
 				}
 			});
@@ -165,6 +165,32 @@ router.get('/trending', async (req, res) => {
 			});
 	} catch (e) {
 		res.status(400).send({ error: 'unable to fetch trends' });
+	}
+});
+
+// @route POST api/posts/approve
+// @desc Approve post
+// @access private
+router.post('/approve', async (req, res) => {
+	const { postId } = req.body;
+
+	try {
+		await Post.findOneAndUpdate(
+			{ _id: postId },
+			{ $set: { approved: true } },
+			{ new: true }
+		)
+			.populate('author')
+			.populate('tags')
+			.populate('comments')
+			.exec((err, post) => {
+				if (err) console.log('[approvePost]', err);
+				if (post) {
+					res.status(202).send(post);
+				}
+			});
+	} catch (e) {
+		res.status(400).send({ error: 'unable to approve post' });
 	}
 });
 

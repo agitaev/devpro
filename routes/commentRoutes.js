@@ -5,6 +5,9 @@ const router = express.Router();
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
 
+// @route POST api/comments/new
+// @desc Post new comment
+// @access private
 router.post('/new', async (req, res) => {
 	const { body, author, post } = req.body;
 	const comment = new Comment({ body, author: author.id });
@@ -31,6 +34,30 @@ router.post('/new', async (req, res) => {
 		});
 	} catch (e) {
 		res.status(400).send({ error: 'bad request' });
+	}
+});
+
+// @route POST api/comments/approve
+// @desc Approve comment
+// @access private
+router.post('/approve', async (req, res) => {
+	const { commentId } = req.body;
+
+	try {
+		await Comment.findOneAndUpdate(
+			{ _id: commentId },
+			{ $set: { approved: true } },
+			{ new: true }
+		)
+			.populate('author')
+			.exec((err, comment) => {
+				if (err) console.log('[approveComment]', err);
+				if (comment) {
+					res.status(202).send(comment);
+				}
+			});
+	} catch (e) {
+		res.status(400).send({ error: 'unable to approve comment' });
 	}
 });
 

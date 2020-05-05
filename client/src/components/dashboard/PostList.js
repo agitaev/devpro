@@ -15,7 +15,7 @@ class PostList extends Component {
 	render() {
 		const { posts } = this.props;
 		const skeletons = [];
-		_.times(9, index =>
+		_.times(9, (index) =>
 			skeletons.push(
 				<Grid item xs={12} sm={6} lg={4} key={index}>
 					<PostItemSkeleton />
@@ -45,28 +45,28 @@ class PostList extends Component {
 
 PostList.propTypes = {
 	getPosts: PropTypes.func.isRequired,
-	posts: PropTypes.array.isRequired
+	posts: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	const { list, searchText } = state.posts;
 	const { allow_personalized_feed } = state.auth.user;
 
 	if (searchText !== '') {
 		return {
-			posts: list.filter(post => post.title.includes(searchText))
+			posts: list.filter((post) => post.title.includes(searchText)),
 		};
 	} else if (allow_personalized_feed) {
-		const userTags = state.auth.user.followed_tags.map(tag => tag.title);
+		const userTags = state.auth.user.followed_tags.map((tag) => tag.title);
 
-		// logic for retrieving personalized feed
+		// retrieving personalized feed
 		let personalizedPosts = [];
 		let junkPosts = [];
 		for (let i = 0; i < list.length; i++) {
 			for (let k = 0; k < list[i].tags.length; k++) {
 				if (userTags.includes(list[i].tags[k].title)) {
 					personalizedPosts.push(list[i]);
-				} else if (!_.any(junkPosts, e => _.isEqual(e, list[i]))) {
+				} else if (!_.any(junkPosts, (e) => _.isEqual(e, list[i]))) {
 					junkPosts.push(list[i]);
 				}
 			}
@@ -75,7 +75,7 @@ const mapStateToProps = state => {
 		const postSet = new Set(personalizedPosts.concat(junkPosts));
 		const posts = Array.from(postSet);
 		return {
-			posts
+			posts,
 		};
 	} else {
 		return { posts: list };

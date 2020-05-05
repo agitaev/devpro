@@ -4,6 +4,8 @@ import {
 	VOTE_POST,
 	SET_SEARCH_TEXT,
 	POST_COMMENT,
+	APPROVE_POST,
+	APPROVE_COMMENT,
 } from '../actions/types';
 
 const initialState = { list: [], searchText: '' };
@@ -38,6 +40,42 @@ export default (state = initialState, action) => {
 
 			return { ...state, list: updatedPosts };
 		}
+		case APPROVE_POST: {
+			const postIndex = state.list.findIndex(
+				(post) => post._id === action.payload.postId
+			);
+			const updatedPosts = state.list.map((post, index) =>
+				index !== postIndex ? post : { ...post, approved: true }
+			);
+
+			return { ...state, list: updatedPosts };
+		}
+		case APPROVE_COMMENT: {
+			let postIndex, updatedComment;
+			const commentId = action.payload._id;
+			state.list.map(
+				(post, index) =>
+					post.comments.length > 0 &&
+					post.comments.map((comment) => {
+						if (comment._id === commentId) {
+							postIndex = index;
+							updatedComment = comment;
+							updatedComment.approved = true;
+						}
+
+						return updatedComment;
+					})
+			);
+
+			const updatedPosts = state.list.map((post, index) =>
+				index !== postIndex
+					? post
+					: { ...post, comments: [...post.comments, updatedComment] }
+			);
+
+			return { ...state, list: updatedPosts };
+		}
+
 		default:
 			return state;
 	}

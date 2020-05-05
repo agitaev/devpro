@@ -9,6 +9,7 @@ import {
 	SYNC_SAVED_POSTS,
 	SYNC_VOTED_POSTS,
 	SYNC_CREATED_POSTS,
+	APPROVE_POST,
 } from './types';
 
 // Retrieve Posts
@@ -93,4 +94,15 @@ export const resetErrors = () => {
 	return {
 		type: RESET_ERRORS,
 	};
+};
+
+export const approvePost = (postId) => (dispatch) => {
+	axios
+		.post('/api/posts/approve', { postId })
+		.then((res) => dispatch({ type: APPROVE_POST, payload: postId }))
+		.catch((err) => console.log(err));
+};
+
+export const declinePost = (id) => {
+	console.log(id, 'declined');
 };

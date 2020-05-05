@@ -11,6 +11,8 @@ import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 
 const Comments = ({ post }) => {
+	const comments = post && post.comments.filter((comment) => comment.approved);
+
 	return (
 		<Grid container justify='center' style={{ paddingTop: '2rem' }}>
 			<CommentForm post={post} />
@@ -23,11 +25,11 @@ const Comments = ({ post }) => {
 					id='comments-panel-header'
 				>
 					<Typography color='textSecondary'>
-						View comments ({post && post.comments.length})
+						View comments ({comments && comments.length})
 					</Typography>
 				</ExpansionPanelSummary>
 				<ExpansionPanelDetails>
-					<CommentList comments={post && post.comments} />
+					<CommentList comments={comments && comments} />
 				</ExpansionPanelDetails>
 			</ExpansionPanel>
 		</Grid>

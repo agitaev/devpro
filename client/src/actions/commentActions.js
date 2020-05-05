@@ -1,4 +1,4 @@
-import { POST_COMMENT } from './types';
+import { POST_COMMENT, APPROVE_COMMENT } from './types';
 import axios from 'axios';
 
 export const postComment = (data) => (dispatch) => {
@@ -13,4 +13,15 @@ export const postComment = (data) => (dispatch) => {
 		.catch((err) => {
 			console.log(err);
 		});
+};
+
+export const approveComment = (commentId) => (dispatch) => {
+	axios
+		.post('/api/comments/approve', { commentId })
+		.then((res) => dispatch({ type: APPROVE_COMMENT, payload: res.data }))
+		.catch((err) => console.log(err));
+};
+
+export const declineComment = (id) => {
+	console.log(id);
 };

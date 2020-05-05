@@ -88,15 +88,21 @@ const AdminDrawer = ({ open, match, handleDrawerClose, logoutUser }) => {
 			<Fragment>
 				<Divider />
 				<List>
-					<RouterLink to={`${match.url}/comments`}>
-						<ListItem button>
+					<RouterLink
+						to={`${match.url}/comments`}
+						style={{ color: 'inherit', textDecoration: 'none' }}
+					>
+						<ListItem button alignItems='center'>
 							<ListItemIcon>
 								<CommentsIcon />
 							</ListItemIcon>
 							<ListItemText primary='Comments' />
 						</ListItem>
 					</RouterLink>
-					<RouterLink to={`${match.url}/posts`}>
+					<RouterLink
+						to={`${match.url}/posts`}
+						style={{ color: 'inherit', textDecoration: 'none' }}
+					>
 						<ListItem button>
 							<ListItemIcon>
 								<PostsIcon />
