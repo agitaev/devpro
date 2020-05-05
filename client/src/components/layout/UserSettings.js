@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {
 	switchAllowDarkMode,
 	switchAllowNotification,
-	switchAllowPersonalizedFeed
+	switchAllowPersonalizedFeed,
 } from '../../actions/userActions';
 
 const UserSettings = ({
@@ -14,7 +14,7 @@ const UserSettings = ({
 	switchAllowDarkMode,
 	switchAllowNotification,
 	switchAllowPersonalizedFeed,
-	userId
+	userId,
 }) => {
 	const [allowPersonalizedFeed, setAllowPersonalizedFeed] = useState(feed);
 	const [allowNotifications, setAllowNotifications] = useState(notifications);
@@ -38,7 +38,7 @@ const UserSettings = ({
 					<Switch
 						color='primary'
 						checked={allowPersonalizedFeed}
-						onChange={event => {
+						onChange={(event) => {
 							setAllowPersonalizedFeed(event.target.checked);
 							switchAllowPersonalizedFeed(userId);
 						}}
@@ -55,7 +55,7 @@ const UserSettings = ({
 					<Switch
 						color='primary'
 						checked={allowNotifications}
-						onChange={event => {
+						onChange={(event) => {
 							setAllowNotifications(event.target.checked);
 							switchAllowNotification(userId);
 						}}
@@ -72,7 +72,7 @@ const UserSettings = ({
 					<Switch
 						color='primary'
 						checked={allowDarkMode}
-						onChange={event => {
+						onChange={(event) => {
 							setAllowDarkMode(event.target.checked);
 							switchAllowDarkMode(userId);
 						}}
@@ -83,11 +83,11 @@ const UserSettings = ({
 	);
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
 	userId: state.auth.user.id,
 	notifications: state.auth.user.allow_notifications,
 	feed: state.auth.user.allow_personalized_feed,
-	darkMode: state.auth.user.allow_dark_mode
+	darkMode: state.auth.user.allow_dark_mode,
 });
 
 export default connect(

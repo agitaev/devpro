@@ -57,7 +57,12 @@ const mapStateToProps = (state) => {
 
 	if (searchText !== '') {
 		return {
-			posts: list.filter((post) => post.title.includes(searchText)),
+			posts: list.filter(
+				(post) =>
+					post.title.toLowerCase().includes(searchText) ||
+					post.subtitle.toLowerCase().includes(searchText) ||
+					post.author.name.toLowerCase().includes(searchText)
+			),
 		};
 	} else if (allow_personalized_feed) {
 		const userTags = state.auth.user.followed_tags.map((tag) => tag.title);

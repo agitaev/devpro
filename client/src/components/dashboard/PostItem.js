@@ -16,7 +16,7 @@ import {
 	StarOutlined as UnsaveIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import moment from 'dayjs';
+import dayjs from 'dayjs';
 import TagChip from '../chunks/TagChip';
 import { connect } from 'react-redux';
 import { votePost, savePost, resetErrors } from '../../actions/postActions';
@@ -132,7 +132,7 @@ class PostItem extends Component {
 							/>
 						) : (
 							<Typography variant='subtitle2' style={{ flex: 1 }}>
-								{moment(post.created_at).format('MMM D')}
+								{dayjs(post.created_at).format('MMM D')}
 							</Typography>
 						)}
 						{isLoading ? (

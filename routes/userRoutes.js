@@ -212,7 +212,6 @@ router.post('/toggle_allow_notifications', (req, res) => {
 		user.allow_notifications = !user.allow_notifications;
 		user.save((error, user) => {
 			if (!error) {
-				console.log(user);
 				res.send(user);
 			} else {
 				console.log(error);
@@ -231,7 +230,6 @@ router.post('/toggle_allow_personalized_feed', (req, res) => {
 		user.allow_personalized_feed = !user.allow_personalized_feed;
 		user.save((error, user) => {
 			if (!error) {
-				console.log(user);
 				res.send(user);
 			}
 		});
@@ -248,7 +246,6 @@ router.post('/toggle_dark_mode', (req, res) => {
 		user.allow_dark_mode = !user.allow_dark_mode;
 		user.save((error, user) => {
 			if (!error) {
-				console.log(user);
 				res.send(user);
 			}
 		});
