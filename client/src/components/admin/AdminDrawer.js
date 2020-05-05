@@ -14,9 +14,10 @@ import {
 import {
 	ChevronLeft as ChevronLeftIcon,
 	ChevronRight as ChevronRightIcon,
-	ExitToAppOutlined as ExitIcon,
 	CommentOutlined as CommentsIcon,
 	DynamicFeedOutlined as PostsIcon,
+	ExitToAppOutlined as ExitIcon,
+	HomeOutlined as HomeIcon,
 } from '@material-ui/icons';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -113,6 +114,12 @@ const AdminDrawer = ({ open, match, handleDrawerClose, logoutUser }) => {
 				</List>
 				<Divider />
 				<List>
+					<ListItem button component={RouterLink} to='/'>
+						<ListItemIcon>
+							<HomeIcon />
+						</ListItemIcon>
+						<ListItemText primary='Back to Home' />
+					</ListItem>
 					<ListItem button onClick={logoutUser}>
 						<ListItemIcon>
 							<ExitIcon />

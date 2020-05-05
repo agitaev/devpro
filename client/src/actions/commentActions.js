@@ -22,6 +22,9 @@ export const approveComment = (commentId) => (dispatch) => {
 		.catch((err) => console.log(err));
 };
 
-export const declineComment = (id) => {
-	console.log(id);
+export const declineComment = (commentId) => {
+	axios
+		.post('/api/comments/decline', { commentId })
+		.then((res) => console.log(res.data))
+		.catch((err) => console.log(err));
 };

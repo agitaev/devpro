@@ -82,9 +82,7 @@ const AdminPosts = ({ posts, getPosts, approvePost }) => {
 };
 
 const mapStateToProps = (state) => ({
-	posts: state.posts.list
-		.map((post) => post.hasOwnProperty('approved') && !post.approved && post)
-		.filter((post) => !!post),
+	posts: state.posts.list.filter((post) => !post.approved),
 });
 
 export default connect(

@@ -103,6 +103,9 @@ export const approvePost = (postId) => (dispatch) => {
 		.catch((err) => console.log(err));
 };
 
-export const declinePost = (id) => {
-	console.log(id, 'declined');
+export const declinePost = (postId) => {
+	axios
+		.post('/api/posts/decline', { postId })
+		.then((res) => console.log(res.data))
+		.catch((err) => console.log(err));
 };

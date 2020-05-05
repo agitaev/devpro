@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Grid, Button, IconButton } from '@material-ui/core';
+import { Paper, Typography, Grid, Button } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
 
 const UserComment = ({ comment }) => {

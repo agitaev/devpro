@@ -15,7 +15,7 @@ const User = require('../models/User');
 router.get('/', async (req, res) => {
 	try {
 		// retrieve only approved posts
-		await Post.find({ approved: true })
+		await Post.find({})
 			.populate('author')
 			.populate('tags')
 			.populate('comments')
@@ -191,6 +191,23 @@ router.post('/approve', async (req, res) => {
 			});
 	} catch (e) {
 		res.status(400).send({ error: 'unable to approve post' });
+	}
+});
+
+// @route POST api/posts/decline
+// @desc Decline post
+// @access private
+router.post('/decline', async (req, res) => {
+	const { postId } = req.body;
+
+	try {
+		await Post.findOneAndDelete({ _id: postId }).exec((err) => {
+			return err
+				? console.log('[declinePost]', err)
+				: res.status(200).send({ status: 200, msg: 'post deleted' });
+		});
+	} catch (e) {
+		res.status(400).send({ error: 'unable to decline post' });
 	}
 });
 

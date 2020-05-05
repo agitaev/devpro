@@ -49,7 +49,10 @@ PostList.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-	const { list, searchText } = state.posts;
+	// filter out approved posts
+	const list = state.posts.list.filter((post) => post.approved);
+
+	const { searchText } = state.posts;
 	const { allow_personalized_feed } = state.auth.user;
 
 	if (searchText !== '') {
@@ -74,6 +77,7 @@ const mapStateToProps = (state) => {
 
 		const postSet = new Set(personalizedPosts.concat(junkPosts));
 		const posts = Array.from(postSet);
+
 		return {
 			posts,
 		};
