@@ -159,7 +159,9 @@ class Profile extends Component {
 									<Route
 										exact
 										path={`${match.path}/comments`}
-										component={UserComments}
+										render={(routeProps) => (
+											<UserComments comments={user.comments} />
+										)}
 									/>
 									<Route
 										exact

@@ -2,17 +2,28 @@ import React, { useState } from 'react';
 import { TextField, Button, Grid } from '@material-ui/core';
 import { postComment } from '../../actions/commentActions';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
-const CommentForm = ({ author, post, postComment }) => {
+const CommentForm = ({
+	author,
+	post,
+	isAuthenticated,
+	history,
+	postComment,
+}) => {
 	const [body, setBody] = useState('');
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
-		const data = { body, author, post };
+		if (isAuthenticated) {
+			const data = { body, author, post };
 
-		postComment(data);
-		setBody('');
+			postComment(data);
+			setBody('');
+		} else {
+			history.push('/login');
+		}
 	};
 
 	return (
@@ -51,7 +62,7 @@ const CommentForm = ({ author, post, postComment }) => {
 						size='large'
 						color='primary'
 					>
-						Send
+						Send to moderation
 					</Button>
 				</Grid>
 			</Grid>
@@ -61,9 +72,10 @@ const CommentForm = ({ author, post, postComment }) => {
 
 const mapStateToProps = (state) => ({
 	author: state.auth.user,
+	isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(
 	mapStateToProps,
 	{ postComment }
-)(CommentForm);
+)(withRouter(CommentForm));
