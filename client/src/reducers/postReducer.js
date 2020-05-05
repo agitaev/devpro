@@ -6,6 +6,8 @@ import {
 	POST_COMMENT,
 	APPROVE_POST,
 	APPROVE_COMMENT,
+	DECLINE_COMMENT,
+	DECLINE_POST,
 } from '../actions/types';
 
 const initialState = { list: [], searchText: '' };
@@ -50,6 +52,13 @@ export default (state = initialState, action) => {
 
 			return { ...state, list: updatedPosts };
 		}
+		case DECLINE_POST: {
+			const updatedPosts = state.list.filter(
+				(post) => post._id !== action.payload
+			);
+
+			return { ...state, list: updatedPosts };
+		}
 		case APPROVE_COMMENT: {
 			let postIndex, updatedComment;
 			const commentId = action.payload._id;
@@ -74,6 +83,16 @@ export default (state = initialState, action) => {
 			);
 
 			return { ...state, list: updatedPosts };
+		}
+		case DECLINE_COMMENT: {
+			// @TODO
+			let posts = state.list;
+
+			for (let i = 0; i < posts.length; i++) {
+				posts[i].comments.filter((comment) => comment._id !== action.payload);
+			}
+
+			return state;
 		}
 
 		default:

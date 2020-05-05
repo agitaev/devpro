@@ -12,9 +12,10 @@ import {
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { getPosts, approvePost, declinePost } from '../../actions/postActions';
+import { withRouter } from 'react-router-dom';
 import dayjs from 'dayjs';
 
-const AdminPosts = ({ posts, getPosts, approvePost }) => {
+const AdminPosts = ({ posts, getPosts, approvePost, declinePost }) => {
 	useEffect(() => {
 		getPosts();
 	}, [getPosts]);
@@ -87,5 +88,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(
 	mapStateToProps,
-	{ getPosts, approvePost }
-)(AdminPosts);
+	{ getPosts, approvePost, declinePost }
+)(withRouter(AdminPosts));

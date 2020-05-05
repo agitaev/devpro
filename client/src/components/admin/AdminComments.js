@@ -15,7 +15,12 @@ import { getPosts } from '../../actions/postActions';
 import dayjs from 'dayjs';
 import { approveComment, declineComment } from '../../actions/commentActions';
 
-const AdminComments = ({ comments, getPosts, approveComment }) => {
+const AdminComments = ({
+	comments,
+	getPosts,
+	approveComment,
+	declineComment,
+}) => {
 	useEffect(() => {
 		getPosts();
 	}, [getPosts]);
@@ -81,5 +86,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
 	mapStateToProps,
-	{ getPosts, approveComment }
+	{ getPosts, approveComment, declineComment }
 )(AdminComments);
