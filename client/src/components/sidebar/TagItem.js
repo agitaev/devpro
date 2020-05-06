@@ -7,7 +7,7 @@ import { followTag } from '../../actions/tagActions';
 class TagItem extends Component {
 	state = {
 		tag: {},
-		elevation: 0
+		elevation: 0,
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
@@ -47,8 +47,8 @@ class TagItem extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	user: state.auth.user
+const mapStateToProps = (state) => ({
+	user: state.auth.user,
 });
 
 export default connect(mapStateToProps)(TagItem);
