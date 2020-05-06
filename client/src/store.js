@@ -10,7 +10,7 @@ const store = createStore(
 	initialState,
 	compose(
 		applyMiddleware(...middleware)
-		// for Redux DevTools
+		// for Redux DevTools uncomment following line
 		// window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 	)
 );

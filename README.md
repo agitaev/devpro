@@ -98,6 +98,10 @@ Followings commands must be executed in root folder.
    $ heroku logs –tail
    ```
 
+## Redux DevTools
+
+To turn on Redux DevTools uncomment line 14 in [store.js](/client/src/store.js). </br> **Make sure to comment that line in production build, otherwise it may crash the application.**
+
 ## License
 
 This project is licensed under the terms of the [MIT license](/LICENSE).
