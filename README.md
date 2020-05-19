@@ -1,81 +1,107 @@
-# User Manual
+## Prerequisites
 
-> Deployed application can be found at https://devpro-v2.herokuapp.com
-
-### Prerequisites
-
-- Node.js v10.16.0 and higher
-- Git v2.25.0 and higher
+- Node.js v10.16.0 _or higher_
+- Git v2.25.0 _or higher_
 - Terminal/Command Line
 - Heroku CLI (only for deployment)
 
-### Installation
-
-The following codes should be executed one at a time.
+## Installation
 
 1. Clone GitHub repository:
-
-```sh
-$ git clone https://github.com/agitaev/devpro.git
-$ cd devpro/
-```
-
+   ```
+   $ git clone https://github.com/agitaev/devpro.git && cd devpro/
+   ```
 2. Install dependencies:
-
-```sh
-$ npm install && cd client/ && npm install && cd ..
-```
-
+   ```
+   $ npm install && cd client/ && npm install && cd ..
+   ```
 3. Run development server:
+   ```
+   $ npm run dev
+   ```
+   If the last command didn’t open the browser automatically, then go to
+   http://localhost:3000 in any browser.
 
-```sh
-$ npm run dev
-```
+## Available scripts
 
-If the last command didn’t open the browser automatically, then navigate to http://localhost:3000 in any browser.
+- Install client-side application dependencies:
 
-### Running Lighthouse Audits
+  ```
+  $ npm run client-install
+  ```
+
+- Run client-side application:
+
+  ```
+  $ npm run client
+  ```
+
+- Run server-side application:
+
+  ```
+  $ npm run server
+  ```
+
+- Run development server:
+
+  ```
+  $ npm run dev
+  ```
+
+- Run Tensorflow testing environment:
+
+  ```
+  $ npm run brain
+  ```
+
+- Run playground/testing environment:
+  ```
+  $ npm run play
+  ```
+
+## Running Lighthouse audits
 
 1. Install Lighthouse:
-
-```sh
-$ sudo npm install -g lighthouse
-```
-
+   ```
+   $ sudo npm install -g lighthouse
+   ```
 2. Run Lighthouse:
+   ```
+   $ lighthouse https://devpro-v2.herokuapp.com/ --verbose – view
+   ```
 
-```sh
-$ lighthouse https://devpro-v2.herokuapp.com/ --verbose –view
-```
+## Deployment
 
-### Deployment
+Followings commands must be executed in root folder.
 
 1. Login to Heroku account:
-
-```sh
-$ heroku login
-```
-
+   ```
+   $ heroku login
+   ```
 2. Create new application in Heroku:
-
-```sh
-$ heroku create agitaev-s-software
-```
-
+   ```
+   $ heroku create agitaev-s-software
+   ```
 3. Add remote branch:
-
-```sh
-$ heroku git:remote -a agitaev-s-software
-```
-
+   ```
+   $ heroku git:remote -a agitaev-s-software
+   ```
 4. Deploy to Heroku:
 
-```sh
-$ git add . && git commit -m ‘testing deployment’ && git push heroku master
-```
+   ```
+   $ git add . && git commit -m 'testing deployment' && git push heroku master
+   ```
 
-After successful deployment, you can execute following command to see logs:
+   After successful deployment, you can execute following command to see logs:
 
-```sh
-$ heroku logs –tail
-```
+   ```
+   $ heroku logs –tail
+   ```
+
+## Redux DevTools
+
+To turn on Redux DevTools uncomment line 14 in [store.js](/client/src/store.js). </br> **Make sure to comment that line in production build, otherwise it may crash the application.**
+
+## License
+
+This project is licensed under the terms of the [MIT license](/LICENSE).

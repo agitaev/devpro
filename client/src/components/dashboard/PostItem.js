@@ -6,17 +6,17 @@ import {
 	Link,
 	IconButton,
 	Snackbar,
-	Button
+	Button,
 } from '@material-ui/core';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import compose from 'recompose/compose';
 import {
 	ExpandLessOutlined as UpvoteIcon,
 	StarBorderOutlined as SaveIcon,
-	StarOutlined as UnsaveIcon
+	StarOutlined as UnsaveIcon,
 } from '@material-ui/icons';
 import { Skeleton } from '@material-ui/lab';
-import moment from 'moment/';
+import dayjs from 'dayjs';
 import TagChip from '../chunks/TagChip';
 import { connect } from 'react-redux';
 import { votePost, savePost, resetErrors } from '../../actions/postActions';
@@ -30,7 +30,7 @@ class PostItem extends Component {
 		voted: false,
 		isLoading: true,
 		error: {},
-		snackbar: false
+		snackbar: false,
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
@@ -42,7 +42,6 @@ class PostItem extends Component {
 			this.setState({ saved: !this.state.saved });
 		} else {
 			this.props.history.push('/login');
-			console.log('unauthorized');
 		}
 	};
 
@@ -51,7 +50,6 @@ class PostItem extends Component {
 			this.props.votePost(this.props.post._id, this.props.user.id);
 		} else {
 			this.props.history.push('/login');
-			console.log('unauthorized');
 		}
 	};
 
@@ -60,7 +58,7 @@ class PostItem extends Component {
 		if (post) this.setState({ isLoading: false });
 
 		if (user && saved_posts && saved_posts.length > 0) {
-			saved_posts.map(savedPost =>
+			saved_posts.map((savedPost) =>
 				savedPost._id === post._id ? this.setState({ saved: true }) : null
 			);
 		}
@@ -116,7 +114,7 @@ class PostItem extends Component {
 				<Paper
 					style={{
 						padding: '1.2rem',
-						backgroundColor: 'inherit'
+						backgroundColor: 'inherit',
 					}}
 					elevation={this.state.elevation}
 					onMouseOver={this.onMouseOver}
@@ -132,7 +130,7 @@ class PostItem extends Component {
 							/>
 						) : (
 							<Typography variant='subtitle2' style={{ flex: 1 }}>
-								{moment(post.created_at).format('MMM D')}
+								{dayjs(post.created_at).format('MMM D')}
 							</Typography>
 						)}
 						{isLoading ? (
@@ -183,7 +181,7 @@ class PostItem extends Component {
 									color='inherit'
 									style={{
 										textDecoration: 'none',
-										lineHeight: 'normal'
+										lineHeight: 'normal',
 									}}
 								>
 									{post.title}
@@ -206,7 +204,7 @@ class PostItem extends Component {
 										lineHeight: 'normal',
 										marginTop: '1rem',
 										display: 'block',
-										fontWeight: 400
+										fontWeight: 400,
 									}}
 								>
 									{post.subtitle}
@@ -294,11 +292,11 @@ class PostItem extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
 	user: state.auth.user,
 	error: state.errors,
 	isAuthenticated: state.auth.isAuthenticated,
-	saved_posts: state.auth.user.saved_posts
+	saved_posts: state.auth.user.saved_posts,
 });
 
 export default compose(

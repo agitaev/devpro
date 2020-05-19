@@ -5,35 +5,35 @@ import {
 	GET_ERRORS,
 	SET_CURRENT_USER,
 	USER_LOADING,
-	LOGOUT_USER
+	LOGOUT_USER,
 } from './types';
 
 // Register User
-export const registerUser = (userData, history) => dispatch => {
+export const registerUser = (userData, history) => (dispatch) => {
 	axios
 		.post('/api/users/register', userData)
-		.then(res =>
+		.then((res) =>
 			history.push({
 				pathname: '/',
 				state: {
 					fromlocation: history.location.pathname,
-					email: userData.email
-				}
+					email: userData.email,
+				},
 			})
 		)
-		.catch(err =>
+		.catch((err) =>
 			dispatch({
 				type: GET_ERRORS,
-				payload: err.response.data
+				payload: err.response.data,
 			})
 		);
 };
 
 // Login - get user token
-export const loginUser = (userData, history) => dispatch => {
+export const loginUser = (userData, history) => (dispatch) => {
 	axios
 		.post('/api/users/login', userData)
-		.then(res => {
+		.then((res) => {
 			// Save to localStorage
 			// Set token to localStorage
 			const { token } = res.data;
@@ -42,37 +42,36 @@ export const loginUser = (userData, history) => dispatch => {
 			setAuthToken(token);
 			// Decode token to get user data
 			const decoded = jwt_decode(token);
-			// console.log(decoded);
 			// Set current user
 			dispatch(setCurrentUser(decoded));
 			// Redirect user to homepage
 			history.push({ pathname: '/' });
 		})
-		.catch(err =>
+		.catch((err) =>
 			dispatch({
 				type: GET_ERRORS,
-				payload: err.response.data
+				payload: err.response.data,
 			})
 		);
 };
 
 // Set logged in user
-export const setCurrentUser = decoded => {
+export const setCurrentUser = (decoded) => {
 	return {
 		type: SET_CURRENT_USER,
-		payload: decoded
+		payload: decoded,
 	};
 };
 
 // User loading
 export const setUserLoading = () => {
 	return {
-		type: USER_LOADING
+		type: USER_LOADING,
 	};
 };
 
 // Log user out
-export const logoutUser = () => dispatch => {
+export const logoutUser = () => (dispatch) => {
 	// clear localStorage and personal preferences
 	localStorage.clear();
 	// Remove auth header for future requests
@@ -83,12 +82,11 @@ export const logoutUser = () => dispatch => {
 };
 
 // Verify user email
-export const confirmUserEmail = token => {
+export const confirmUserEmail = (token) => {
 	axios
 		.post('/api/users/email_confirmation', { token })
-		.then(res => {
-			console.log('res.data', res.data);
+		.then((res) => {
 			loginUser(res.data);
 		})
-		.catch(err => console.log(err));
+		.catch((err) => console.log(err));
 };

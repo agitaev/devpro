@@ -6,23 +6,24 @@ import {
 	Container,
 	Typography,
 	Grid,
-	Avatar,
+	// Avatar,
 	Divider,
 	Button,
 	ButtonGroup,
-	Hidden
+	Hidden,
 } from '@material-ui/core';
 import {
 	ExpandLessOutlined as UpvoteIcon,
-	StarBorderOutlined as SaveIcon
+	StarBorderOutlined as SaveIcon,
 	// StarOutlined as UnsaveIcon
 } from '@material-ui/icons';
 import { Link as RouterLink } from 'react-router-dom';
-import moment from 'moment';
+import moment from 'dayjs';
 import TagChip from '../chunks/TagChip';
 import PostItem from '../dashboard/PostItem';
 import _ from 'underscore';
 import { Skeleton } from '@material-ui/lab';
+import Comments from './Comments';
 
 class Post extends Component {
 	componentDidMount() {
@@ -55,9 +56,16 @@ class Post extends Component {
 											/>
 										</Fragment>
 									)}
-									<Typography variant='h5' gutterBottom>
-										{post.subtitle ? post.subtitle : ''}
-									</Typography>
+									{post && post.title ? (
+										<Typography variant='h5' gutterBottom>
+											{post.subtitle ? post.subtitle : ''}
+										</Typography>
+									) : (
+										<Fragment>
+											<Skeleton animation='wave' height={30} width='90%' />
+											<Skeleton animation='wave' height={30} width='40%' />
+										</Fragment>
+									)}
 									<Grid container justify='space-between' alignItems='center'>
 										<Grid item>
 											{post && post.author ? (
@@ -123,10 +131,12 @@ class Post extends Component {
 									<Grid container spacing={2} style={{ padding: '1rem 0' }}>
 										{post &&
 											post.tags &&
-											post.tags.map(tag => <TagChip key={tag._id} tag={tag} />)}
+											post.tags.map((tag) => (
+												<TagChip key={tag._id} tag={tag} />
+											))}
 									</Grid>
 								</div>
-								<div style={{ padding: '1rem 0 3rem' }}>
+								{/* <div style={{ padding: '1rem 0 3rem' }}>
 									{post && post._id ? (
 										<Typography variant='h6' gutterBottom>
 											Author
@@ -141,7 +151,7 @@ class Post extends Component {
 										style={{
 											padding: '.5rem 0',
 											textDecoration: 'none',
-											color: 'inherit'
+											color: 'inherit',
 										}}
 										component={RouterLink}
 										to={`/users/${post && post.author ? post.author._id : ''}`}
@@ -175,38 +185,39 @@ class Post extends Component {
 											)}
 										</Grid>
 									</Grid>
+								</div> */}
+							</div>
+							<Divider />
+							<Comments post={post} />
+							<div style={{ padding: '2rem 0 1rem' }}>
+								{post && post._id ? (
+									<Typography variant='h6' gutterBottom>
+										Related
+									</Typography>
+								) : (
+									<Skeleton animation='wave' height={35} width='15%' />
+								)}
+								<div>
+									{post && recommended_posts ? (
+										<Grid container direction='row'>
+											{recommended_posts.length > 0 &&
+												recommended_posts
+													.filter((x) => x._id !== post._id)
+													.map((x, index) =>
+														index < 2 ? (
+															<Grid item xs={12} md={6} key={x._id}>
+																<PostItem post={x} />
+															</Grid>
+														) : null
+													)}
+										</Grid>
+									) : (
+										<Skeleton animation='wave' height={400} width='100%' />
+									)}
 								</div>
 							</div>
 						</Grid>
 					</Grid>
-					<Divider />
-					<div style={{ padding: '2rem 0 1rem' }}>
-						{post && post._id ? (
-							<Typography variant='h6' gutterBottom>
-								Related
-							</Typography>
-						) : (
-							<Skeleton animation='wave' height={35} width='15%' />
-						)}
-						<div>
-							{post && recommended_posts ? (
-								<Grid container direction='row'>
-									{recommended_posts.length > 0 &&
-										recommended_posts
-											.filter(x => x._id !== post._id)
-											.map((x, index) =>
-												index < 2 ? (
-													<Grid item xs={12} md={6} key={x._id}>
-														<PostItem post={x} />
-													</Grid>
-												) : null
-											)}
-								</Grid>
-							) : (
-								<Skeleton animation='wave' height={400} width='100%' />
-							)}
-						</div>
-					</div>
 				</Container>
 			</Fragment>
 		);
@@ -216,8 +227,8 @@ class Post extends Component {
 const mapStateToProps = (state, props) => {
 	const { list } = state.posts;
 
-	const post = list.find(post => post._id === props.match.params.postId);
-	const postTags = post ? post.tags.map(tag => tag.title) : null;
+	const post = list.find((post) => post._id === props.match.params.postId);
+	const postTags = post ? post.tags.map((tag) => tag.title) : null;
 
 	// logic for retrieving related posts
 	let relatedPosts = [];
@@ -226,7 +237,7 @@ const mapStateToProps = (state, props) => {
 		for (let k = 0; k < list[i].tags.length; k++) {
 			if (postTags.includes(list[i].tags[k].title)) {
 				relatedPosts.push(list[i]);
-			} else if (!_.any(junkPosts, e => _.isEqual(e, list[i]))) {
+			} else if (!_.any(junkPosts, (e) => _.isEqual(e, list[i]))) {
 				junkPosts.push(list[i]);
 			}
 		}
@@ -238,7 +249,7 @@ const mapStateToProps = (state, props) => {
 	return {
 		post,
 		recommended_posts,
-		userId: state.auth.user.id
+		userId: state.auth.user.id,
 	};
 };
 

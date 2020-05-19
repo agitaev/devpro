@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const isEmpty = require('is-empty');
 
-const validatePostInput = data => {
+const validatePostInput = (data) => {
 	let errors = {};
 
 	// Convert empty fields to an empty string so we can use validator functions
@@ -15,7 +15,7 @@ const validatePostInput = data => {
 	} else if (!Validator.isLength(data.title, { max: 96 })) {
 		errors.title =
 			"Let's keep it short and clear. Title must include no more than 96 characters";
-	} else if (!Validator.isLength(data.title, { min: 24 })) {
+	} else if (!Validator.isLength(data.title, { min: 8 })) {
 		errors.title =
 			"That's pretty short. Title must at least 24 characters long";
 	}

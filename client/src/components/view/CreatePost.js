@@ -5,7 +5,7 @@ import {
 	Grid,
 	Typography,
 	Button,
-	Snackbar
+	Snackbar,
 } from '@material-ui/core';
 import _ from 'underscore';
 import compose from 'recompose/compose';
@@ -25,17 +25,10 @@ class CreatePost extends Component {
 		tags: [],
 		errors: {},
 		showSnackbar: false,
-		tagOptions: []
 	};
 
 	componentDidMount() {
 		this.props.getTags();
-	}
-
-	static getDerivedStateFromProps(props, state) {
-		if (props.tags) {
-			return { tagOptions: props.tags };
-		}
 	}
 
 	componentDidUpdate(prevProps) {
@@ -48,11 +41,11 @@ class CreatePost extends Component {
 		this.props.resetErrors();
 	}
 
-	onChange = e => {
+	onChange = (e) => {
 		this.setState({ [e.target.id]: e.target.value });
 	};
 
-	onSubmit = async e => {
+	onSubmit = async (e) => {
 		e.preventDefault();
 
 		const tags = this.state.tags.map(({ _id }) => _id);
@@ -61,7 +54,7 @@ class CreatePost extends Component {
 			subtitle: this.state.subtitle,
 			body: this.state.body,
 			author: this.props.auth.user.id,
-			tags
+			tags,
 		};
 
 		this.props.createPost(post, this.props.history);
@@ -74,6 +67,7 @@ class CreatePost extends Component {
 
 	render() {
 		const { title, subtitle, body, errors, showSnackbar } = this.state;
+		const { tags } = this.props;
 
 		return (
 			<Container maxWidth='lg' style={{ margin: '2rem auto 10rem' }}>
@@ -145,7 +139,7 @@ class CreatePost extends Component {
 											color: 'grey',
 											fontSize: '1rem',
 											fontWeight: 'normal',
-											verticalAlign: 'text-top'
+											verticalAlign: 'text-top',
 										}}
 									>
 										&nbsp;-&nbsp;optional
@@ -199,9 +193,9 @@ class CreatePost extends Component {
 									onChange={(event, tags) => this.setState({ tags })}
 									multiple
 									id='tags'
-									options={this.state.tagOptions}
-									getOptionLabel={option => option.title}
-									renderInput={params => (
+									options={tags ? tags : []}
+									getOptionLabel={(option) => option.title}
+									renderInput={(params) => (
 										<TextField
 											{...params}
 											size='small'
@@ -235,12 +229,12 @@ class CreatePost extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
 	auth: state.auth,
 	errors: state.errors,
 	tags: state.tags
 		// sort alphabetically
-		.sort((x, y) => (x.title < y.title ? -1 : x.title > y.title ? 1 : 0))
+		.sort((x, y) => (x.title < y.title ? -1 : x.title > y.title ? 1 : 0)),
 });
 
 export default compose(

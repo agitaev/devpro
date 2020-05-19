@@ -14,21 +14,25 @@ const User = require('../models/User');
 // @access Public
 router.get('/', async (req, res) => {
 	try {
+		// retrieve only approved posts
 		await Post.find({})
 			.populate('author')
 			.populate('tags')
+			.populate('comments')
+			.populate({
+				path: 'comments',
+				populate: { path: 'author', model: 'User' },
+				options: { sort: { created_at: 'desc' } },
+			})
 			.sort({ created_at: 'desc' }) // newest on top
 			.exec((err, posts) => {
 				if (err) {
-					console.log(err);
 					res.send(400).send(err);
 				} else {
-					// console.log(posts);
 					res.send(posts);
 				}
 			});
 	} catch (e) {
-		console.log(e);
 		res.status(400).send({ error: 'bad request' });
 	}
 });
@@ -40,13 +44,12 @@ router.post('/new', (req, res) => {
 	// Form validation
 	const { errors, isValid } = validatePostInput(req.body);
 	const { author, title, subtitle, body, tags } = req.body;
-	console.log(req.body);
 
 	if (!isValid) {
 		return res.status(400).json(errors);
 	}
 
-	Post.findOne({ title }).then(post => {
+	Post.findOne({ title }).then((post) => {
 		if (post) {
 			return res
 				.status(400)
@@ -57,7 +60,7 @@ router.post('/new', (req, res) => {
 				subtitle,
 				title,
 				body,
-				tags
+				tags,
 			});
 			try {
 				post.save((err, model) => {
@@ -159,6 +162,49 @@ router.get('/trending', async (req, res) => {
 			});
 	} catch (e) {
 		res.status(400).send({ error: 'unable to fetch trends' });
+	}
+});
+
+// @route POST api/posts/approve
+// @desc Approve post
+// @access private
+router.post('/approve', async (req, res) => {
+	const { postId } = req.body;
+
+	try {
+		await Post.findOneAndUpdate(
+			{ _id: postId },
+			{ $set: { approved: true } },
+			{ new: true }
+		)
+			.populate('author')
+			.populate('tags')
+			.populate('comments')
+			.exec((err, post) => {
+				if (err) console.log('[approvePost]', err);
+				if (post) {
+					res.status(202).send(post);
+				}
+			});
+	} catch (e) {
+		res.status(400).send({ error: 'unable to approve post' });
+	}
+});
+
+// @route POST api/posts/decline
+// @desc Decline post
+// @access private
+router.post('/decline', async (req, res) => {
+	const { postId } = req.body;
+
+	try {
+		await Post.findOneAndDelete({ _id: postId }).exec((err) => {
+			return err
+				? console.log('[declinePost]', err)
+				: res.status(200).send({ status: 200, msg: 'post deleted' });
+		});
+	} catch (e) {
+		res.status(400).send({ error: 'unable to decline post' });
 	}
 });
 

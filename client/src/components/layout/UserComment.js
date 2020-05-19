@@ -1,16 +1,10 @@
 import React from 'react';
 import { Paper, Typography, Grid, Button } from '@material-ui/core';
 import { Link as RouterLink } from 'react-router-dom';
-import moment from 'dayjs';
 
-const UserPost = (props) => {
-	const { post } = props;
-
+const UserComment = ({ comment }) => {
 	return (
 		<div style={{ marginTop: '1rem' }}>
-			<Typography variant='subtitle2' gutterBottom>
-				{moment(post.created_at).format('MMM D')}
-			</Typography>
 			<Paper style={{ padding: '.5rem' }}>
 				<Grid container direction='row' spacing={2}>
 					<Grid
@@ -24,13 +18,19 @@ const UserPost = (props) => {
 						lg={1}
 						style={{ background: '#f4f4f4' }}
 					>
-						<Typography variant='body2'>updoots</Typography>
-						<Typography variant='h4'>{post.vote_count}</Typography>
+						<Typography
+							variant='h6'
+							component={RouterLink}
+							to={`/comments/${comment._id}`}
+							style={{ color: 'inherit', textDecoration: 'none' }}
+						>
+							Thread
+						</Typography>
 					</Grid>
 					<Grid item xs={7} sm={8} lg={9}>
-						<Typography variant='h6'>{post.title}</Typography>
+						<Typography variant='h6'>RE: </Typography>
 						<Typography variant='subtitle1' noWrap>
-							{post.subtitle}
+							{comment.body}
 						</Typography>
 					</Grid>
 					<Grid container item xs={2} justify='center' alignItems='center'>
@@ -39,7 +39,7 @@ const UserPost = (props) => {
 							variant='contained'
 							color='primary'
 							component={RouterLink}
-							to={`/posts/${post._id}`}
+							to={`/comments/${comment._id}`}
 						>
 							view
 						</Button>
@@ -50,4 +50,4 @@ const UserPost = (props) => {
 	);
 };
 
-export default UserPost;
+export default UserComment;

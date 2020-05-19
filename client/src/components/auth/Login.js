@@ -9,7 +9,7 @@ import {
 	Button,
 	Typography,
 	TextField,
-	Snackbar
+	Snackbar,
 } from '@material-ui/core';
 import BackToHomeButton from '../chunks/BackToHomeButton';
 import Alert from '../chunks/Alert';
@@ -19,13 +19,12 @@ class Login extends Component {
 		email: '',
 		password: '',
 		errors: {},
-		isLoading: false
+		isLoading: false,
 	};
 
 	componentDidMount() {
 		// If logged in and user navigates to Login page, should redirect them to dashboard
 		if (this.props.auth.isAuthenticated) {
-			console.log(this.props);
 			this.props.history.push('/');
 		}
 	}
@@ -34,16 +33,16 @@ class Login extends Component {
 		return props.errors ? { errors: props.errors } : { errors: {} };
 	}
 
-	onChange = e => {
+	onChange = (e) => {
 		this.setState({ [e.target.id]: e.target.value });
 	};
 
-	onSubmit = e => {
+	onSubmit = (e) => {
 		e.preventDefault();
 
 		const userData = {
 			email: this.state.email,
-			password: this.state.password
+			password: this.state.password,
 		};
 
 		this.props.loginUser(userData, this.props.history);
@@ -132,12 +131,12 @@ class Login extends Component {
 Login.propTypes = {
 	loginUser: PropTypes.func.isRequired,
 	auth: PropTypes.object.isRequired,
-	errors: PropTypes.object.isRequired
+	errors: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
 	auth: state.auth,
-	errors: state.errors
+	errors: state.errors,
 });
 
 export default connect(

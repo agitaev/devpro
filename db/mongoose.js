@@ -9,9 +9,9 @@ mongoose.connect(
 		useFindAndModify: false,
 		useUnifiedTopology: true,
 		useCreateIndex: true,
-		serverSelectionTimeoutMS: 5000
+		serverSelectionTimeoutMS: 5000,
 	},
-	error => {
+	(error) => {
 		if (!error) {
 			console.log('[mongodb] connected successfully');
 		} else {

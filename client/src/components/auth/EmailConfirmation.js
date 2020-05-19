@@ -6,12 +6,11 @@ import { DoneAllOutlined as SuccessIcon } from '@material-ui/icons';
 
 class EmailConfirmation extends Component {
 	state = {
-		email: ''
+		email: '',
 	};
 
 	componentDidMount() {
 		if (!this.props.isAuthenticated) {
-			console.log(this.props);
 			const params = new URLSearchParams(this.props.location.search);
 			const token = params.get('token');
 			const email = params.get('email');
@@ -51,8 +50,8 @@ class EmailConfirmation extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	isAuthenticated: state.auth.isAuthenticated
+const mapStateToProps = (state) => ({
+	isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps)(EmailConfirmation);

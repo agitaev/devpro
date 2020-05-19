@@ -3,7 +3,7 @@ import { Paper, Typography, Grid, IconButton } from '@material-ui/core';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import {
 	StarBorderOutlined as SaveIcon,
-	StarOutlined as UnsaveIcon
+	StarOutlined as UnsaveIcon,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import isEmpty from 'is-empty';
@@ -12,7 +12,7 @@ import { savePost } from '../../actions/postActions';
 class TrendingItem extends Component {
 	state = {
 		elevation: 0,
-		saved: false
+		saved: false,
 	};
 
 	onMouseOver = () => this.setState({ elevation: 5 });
@@ -24,16 +24,14 @@ class TrendingItem extends Component {
 			this.setState({ saved: !this.state.saved });
 		} else {
 			this.props.history.push('/login');
-			console.log('unauthorized');
 		}
 	};
 
 	componentDidMount() {
 		const { user, saved_posts, post } = this.props;
-		// console.log(user);l=
 
 		if (user && saved_posts && saved_posts.length > 0) {
-			saved_posts.map(savedPost =>
+			saved_posts.map((savedPost) =>
 				savedPost._id === post._id ? this.setState({ saved: true }) : null
 			);
 		}
@@ -41,7 +39,6 @@ class TrendingItem extends Component {
 
 	componentDidUpdate(prevProps) {
 		if (isEmpty(prevProps.user) && this.state.saved) {
-			console.log('updated');
 			this.setState({ saved: false });
 		}
 	}
@@ -78,7 +75,7 @@ class TrendingItem extends Component {
 								fontSize: '1.2rem',
 								textDecoration: 'none',
 								lineHeight: 'normal',
-								display: 'block'
+								display: 'block',
 							}}
 							color='inherit'
 						>
@@ -116,10 +113,10 @@ class TrendingItem extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
 	user: state.auth.user,
 	isAuthenticated: state.auth.isAuthenticated,
-	saved_posts: state.auth.user.saved_posts
+	saved_posts: state.auth.user.saved_posts,
 });
 
 export default connect(

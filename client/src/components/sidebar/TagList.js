@@ -9,37 +9,30 @@ import axios from 'axios';
 class TagList extends Component {
 	state = {
 		tags: [],
-		isLoading: true
+		isLoading: true,
 	};
 
 	componentDidMount() {
 		if (this.props.user_tags && !localStorage.getItem('recommended_tags')) {
 			axios
 				.post('/api/recommender', { tags: this.props.user_tags })
-				.then(res => {
+				.then((res) => {
 					if (res.data.error) {
 						this.setState({ tags: [], isLoading: false });
 					} else {
 						let tags = [];
 
-						res.data.map(tag => tags.push(tag));
+						res.data.map((tag) => tags.push(tag));
 						this.setState({ tags, isLoading: false });
 						localStorage.setItem('recommended_tags', JSON.stringify(tags));
 					}
 				})
-				.catch(err => console.log(err));
+				.catch((err) => console.log(err));
 		} else {
 			const tags = JSON.parse(localStorage.getItem('recommended_tags'));
 			this.setState({ tags, isLoading: false });
 		}
 	}
-
-	// UNSAFE_componentWillReceiveProps(nextProps) {
-	// 	console.log(nextProps);
-	// 	if (nextProps.user_tags) {
-	// 		this.setState({ user_tags: nextProps.user_tags });
-	// 	}
-	// }
 
 	render() {
 		const { tags, isLoading } = this.state;
@@ -72,7 +65,7 @@ class TagList extends Component {
 						justify='space-between'
 					>
 						{tags && tags !== undefined
-							? tags.map(tag => (
+							? tags.map((tag) => (
 									<Grid item key={tag._id}>
 										<TagItem tag={tag} />
 									</Grid>
@@ -85,14 +78,14 @@ class TagList extends Component {
 	}
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	if (state.auth.isAuthenticated) {
 		return {
-			user_tags: state.auth.user.followed_tags.map(tag => tag.title)
+			user_tags: state.auth.user.followed_tags.map((tag) => tag.title),
 		};
 	} else {
 		return {
-			tags: state.tags
+			tags: state.tags,
 		};
 	}
 };

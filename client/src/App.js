@@ -20,12 +20,17 @@ import TrendingBoard from './components/dashboard/TrendingBoard';
 import EmailConfirmation from './components/auth/EmailConfirmation';
 import TagPosts from './components/layout/TagPosts';
 import SearchBoard from './components/dashboard/SearchBoard';
+import AdminPanel from './components/admin/AdminPanel';
 
 import { Hidden, ThemeProvider, createMuiTheme } from '@material-ui/core';
-import { light, dark } from './utils/theme';
+import {
+	light,
+	// dark
+} from './utils/theme';
+import ScrollToTop from './utils/ScrollToTop';
 
 const lightTheme = createMuiTheme(light);
-const darkTheme = createMuiTheme(dark);
+// const darkTheme = createMuiTheme(dark);
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -50,41 +55,52 @@ if (localStorage.jwtToken) {
 
 class App extends Component {
 	render() {
+		const isAdminPanel = window.location.pathname.split('/')[1] === 'admin';
+
 		return (
 			<Provider store={store}>
 				<ThemeProvider theme={lightTheme}>
 					<Router>
-						<div className='App'>
-							<Navbar />
-							<Route exact path='/' component={Dashboard} />
-							<Route exact path='/register' component={Register} />
-							<Route exact path='/login' component={Login} />
-							<Route
-								exact
-								path='/email_confirmation'
-								component={EmailConfirmation}
-							/>
-							<Route
-								exact
-								path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
-								component={Post}
-							/>
-							<Route
-								exact
-								path='/users/:userId([0-9a-fA-F]{24})' // match mongodb objectid
-								component={Profile}
-							/>
-							<Route exact path='/tags/:tag' component={TagPosts} />
-							<Route exact path='/trending' component={TrendingBoard} />
-							<Route exact path='/search' component={SearchBoard} />
-							<Switch>
-								<PrivateRoute exact path='/posts/new' component={CreatePost} />
-								<PrivateRoute path='/me' component={Profile} />
-							</Switch>
-							<Hidden mdUp>
-								<BottomNavbar />
-							</Hidden>
-						</div>
+						<ScrollToTop>
+							<div className='App'>
+								<Navbar />
+								<Route exact path='/' component={Dashboard} />
+								<Route exact path='/register' component={Register} />
+								<Route exact path='/login' component={Login} />
+								<Route
+									exact
+									path='/email_confirmation'
+									component={EmailConfirmation}
+								/>
+								<Route
+									exact
+									path='/posts/:postId([0-9a-fA-F]{24})' // match mongodb objectid
+									component={Post}
+								/>
+								<Route
+									exact
+									path='/users/:userId([0-9a-fA-F]{24})' // match mongodb objectid
+									component={Profile}
+								/>
+								<Route exact path='/tags/:tag' component={TagPosts} />
+								<Route exact path='/trending' component={TrendingBoard} />
+								<Route exact path='/search' component={SearchBoard} />
+								<Switch>
+									<PrivateRoute
+										exact
+										path='/posts/new'
+										component={CreatePost}
+									/>
+									<PrivateRoute path='/me' component={Profile} />
+									<PrivateRoute path='/admin' component={AdminPanel} />
+								</Switch>
+								{!isAdminPanel && (
+									<Hidden mdUp>
+										<BottomNavbar />
+									</Hidden>
+								)}
+							</div>
+						</ScrollToTop>
 					</Router>
 				</ThemeProvider>
 			</Provider>

@@ -1,31 +1,19 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment, useEffect, lazy, Suspense } from 'react';
 import { Grid, Typography, Paper } from '@material-ui/core';
-import TrendingItem from './TrendingItem';
 import { Skeleton } from '@material-ui/lab';
 import { connect } from 'react-redux';
 import { getPosts } from '../../actions/postActions';
-import _ from 'underscore';
 
-class TrendingList extends Component {
-	state = {
-		posts: [],
-		isLoading: true
-	};
+const TrendingItem = lazy(() => import('./TrendingItem'));
 
-	componentDidMount() {
-		this.props.getPosts();
-	}
+const TrendingList = ({ posts, getPosts }) => {
+	useEffect(() => {
+		getPosts();
+	}, [getPosts]);
 
-	static getDerivedStateFromProps(props, state) {
-		if (props.posts.length > 0) {
-			return { posts: props.posts, isLoading: false };
-		}
-	}
-
-	render() {
-		const { isLoading } = this.state;
-		const skeletons = [];
-		_.times(4, index => {
+	const skeletons = [];
+	import('underscore').then((_) => {
+		_.times(4, (index) => {
 			skeletons.push(
 				<Fragment key={index}>
 					<br />
@@ -45,46 +33,48 @@ class TrendingList extends Component {
 				</Fragment>
 			);
 		});
+	});
 
-		return (
-			<Fragment>
-				{isLoading ? (
-					<Skeleton
-						animation='wave'
-						width='20%'
-						style={{ marginBottom: '.5rem' }}
-					/>
+	return (
+		<Suspense fallback={skeletons}>
+			{!(posts && posts.length > 0) ? (
+				<Skeleton
+					animation='wave'
+					width='20%'
+					style={{ marginBottom: '.5rem' }}
+				/>
+			) : (
+				<Typography variant='subtitle1' gutterBottom>
+					Trending posts
+				</Typography>
+			)}
+			<Paper style={{ marginBottom: '1rem' }}>
+				{!(posts && posts.length > 0) ? (
+					<Fragment>{skeletons}</Fragment>
 				) : (
-					<Typography variant='subtitle1' gutterBottom>
-						Trending posts
-					</Typography>
+					<Grid container justify='space-between'>
+						{posts && posts.length > 0
+							? posts.map((post, index) =>
+									index < 5 ? (
+										<Grid key={post._id} item xs={12}>
+											<TrendingItem post={post} />
+										</Grid>
+									) : null
+							  )
+							: null}
+					</Grid>
 				)}
-				<Paper style={{ marginBottom: '1rem' }}>
-					{isLoading ? (
-						<Fragment>{skeletons}</Fragment>
-					) : (
-						<Grid container justify='space-between'>
-							{this.props.posts && this.props.posts.length > 0
-								? this.props.posts.map((post, index) =>
-										index < 5 ? (
-											<Grid key={post._id} item xs={12}>
-												<TrendingItem post={post} />
-											</Grid>
-										) : null
-								  )
-								: null}
-						</Grid>
-					)}
-				</Paper>
-			</Fragment>
-		);
-	}
-}
+			</Paper>
+		</Suspense>
+	);
+};
 
-const mapStateToProps = state => ({
-	posts: state.posts.list.sort((x, y) =>
-		x.vote_count < y.vote_count ? 1 : x.vote_count > y.vote_count ? -1 : 0
-	)
+const mapStateToProps = (state) => ({
+	posts: state.posts.list
+		.filter((post) => post.approved)
+		.sort((x, y) =>
+			x.vote_count < y.vote_count ? 1 : x.vote_count > y.vote_count ? -1 : 0
+		),
 });
 
 export default connect(
