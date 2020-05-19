@@ -105,3 +105,7 @@ To turn on Redux DevTools uncomment line 14 in [store.js](/client/src/store.js).
 ## License
 
 This project is licensed under the terms of the [MIT license](/LICENSE).
+
+## Disclaimer
+
+This project was carried out as a part of BSc (Hons) Business Information Systems Degree, Westminster International University in Tashkent.
