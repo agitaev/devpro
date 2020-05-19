@@ -90,7 +90,7 @@ const Navbar = ({ auth, setSearchText, logoutUser, searchText }) => {
 								textTransform: 'uppercase',
 							}}
 						>
-							devpro
+							m1r7d3
 						</Typography>
 					</Grid>
 					{!isAdminPanel && (

@@ -13,7 +13,7 @@ const sendConfirmationEmail = async ({ user, url }) => {
 	return await transporter.sendMail({
 		from: '"Fred Foo 👻" <foo@bar.com>',
 		to: user.email,
-		subject: 'Confirm your DEVPRO account', // Subject line
+		subject: 'Confirm your M1R7D3 account', // Subject line
 		text: `Hello world? Here's your confirmation link: ${url}`,
 		html: `<b>Hello world? Here's your <a href='${url}'>confirmation link</a>.</b>`,
 	});
